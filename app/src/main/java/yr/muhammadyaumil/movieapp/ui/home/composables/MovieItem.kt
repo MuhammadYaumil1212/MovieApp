@@ -21,7 +21,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -40,7 +39,10 @@ fun MovieRecentItem(
     imageUrl: String = "",
 ) {
     Column(
-        modifier = modifier.width(160.dp),
+        modifier =
+            modifier
+                .width(160.dp)
+                .padding(horizontal = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AsyncImage(
@@ -52,12 +54,7 @@ fun MovieRecentItem(
                 Modifier
                     .fillMaxWidth()
                     .aspectRatio(0.67f)
-                    .shadow(
-                        elevation = 16.dp,
-                        shape = RoundedCornerShape(24.dp),
-                        ambientColor = Color.Gray,
-                        spotColor = Color.DarkGray,
-                    ).clip(RoundedCornerShape(24.dp)),
+                    .clip(RoundedCornerShape(24.dp)),
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
