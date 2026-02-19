@@ -65,6 +65,10 @@ Untuk menjalankan aplikasi ini, Anda perlu mendaftarkan API Key di [TMDB](https:
 1. Buka file `local.properties` di root project Anda.
 2. Tambahkan variabel `API_KEY, BASE URL , dan lain-lain` seperti contoh di bawah ini:
 
-```properties
-![WhatsApp Image 2026-02-20 at 01 59 16](https://github.com/user-attachments/assets/23e26d17-708d-4fa1-b1b8-05ab7d8a54c3)
+```local.properties
+sdk.dir=/Users/apple/Library/Android/sdk
+API_KEY_PROD=[TOKEN]
+API_READ_ACCESS_TOKEN=[TOKEN ACCESS]
+BASE_URL_PROD=https://api.themoviedb.org/3/
+IMAGE_BASE_URL=https://image.tmdb.org/t/p/w200
 
