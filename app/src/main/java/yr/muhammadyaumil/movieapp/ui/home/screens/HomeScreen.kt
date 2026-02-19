@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import yr.muhammadyaumil.movieapp.BuildConfig
+import yr.muhammadyaumil.movieapp.core.utils.formatDate
+import yr.muhammadyaumil.movieapp.core.utils.formatRating
 import yr.muhammadyaumil.movieapp.ui.home.composables.MovieRecentItem
 import yr.muhammadyaumil.movieapp.ui.home.composables.MovieRecommendationItem
 import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
@@ -77,7 +79,8 @@ fun HomeScreen() {
                             items(movies.size) { index ->
                                 MovieRecentItem(
                                     title = movies[index]?.originalTitle ?: "",
-                                    rating = movies[index]?.voteAverage ?: 0.0,
+                                    rating =
+                                        movies[index]?.voteAverage.formatRating().toDouble(),
                                     imageUrl = "${BuildConfig.IMAGE_URL}${movies[index]?.posterPath}",
                                 )
                             }
@@ -100,7 +103,7 @@ fun HomeScreen() {
                             MovieRecommendationItem(
                                 title = movies[index]?.originalTitle ?: "",
                                 description = movies[index]?.overview ?: "",
-                                duration = movies[index]?.releaseDate ?: "",
+                                duration = movies[index]?.releaseDate.formatDate(),
                                 imageUrl = "${BuildConfig.IMAGE_URL}${movies[index]?.posterPath}",
                             )
                         }
