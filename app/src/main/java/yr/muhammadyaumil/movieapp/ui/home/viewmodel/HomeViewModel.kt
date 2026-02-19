@@ -1,6 +1,5 @@
 package yr.muhammadyaumil.movieapp.ui.home.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +24,7 @@ class HomeViewModel
 
         init {
             getMovies()
+            getNowPlayingMovies()
         }
 
         private fun getMovies() =
@@ -34,12 +34,10 @@ class HomeViewModel
                     .collect { resources ->
                         when (resources) {
                             is Resources.Loading -> {
-                                Log.d("TAG VIEW MODEL", resources.data.toString())
                                 _state.update { it.copy(isLoading = true) }
                             }
 
                             is Resources.Success -> {
-                                Log.d("TAG VIEW MODEL", resources.data.toString())
                                 _state.update {
                                     it.copy(
                                         isLoading = false,
@@ -58,5 +56,34 @@ class HomeViewModel
                             }
                         }
                     }
+            }
+
+        private fun getNowPlayingMovies() =
+            viewModelScope.launch {
+                movieRepository.getNowPlayingMovies().collect { resources ->
+                    when (resources) {
+                        is Resources.Loading -> {
+                            _state.update { it.copy(isLoading = true) }
+                        }
+
+                        is Resources.Success -> {
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    nowPlayingList = resources.data,
+                                )
+                            }
+                        }
+
+                        is Resources.Error -> {
+                            _state.update {
+                                it.copy(
+                                    isLoading = false,
+                                    errorMessage = resources.message,
+                                )
+                            }
+                        }
+                    }
+                }
             }
     }

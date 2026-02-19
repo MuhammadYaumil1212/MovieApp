@@ -11,6 +11,7 @@ import yr.muhammadyaumil.movieapp.core.state.Resources
 import yr.muhammadyaumil.movieapp.core.utils.toEntity
 import yr.muhammadyaumil.movieapp.data.remote.MovieApiServices
 import yr.muhammadyaumil.movieapp.domain.entity.MovieGeneralEntity
+import yr.muhammadyaumil.movieapp.domain.entity.NowPlayingMovieEntity
 import yr.muhammadyaumil.movieapp.domain.repository.MovieRepository
 import javax.inject.Inject
 
@@ -30,9 +31,22 @@ class MovieRepositoryImpl
                 if (moviesResponse.results?.isNotEmpty() == true) {
                     emit(Resources.Success(moviesResponse))
                 }
-            }.flowOn(Dispatchers.IO)
-                .catch { e ->
-                    Log.e(AppConstants.API_LOGGER, e.localizedMessage ?: AppConstants.NULL_MESSAGE)
-                    emit(Resources.Error(e.localizedMessage))
+            }.flowOn(Dispatchers.IO).catch { e ->
+                Log.e(AppConstants.API_LOGGER, e.localizedMessage ?: AppConstants.NULL_MESSAGE)
+                emit(Resources.Error(e.localizedMessage))
+            }
+
+        override suspend fun getNowPlayingMovies(): Flow<Resources<NowPlayingMovieEntity>> =
+            flow {
+                emit(Resources.Loading())
+                val nowPlayingMoviesResponse =
+                    movieApiServices
+                        .getNowPlayingMovies()
+                if (nowPlayingMoviesResponse.results?.isNotEmpty() == true) {
+                    emit(Resources.Success(nowPlayingMoviesResponse.toEntity()))
                 }
+            }.flowOn(Dispatchers.IO).catch { e ->
+                Log.e(AppConstants.API_LOGGER, e.localizedMessage ?: AppConstants.NULL_MESSAGE)
+                emit(Resources.Error(e.localizedMessage))
+            }
     }

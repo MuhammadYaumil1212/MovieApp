@@ -56,6 +56,7 @@ fun HomeScreen() {
 
             else -> {
                 val movies = state.movieList?.results ?: emptyList()
+                val nowPlayingMovies = state.nowPlayingList?.results ?: emptyList()
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                 ) {
@@ -76,12 +77,15 @@ fun HomeScreen() {
                             contentPadding = PaddingValues(horizontal = 16.dp),
                             horizontalArrangement = Arrangement.spacedBy(16.dp),
                         ) {
-                            items(movies.size) { index ->
+                            items(nowPlayingMovies.size) { index ->
                                 MovieRecentItem(
-                                    title = movies[index]?.originalTitle ?: "",
+                                    title = nowPlayingMovies[index].originalTitle ?: "",
                                     rating =
-                                        movies[index]?.voteAverage.formatRating().toDouble(),
-                                    imageUrl = "${BuildConfig.IMAGE_URL}${movies[index]?.posterPath}",
+                                        nowPlayingMovies[index]
+                                            .voteAverage
+                                            .formatRating()
+                                            .toDouble(),
+                                    imageUrl = "${BuildConfig.IMAGE_URL}${nowPlayingMovies[index].posterPath}",
                                 )
                             }
                         }
