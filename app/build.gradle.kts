@@ -33,8 +33,10 @@ android {
 
     buildTypes {
         release {
-            val baseUrl = localProperties.getProperty("urlProd")
+            val baseUrl = localProperties.getProperty("BASE_URL_PROD")
+            val apiKey = localProperties.getProperty("API_KEY")
             buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+            buildConfigField("String", "API_KEY", "\"$apiKey\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -42,8 +44,10 @@ android {
             )
         }
         debug {
-            val baseUrl = localProperties.getProperty("urlProd")
+            val baseUrl = localProperties.getProperty("BASE_URL_PROD")
+            val apiKey = localProperties.getProperty("API_KEY")
             buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+            buildConfigField("String", "API_KEY", "\"$apiKey\"")
         }
     }
     compileOptions {
