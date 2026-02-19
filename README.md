@@ -14,7 +14,6 @@ Aplikasi Android yang menampilkan daftar film populer dan terbaru dari **The Mov
 
 ## Stack Teknologi
 * **Language:** Kotlin / Java (Android Native)
-* **Architecture:** MVVM (Model-View-ViewModel)
 * **Networking:** Retrofit & OkHttp
 * **Image Loading:** Glide / Coil
 * **Dependency Injection:** Hilt / Koin
