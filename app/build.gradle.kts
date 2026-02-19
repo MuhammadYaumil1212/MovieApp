@@ -10,8 +10,8 @@ plugins {
 }
 
 val localProperties = Properties()
-val localPropertiesFile: File? = rootProject.file("local.properties")
-if (localPropertiesFile!!.exists()) {
+val localPropertiesFile: File = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
     localProperties.load(FileInputStream(localPropertiesFile))
 }
 
@@ -34,7 +34,7 @@ android {
     buildTypes {
         release {
             val baseUrl = localProperties.getProperty("BASE_URL_PROD")
-            val apiKey = localProperties.getProperty("API_KEY")
+            val apiKey = localProperties.getProperty("API_KEY_PROD")
             buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             buildConfigField("String", "API_KEY", "\"$apiKey\"")
             isMinifyEnabled = false
@@ -45,7 +45,7 @@ android {
         }
         debug {
             val baseUrl = localProperties.getProperty("BASE_URL_PROD")
-            val apiKey = localProperties.getProperty("API_KEY")
+            val apiKey = localProperties.getProperty("API_KEY_PROD")
             buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             buildConfigField("String", "API_KEY", "\"$apiKey\"")
         }
