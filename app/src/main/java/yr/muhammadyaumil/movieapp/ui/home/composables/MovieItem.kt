@@ -33,7 +33,7 @@ import yr.muhammadyaumil.movieapp.R
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun MovieItem(
+fun MovieRecentItem(
     modifier: Modifier = Modifier,
     title: String = "No Title",
     rating: Double = 0.0,
