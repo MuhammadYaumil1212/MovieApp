@@ -1,9 +1,9 @@
 package yr.muhammadyaumil.movieapp.ui.home.screens
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import yr.muhammadyaumil.movieapp.BuildConfig
 import yr.muhammadyaumil.movieapp.ui.home.composables.MovieRecommendationItem
 import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 
@@ -24,24 +25,19 @@ import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 fun HomeScreen() {
     val homeViewModel: HomeViewModel = hiltViewModel()
     val state by homeViewModel.state.collectAsState()
-    Box(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .systemBarsPadding(),
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
         when {
             state.isLoading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center),
-                )
+                CircularProgressIndicator()
             }
 
             state.errorMessage != null -> {
                 Text(
                     text = state.errorMessage ?: "Terjadi kesalahan",
                     color = Color.Red,
-                    modifier = Modifier.align(Alignment.Center),
                 )
             }
 
@@ -60,7 +56,7 @@ fun HomeScreen() {
                                 description = this?.overview ?: "",
                                 duration = this?.releaseDate ?: "",
                                 imageUrl =
-                                    "https://image.tmdb.org/t/p/w200${this?.posterPath}",
+                                    "${BuildConfig.IMAGE_URL}${this?.posterPath}",
                             )
                         }
                     }

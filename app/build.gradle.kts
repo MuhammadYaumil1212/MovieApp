@@ -35,8 +35,10 @@ android {
         release {
             val baseUrl = localProperties.getProperty("BASE_URL_PROD")
             val apiKey = localProperties.getProperty("API_KEY_PROD")
+            val imageUrl = localProperties.getProperty("IMAGE_BASE_URL")
             buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             buildConfigField("String", "API_KEY", "\"$apiKey\"")
+            buildConfigField("String", "IMAGE_URL", "\"$imageUrl\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -46,8 +48,10 @@ android {
         debug {
             val baseUrl = localProperties.getProperty("BASE_URL_PROD")
             val apiKey = localProperties.getProperty("API_KEY_PROD")
+            val imageUrl = localProperties.getProperty("IMAGE_BASE_URL")
             buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             buildConfigField("String", "API_KEY", "\"$apiKey\"")
+            buildConfigField("String", "IMAGE_URL", "\"$imageUrl\"")
         }
     }
     compileOptions {
