@@ -16,13 +16,13 @@ if (localPropertiesFile!!.exists()) {
 }
 
 android {
-    namespace = "yr.muhammadyaumil.animeapp"
+    namespace = "yr.muhammadyaumil.movieapp"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "yr.muhammadyaumil.animeapp"
+        applicationId = "yr.muhammadyaumil.movieapp"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
