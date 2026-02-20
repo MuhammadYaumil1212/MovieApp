@@ -120,12 +120,12 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.androidx.material3.adaptive.navigation3)
 
-    // gson
-    implementation(libs.google.gson)
-
     // serialization
     implementation(libs.kotlinx.serialization.core)
 
     // extended icons
     implementation(libs.androidx.compose.material.icons.extended)
+
+    // google font
+    implementation(libs.androidx.ui.text.google.fonts)
 }

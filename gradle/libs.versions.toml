@@ -74,7 +74,6 @@ sandwich-ktor = { module = "com.github.skydoves:sandwich-ktor", version.ref = "s
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4jSimple" }
-google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 # Hilt
 androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltCompiler" }
