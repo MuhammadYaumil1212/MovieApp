@@ -1,6 +1,7 @@
 package yr.muhammadyaumil.movieapp.ui.settings.screens
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,7 +54,12 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
             SettingsItem(icon = Icons.Outlined.FavoriteBorder, title = "Favorite"),
         )
     Column {
-        Box(modifier = Modifier.padding(16.dp)) {
+        Box(
+            modifier =
+                Modifier
+                    .padding(16.dp)
+                    .clickable {},
+        ) {
             Row(
                 modifier =
                     Modifier
