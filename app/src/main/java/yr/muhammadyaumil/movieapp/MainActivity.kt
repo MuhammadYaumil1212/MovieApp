@@ -4,9 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import com.example.compose.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import yr.muhammadyaumil.movieapp.ui.home.screens.HomeScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -15,7 +16,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme {
-                HomeScreen()
+                Surface(color = MaterialTheme.colorScheme.background) {
+                    MovieApp()
+                }
             }
         }
     }

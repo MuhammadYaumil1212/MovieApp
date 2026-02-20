@@ -32,7 +32,7 @@ import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun HomeScreen() {
+fun HomeScreen(modifier: Modifier) {
     val homeViewModel: HomeViewModel = hiltViewModel()
     val state by homeViewModel.state.collectAsState()
     Box(
@@ -116,11 +116,4 @@ fun HomeScreen() {
             }
         }
     }
-}
-
-@Suppress("ktlint:standard:function-naming")
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
 }

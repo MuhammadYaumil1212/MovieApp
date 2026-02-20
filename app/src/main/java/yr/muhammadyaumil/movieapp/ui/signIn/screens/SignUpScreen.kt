@@ -9,7 +9,7 @@ import com.example.compose.AppTheme
 @Suppress("ktlint:standard:function-naming")
 @Composable
 fun SignInScreen(modifier: Modifier = Modifier) {
-
+    Text("Hello")
 }
 
 @Suppress("ktlint:standard:function-naming")
