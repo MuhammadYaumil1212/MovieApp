@@ -17,7 +17,7 @@ sealed class Screen(
 
     object Settings : Screen("settings", "Settings", Icons.Filled.Settings, Icons.Outlined.Settings)
 
-    object SignIn : Screen("signIn", "SignIn", Icons.Filled.Settings, Icons.Outlined.Settings)
+    object Login : Screen("login", "login", Icons.Filled.Settings, Icons.Outlined.Settings)
 
     companion object {
         val bottomNavItems = listOf(Home, Settings)

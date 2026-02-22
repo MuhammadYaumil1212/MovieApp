@@ -38,7 +38,10 @@ import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun HomeScreen(modifier: Modifier) {
+fun HomeScreen(
+    modifier: Modifier,
+    navigateToLogin: () -> Unit,
+) {
     val homeViewModel: HomeViewModel = hiltViewModel()
     val state by homeViewModel.state.collectAsState()
     Box(
@@ -80,7 +83,7 @@ fun HomeScreen(modifier: Modifier) {
                                     Modifier
                                         .size(40.dp)
                                         .clip(RoundedCornerShape(10.dp))
-                                        .clickable { /* aksi */ }
+                                        .clickable { navigateToLogin() }
                                         .align(Alignment.CenterEnd),
                             )
                         }
