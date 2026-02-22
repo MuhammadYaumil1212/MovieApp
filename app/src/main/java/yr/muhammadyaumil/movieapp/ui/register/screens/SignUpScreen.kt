@@ -1,4 +1,4 @@
-package yr.muhammadyaumil.movieapp.ui.signUp.screens
+package yr.muhammadyaumil.movieapp.ui.register.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable

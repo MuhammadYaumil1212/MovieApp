@@ -1,4 +1,4 @@
-package yr.muhammadyaumil.movieapp.ui.signIn.state
+package yr.muhammadyaumil.movieapp.ui.login.state
 
 data class SignInState(
     val email: String = "",

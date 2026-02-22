@@ -66,7 +66,11 @@ fun MovieApp() {
                     navController.navigate(Screen.Login.route)
                 })
             }
-            composable(Screen.Login.route) { LoginScreen(modifier = Modifier) }
+            composable(Screen.Login.route) {
+                LoginScreen(modifier = Modifier, onClick = {
+                    navController.popBackStack()
+                })
+            }
         }
     }
 }
