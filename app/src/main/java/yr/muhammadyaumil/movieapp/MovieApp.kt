@@ -16,8 +16,8 @@ import androidx.navigation.compose.rememberNavController
 import yr.muhammadyaumil.movieapp.core.composables.MovieBottomBar
 import yr.muhammadyaumil.movieapp.core.navigation.Screen
 import yr.muhammadyaumil.movieapp.ui.home.screens.HomeScreen
+import yr.muhammadyaumil.movieapp.ui.login.screens.LoginScreen
 import yr.muhammadyaumil.movieapp.ui.settings.screens.SettingsScreen
-import yr.muhammadyaumil.movieapp.ui.signIn.screens.SignInScreen
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
@@ -56,13 +56,17 @@ fun MovieApp() {
             startDestination = Screen.Home.route,
             modifier = Modifier.padding(innerPadding),
         ) {
-            composable(Screen.Home.route) { HomeScreen(modifier = Modifier) }
-            composable(Screen.Settings.route) {
-                SettingsScreen(modifier = Modifier, navigateToLogin = {
-                    navController.navigate(Screen.SignIn.route)
+            composable(Screen.Home.route) {
+                HomeScreen(modifier = Modifier, navigateToLogin = {
+                    navController.navigate(Screen.Login.route)
                 })
             }
-            composable(Screen.SignIn.route) { SignInScreen(modifier = Modifier) }
+            composable(Screen.Settings.route) {
+                SettingsScreen(modifier = Modifier, navigateToLogin = {
+                    navController.navigate(Screen.Login.route)
+                })
+            }
+            composable(Screen.Login.route) { LoginScreen(modifier = Modifier) }
         }
     }
 }
