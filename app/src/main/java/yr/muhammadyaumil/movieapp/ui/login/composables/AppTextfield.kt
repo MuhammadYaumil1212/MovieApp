@@ -1,11 +1,13 @@
-package yr.muhammadyaumil.movieapp.ui.signIn.composables
+package yr.muhammadyaumil.movieapp.ui.login.composables
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicSecureTextField
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
@@ -27,7 +29,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
-@Suppress("ktlint:standard:function-naming")
 @Composable
 fun AppTextfield(
     modifier: Modifier = Modifier,
@@ -104,18 +105,20 @@ fun AppBasicTextfield(
                             tint = MaterialTheme.colors.onSurface.copy(0.5f),
                             modifier = Modifier.clickable { onLeadingClick() },
                         )
+                        Spacer(modifier = Modifier.width(10.dp))
                     }
+
                     Box(modifier = Modifier.weight(1f)) {
-                        if (textfieldState.text.isEmpty()) {
-                            if (hint != null) {
-                                Text(
-                                    text = hint,
-                                    color = MaterialTheme.colors.onSurface.copy(0.4f),
-                                    modifier = Modifier.fillMaxWidth(),
-                                )
-                            }
+                        if (textfieldState.text.isEmpty() && hint != null) {
+                            Text(
+                                text = hint,
+                                color = MaterialTheme.colors.onSurface.copy(0.4f),
+                            )
                         }
+
+                        innerTextfield()
                     }
+
                     if (trailingIcon != null) {
                         Icon(
                             imageVector = trailingIcon,
@@ -123,18 +126,16 @@ fun AppBasicTextfield(
                             tint = MaterialTheme.colors.onSurface.copy(0.5f),
                             modifier = Modifier.clickable { onTrailingClick() },
                         )
-                    } else {
-                        if (trailingText != null) {
-                            Text(
-                                text = trailingText,
-                                color = MaterialTheme.colors.primary,
-                                fontWeight = FontWeight.SemiBold,
-                                modifier =
-                                    Modifier
-                                        .padding(end = 4.dp)
-                                        .clickable { onTrailingClick() },
-                            )
-                        }
+                    } else if (trailingText != null) {
+                        Text(
+                            text = trailingText,
+                            color = MaterialTheme.colors.primary,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier =
+                                Modifier
+                                    .padding(end = 4.dp)
+                                    .clickable { onTrailingClick() },
+                        )
                     }
                 }
                 HorizontalDivider(modifier = Modifier.alpha(0.7f))
