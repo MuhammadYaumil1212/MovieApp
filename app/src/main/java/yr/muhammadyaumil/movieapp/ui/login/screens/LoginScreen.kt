@@ -2,6 +2,8 @@ package yr.muhammadyaumil.movieapp.ui.login.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +30,7 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -45,6 +48,7 @@ fun LoginScreen(
 ) {
     val emailState = rememberTextFieldState(initialText = "")
     val passwordState = rememberTextFieldState(initialText = "")
+    val interactionSource = remember { MutableInteractionSource() }
     Scaffold(
         topBar = {
             Icon(
@@ -53,7 +57,11 @@ fun LoginScreen(
                 modifier =
                     Modifier
                         .clickable(onClick = onClick)
-                        .padding(16.dp),
+                        .padding(16.dp)
+                        .indication(
+                            interactionSource = interactionSource,
+                            indication = null,
+                        ),
             )
         },
     ) { innerPadding ->
