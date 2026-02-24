@@ -1,4 +1,4 @@
-package yr.muhammadyaumil.movieapp.data.model
+package yr.muhammadyaumil.movieapp.data.model.Movie
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

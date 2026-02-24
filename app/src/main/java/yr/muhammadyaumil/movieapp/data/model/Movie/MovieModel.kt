@@ -1,16 +1,14 @@
-package yr.muhammadyaumil.movieapp.data.model
+package yr.muhammadyaumil.movieapp.data.model.Movie
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NowPlayingMovieModel(
-    @SerialName("dates")
-    val dates: DatesModel?,
+data class MovieModel(
     @SerialName("page")
     val page: Int?,
     @SerialName("results")
-    val results: List<ResultNowPlayingModel>?,
+    val results: List<ResultModel>?,
     @SerialName("total_pages")
     val totalPages: Int?,
     @SerialName("total_results")

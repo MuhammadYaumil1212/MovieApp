@@ -1,10 +1,10 @@
-package yr.muhammadyaumil.movieapp.data.model
+package yr.muhammadyaumil.movieapp.data.model.Movie
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResultModel(
+data class ResultNowPlayingModel(
     @SerialName("adult")
     val adult: Boolean?,
     @SerialName("backdrop_path")

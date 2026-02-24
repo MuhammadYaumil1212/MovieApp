@@ -1,9 +1,9 @@
 package yr.muhammadyaumil.movieapp.core.utils
 
-import yr.muhammadyaumil.movieapp.data.model.MovieModel
-import yr.muhammadyaumil.movieapp.data.model.NowPlayingMovieModel
-import yr.muhammadyaumil.movieapp.data.model.ResultModel
-import yr.muhammadyaumil.movieapp.data.model.ResultNowPlayingModel
+import yr.muhammadyaumil.movieapp.data.model.Movie.MovieModel
+import yr.muhammadyaumil.movieapp.data.model.Movie.NowPlayingMovieModel
+import yr.muhammadyaumil.movieapp.data.model.Movie.ResultModel
+import yr.muhammadyaumil.movieapp.data.model.Movie.ResultNowPlayingModel
 import yr.muhammadyaumil.movieapp.domain.entity.MovieEntity
 import yr.muhammadyaumil.movieapp.domain.entity.MovieGeneralEntity
 import yr.muhammadyaumil.movieapp.domain.entity.NowPlayingMovieEntity
