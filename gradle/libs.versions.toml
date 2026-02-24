@@ -1,6 +1,9 @@
 [versions]
 agp = "9.0.1"
-bom = "3.3.0"
+authKt = "3.3.0"
+postgrestKt = "3.3.0"
+storageKt = "3.3.0"
+supabaseVersion = "3.3.0"
 kotlin = "2.3.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -23,7 +26,6 @@ uiTextGoogleFonts = "1.10.3"
 slf4jSimple = "2.0.17"
 navigationCompose = "2.9.7"
 timber = "5.0.1"
-gson = "2.13.2"
 runtime = "1.10.3"
 nav3Core = "1.0.1"
 lifecycleViewmodelNav3 = "2.10.0"
@@ -38,7 +40,8 @@ uiGraphics = "1.10.3"
 androidx-compose-material = { module = "androidx.compose.material:material", version.ref = "material" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "bom" }
+auth-kt = { module = "io.github.jan-tennert.supabase:auth-kt", version.ref = "authKt" }
+bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabaseVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -53,9 +56,10 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 
-# Timber
+# supabase
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktorClientAuth" }
-timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+postgrest-kt = { module = "io.github.jan-tennert.supabase:postgrest-kt", version.ref = "postgrestKt" }
+storage-kt = { module = "io.github.jan-tennert.supabase:storage-kt", version.ref = "storageKt" }
 
 # Fonts
 androidx-ui-text-google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }

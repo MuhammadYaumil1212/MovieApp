@@ -36,9 +36,13 @@ android {
             val baseUrl = localProperties.getProperty("BASE_URL_PROD")
             val apiKey = localProperties.getProperty("API_KEY_PROD")
             val imageUrl = localProperties.getProperty("IMAGE_BASE_URL")
+            val supabaseKey = localProperties.getProperty("SUPABASE_KEY")
+            val supabaseUrl = localProperties.getProperty("SUPABASE_URL")
             buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             buildConfigField("String", "API_KEY", "\"$apiKey\"")
             buildConfigField("String", "IMAGE_URL", "\"$imageUrl\"")
+            buildConfigField("String", "SUPABASE_KEY", "\"$supabaseKey\"")
+            buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -49,9 +53,13 @@ android {
             val baseUrl = localProperties.getProperty("BASE_URL_PROD")
             val apiKey = localProperties.getProperty("API_KEY_PROD")
             val imageUrl = localProperties.getProperty("IMAGE_BASE_URL")
+            val supabaseKey = localProperties.getProperty("SUPABASE_KEY")
+            val supabaseUrl = localProperties.getProperty("SUPABASE_URL")
             buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             buildConfigField("String", "API_KEY", "\"$apiKey\"")
             buildConfigField("String", "IMAGE_URL", "\"$imageUrl\"")
+            buildConfigField("String", "SUPABASE_KEY", "\"$supabaseKey\"")
+            buildConfigField("String", "SUPABASE_URL", "\"$supabaseUrl\"")
         }
     }
     compileOptions {
@@ -133,4 +141,7 @@ dependencies {
 
     // supabase
     implementation(platform(libs.bom))
+    implementation(libs.postgrest.kt)
+    implementation(libs.storage.kt)
+    implementation(libs.auth.kt)
 }
