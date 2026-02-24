@@ -1,4 +1,4 @@
-package yr.muhammadyaumil.movieapp.ui.login.composables
+package yr.muhammadyaumil.movieapp.core.composables
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

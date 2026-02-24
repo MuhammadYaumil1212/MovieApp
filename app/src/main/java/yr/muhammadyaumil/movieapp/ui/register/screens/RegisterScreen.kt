@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import yr.muhammadyaumil.movieapp.core.composables.AppButton
-import yr.muhammadyaumil.movieapp.ui.login.composables.AppTextfield
+import yr.muhammadyaumil.movieapp.core.composables.AppTextfield
 
 @Suppress("ktlint:standard:function-naming")
 @Composable

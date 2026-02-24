@@ -36,8 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import yr.muhammadyaumil.movieapp.R
 import yr.muhammadyaumil.movieapp.core.composables.AppButton
+import yr.muhammadyaumil.movieapp.core.composables.AppTextfield
 import yr.muhammadyaumil.movieapp.core.composables.SocialAuthButton
-import yr.muhammadyaumil.movieapp.ui.login.composables.AppTextfield
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
