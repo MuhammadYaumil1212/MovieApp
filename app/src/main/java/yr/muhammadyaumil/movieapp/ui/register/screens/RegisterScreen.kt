@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -26,6 +25,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,19 +34,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.flow.StateFlow
 import yr.muhammadyaumil.movieapp.core.composables.AppButton
+import yr.muhammadyaumil.movieapp.core.composables.AppSnackbarController
 import yr.muhammadyaumil.movieapp.core.composables.AppTextfield
+import yr.muhammadyaumil.movieapp.core.composables.SnackbarEvent
+import yr.muhammadyaumil.movieapp.ui.register.event.RegisterEvent
+import yr.muhammadyaumil.movieapp.ui.register.state.RegisterState
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
 fun RegisterScreen(
     modifier: Modifier,
     onBackClick: () -> Unit,
+    onEvent: (onEvent: RegisterEvent) -> Unit,
+    state: StateFlow<RegisterState>,
 ) {
-    val emailState = rememberTextFieldState(initialText = "")
-    val passwordState = rememberTextFieldState(initialText = "")
-    val usernameState = rememberTextFieldState(initialText = "")
-    val confirmPasswordState = rememberTextFieldState(initialText = "")
     val interactionSource = remember { MutableInteractionSource() }
     Scaffold(
         topBar = {
@@ -64,6 +68,12 @@ fun RegisterScreen(
             )
         },
     ) { innerPadding ->
+        LaunchedEffect(state.collectAsState().value.errorMessage) {
+            state.value.errorMessage?.let { msg ->
+                AppSnackbarController.sendEvent(SnackbarEvent(message = msg))
+                onEvent(RegisterEvent.ErrorConsumed)
+            }
+        }
         Box(
             modifier =
                 modifier
@@ -79,16 +89,16 @@ fun RegisterScreen(
                     fontWeight = FontWeight.W700,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                FormTextfield(
-                    emailState = emailState,
-                    passwordState = passwordState,
-                    usernameState = usernameState,
-                    confirmPasswordState = confirmPasswordState,
-                    onRegisterClick = {
-                        println("Login dengan ${emailState.text} dan ${passwordState.text}")
-                    },
-                )
-                Spacer(modifier = Modifier.height(20.dp))
+                with(state.collectAsState()) {
+                    FormTextfield(
+                        emailState = this.value.email,
+                        passwordState = this.value.password,
+                        usernameState = this.value.username,
+                        confirmPasswordState = this.value.confirmPassword,
+                        isRegisterLoading = this.value.isLoading,
+                        onRegisterClick = { onEvent(RegisterEvent.RegisterClicked) },
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
                 LoginNavigation {
                     onBackClick()
@@ -174,7 +184,8 @@ fun FormTextfield(
         Spacer(modifier = Modifier.height(20.dp))
         AppButton(
             onClick = onRegisterClick,
-            text = if (isRegisterLoading) "Loading..." else "Register",
+            text = "Register",
+            isLoading = isRegisterLoading,
         )
     }
 }

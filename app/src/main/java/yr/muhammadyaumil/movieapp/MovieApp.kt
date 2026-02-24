@@ -29,6 +29,7 @@ import yr.muhammadyaumil.movieapp.ui.home.screens.HomeScreen
 import yr.muhammadyaumil.movieapp.ui.login.screens.LoginScreen
 import yr.muhammadyaumil.movieapp.ui.login.viewmodel.LoginViewModel
 import yr.muhammadyaumil.movieapp.ui.register.screens.RegisterScreen
+import yr.muhammadyaumil.movieapp.ui.register.viewmodel.RegisterViewModel
 import yr.muhammadyaumil.movieapp.ui.settings.screens.SettingsScreen
 
 @Suppress("ktlint:standard:function-naming")
@@ -119,9 +120,16 @@ fun MovieApp() {
                 )
             }
             composable(Screen.Register.route) {
-                RegisterScreen(modifier = Modifier, onBackClick = {
-                    navController.popBackStack()
-                })
+                val registerViewModel = hiltViewModel<RegisterViewModel>()
+                val state = registerViewModel.state
+                RegisterScreen(
+                    modifier = Modifier,
+                    onEvent = registerViewModel::onEvent,
+                    state = state,
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
+                )
             }
         }
     }
