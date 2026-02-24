@@ -1,5 +1,6 @@
 [versions]
 agp = "9.0.1"
+bom = "3.3.0"
 kotlin = "2.3.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -37,6 +38,7 @@ uiGraphics = "1.10.3"
 androidx-compose-material = { module = "androidx.compose.material:material", version.ref = "material" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "bom" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

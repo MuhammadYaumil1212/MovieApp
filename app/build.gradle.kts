@@ -130,4 +130,7 @@ dependencies {
 
     // google font
     implementation(libs.androidx.ui.text.google.fonts)
+
+    // supabase
+    implementation(platform(libs.bom))
 }
