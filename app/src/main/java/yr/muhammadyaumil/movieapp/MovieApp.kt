@@ -17,6 +17,7 @@ import yr.muhammadyaumil.movieapp.core.composables.MovieBottomBar
 import yr.muhammadyaumil.movieapp.core.navigation.Screen
 import yr.muhammadyaumil.movieapp.ui.home.screens.HomeScreen
 import yr.muhammadyaumil.movieapp.ui.login.screens.LoginScreen
+import yr.muhammadyaumil.movieapp.ui.register.screens.RegisterScreen
 import yr.muhammadyaumil.movieapp.ui.settings.screens.SettingsScreen
 
 @Suppress("ktlint:standard:function-naming")
@@ -67,7 +68,18 @@ fun MovieApp() {
                 })
             }
             composable(Screen.Login.route) {
-                LoginScreen(modifier = Modifier, onClick = {
+                LoginScreen(
+                    modifier = Modifier,
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
+                    navigateToRegister = {
+                        navController.navigate(Screen.Register.route)
+                    },
+                )
+            }
+            composable(Screen.Register.route) {
+                RegisterScreen(modifier = Modifier, onBackClick = {
                     navController.popBackStack()
                 })
             }

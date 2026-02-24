@@ -44,7 +44,8 @@ import yr.muhammadyaumil.movieapp.ui.login.composables.AppTextfield
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
+    navigateToRegister: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     val emailState = rememberTextFieldState(initialText = "")
     val passwordState = rememberTextFieldState(initialText = "")
@@ -56,7 +57,7 @@ fun LoginScreen(
                 contentDescription = null,
                 modifier =
                     Modifier
-                        .clickable(onClick = onClick)
+                        .clickable(onClick = onBackClick)
                         .padding(16.dp)
                         .indication(
                             interactionSource = interactionSource,
@@ -168,6 +169,66 @@ fun LoginScreen(
                             fontWeight = FontWeight.SemiBold,
                         )
                     }
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+                ElevatedButton(
+                    onClick = { },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors =
+                        ButtonDefaults.elevatedButtonColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onBackground,
+                        ),
+                    elevation =
+                        ButtonDefaults.elevatedButtonElevation(
+                            defaultElevation = 6.dp,
+                        ),
+                    contentPadding = PaddingValues(vertical = 14.dp),
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.ic_apple),
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp),
+                        )
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Text(
+                            text = "Login with Apple",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "Belum mendaftar ?",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Spacer(Modifier.width(5.dp))
+                    Text(
+                        modifier =
+                            Modifier.clickable(onClick = {
+                                navigateToRegister()
+                            }),
+                        text = "Daftar disini",
+                        fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Bold,
+                    )
                 }
             }
         }
