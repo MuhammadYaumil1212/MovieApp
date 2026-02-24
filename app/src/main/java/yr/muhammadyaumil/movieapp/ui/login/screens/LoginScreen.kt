@@ -1,8 +1,6 @@
 package yr.muhammadyaumil.movieapp.ui.login.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.indication
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -26,7 +23,8 @@ import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,10 +32,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.flow.StateFlow
 import yr.muhammadyaumil.movieapp.R
 import yr.muhammadyaumil.movieapp.core.composables.AppButton
+import yr.muhammadyaumil.movieapp.core.composables.AppSnackbarController
 import yr.muhammadyaumil.movieapp.core.composables.AppTextfield
+import yr.muhammadyaumil.movieapp.core.composables.SnackbarEvent
 import yr.muhammadyaumil.movieapp.core.composables.SocialAuthButton
+import yr.muhammadyaumil.movieapp.ui.login.event.LoginEvent
+import yr.muhammadyaumil.movieapp.ui.login.state.LoginState
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
@@ -45,10 +48,9 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     navigateToRegister: () -> Unit,
     onBackClick: () -> Unit,
+    onEvent: (onEvent: LoginEvent) -> Unit,
+    state: StateFlow<LoginState>,
 ) {
-    val emailState = rememberTextFieldState(initialText = "")
-    val passwordState = rememberTextFieldState(initialText = "")
-    val interactionSource = remember { MutableInteractionSource() }
     Scaffold(
         topBar = {
             Icon(
@@ -58,14 +60,16 @@ fun LoginScreen(
                     Modifier
                         .clip(CircleShape)
                         .clickable(onClick = onBackClick)
-                        .padding(16.dp)
-                        .indication(
-                            interactionSource = interactionSource,
-                            indication = null,
-                        ),
+                        .padding(16.dp),
             )
         },
     ) { innerPadding ->
+        LaunchedEffect(state.collectAsState().value.errorMessage) {
+            state.value.errorMessage?.let { msg ->
+                AppSnackbarController.sendEvent(SnackbarEvent(message = msg))
+                onEvent(LoginEvent.ErrorConsumed)
+            }
+        }
         Box(
             modifier =
                 Modifier
@@ -78,16 +82,19 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(20.dp))
                 Text("Login to continue", fontSize = 30.sp, fontWeight = FontWeight.W700)
                 Spacer(modifier = Modifier.height(20.dp))
-                FormTextfield(
-                    emailState = emailState,
-                    passwordState = passwordState,
-                    onForgotPasswordClick = {
-                        // Navigasi ke layar lupa password
-                    },
-                    onLoginClick = {
-                        println("Login dengan ${emailState.text} dan ${passwordState.text}")
-                    },
-                )
+                with(state.collectAsState()) {
+                    FormTextfield(
+                        emailState = this.value.email,
+                        passwordState = this.value.password,
+                        isLoginLoading = this.value.isLoading,
+                        onForgotPasswordClick = {
+                            // Navigasi ke layar lupa password
+                        },
+                        onLoginClick = {
+                            onEvent(LoginEvent.LoginClicked)
+                        },
+                    )
+                }
                 Spacer(modifier = Modifier.height(20.dp))
                 OrDivider()
                 Spacer(modifier = Modifier.height(20.dp))
@@ -196,7 +203,8 @@ fun FormTextfield(
 
         AppButton(
             onClick = onLoginClick,
-            text = if (isLoginLoading) "Loading..." else "Login",
+            isLoading = isLoginLoading,
+            text = "Login",
         )
     }
 }

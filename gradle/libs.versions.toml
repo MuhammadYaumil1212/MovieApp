@@ -1,6 +1,7 @@
 [versions]
 agp = "9.0.1"
 authKt = "3.3.0"
+datastorePreferences = "1.2.0"
 postgrestKt = "3.3.0"
 storageKt = "3.3.0"
 supabaseVersion = "3.3.0"
@@ -40,6 +41,7 @@ uiGraphics = "1.10.3"
 androidx-compose-material = { module = "androidx.compose.material:material", version.ref = "material" }
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 auth-kt = { module = "io.github.jan-tennert.supabase:auth-kt", version.ref = "authKt" }
 bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabaseVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

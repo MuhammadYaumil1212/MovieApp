@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -28,6 +29,7 @@ fun AppButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
     borderColor: Color? = null,
@@ -51,12 +53,19 @@ fun AppButton(
             ),
         contentPadding = PaddingValues(vertical = 14.dp),
     ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.background,
-            fontWeight = FontWeight.SemiBold,
-        )
+        if (!isLoading) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.background,
+                fontWeight = FontWeight.SemiBold,
+            )
+        } else {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.background,
+                modifier = Modifier.size(width = 25.dp, height = 25.dp),
+            )
+        }
     }
 }
 

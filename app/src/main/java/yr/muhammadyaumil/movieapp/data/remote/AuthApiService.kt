@@ -3,7 +3,9 @@ package yr.muhammadyaumil.movieapp.data.remote
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
+import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserInfo
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 interface AuthApiServices {
@@ -20,6 +22,8 @@ interface AuthApiServices {
     suspend fun authWithGoogle()
 
     suspend fun getCurrentUser(): UserInfo?
+
+    suspend fun getSessionStatus(): StateFlow<SessionStatus>
 
     suspend fun logout()
 }
@@ -52,6 +56,8 @@ class AuthApiServicesImpl
         }
 
         override suspend fun getCurrentUser(): UserInfo? = client.auth.currentUserOrNull()
+
+        override suspend fun getSessionStatus(): StateFlow<SessionStatus> = client.auth.sessionStatus
 
         override suspend fun logout() = client.auth.signOut()
     }

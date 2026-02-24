@@ -1,15 +1,68 @@
 package yr.muhammadyaumil.movieapp.ui.login.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import yr.muhammadyaumil.movieapp.ui.login.state.SignInState
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import yr.muhammadyaumil.movieapp.core.utils.handleResource
+import yr.muhammadyaumil.movieapp.domain.repository.AuthRepository
+import yr.muhammadyaumil.movieapp.ui.login.event.LoginEvent
+import yr.muhammadyaumil.movieapp.ui.login.state.LoginState
+import javax.inject.Inject
 
-class LoginViewModel : ViewModel() {
-    private val _state = MutableStateFlow(SignInState())
-    val state: StateFlow<SignInState> = _state.asStateFlow()
-}
+@HiltViewModel
+class LoginViewModel
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+    ) : ViewModel() {
+        private val _state = MutableStateFlow(LoginState())
+        val state: StateFlow<LoginState> = _state.asStateFlow()
+
+        fun onEvent(event: LoginEvent) {
+            when (event) {
+                is LoginEvent.ErrorConsumed -> {
+                    _state.update { it.copy(errorMessage = null) }
+                }
+
+                is LoginEvent.LoginClicked -> {
+                    onLogin()
+                }
+            }
+        }
+
+        private fun onLogin() {
+            val email =
+                _state.value.email.text
+                    .toString()
+            val pass =
+                _state.value.password.text
+                    .toString()
+            if (email.isEmpty() || pass.isEmpty()) {
+                _state.update { it.copy(errorMessage = "Email or Password cannot be blank") }
+                return
+            }
+            viewModelScope.launch {
+                authRepository
+                    .login(email = email, password = pass)
+                    .collect { result ->
+                        _state.handleResource(
+                            resource = result,
+                            onLoading = { currentState ->
+                                currentState.copy(isLoading = true, errorMessage = null)
+                            },
+                            onSuccess = { currentState, data ->
+                                currentState.copy(isLoading = false, errorMessage = null)
+                            },
+                            onError = { currentState, message ->
+                                currentState.copy(isLoading = false, errorMessage = message)
+                            },
+                        )
+                    }
+            }
+        }
+    }

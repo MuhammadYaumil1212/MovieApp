@@ -22,9 +22,14 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import yr.muhammadyaumil.movieapp.core.constants.AppConstants
+import yr.muhammadyaumil.movieapp.data.local.SessionManager
+import yr.muhammadyaumil.movieapp.data.remote.AuthApiServices
+import yr.muhammadyaumil.movieapp.data.remote.AuthApiServicesImpl
 import yr.muhammadyaumil.movieapp.data.remote.MovieApiServices
 import yr.muhammadyaumil.movieapp.data.remote.MovieApiServicesImpl
+import yr.muhammadyaumil.movieapp.data.repository.AuthRepositoryImpl
 import yr.muhammadyaumil.movieapp.data.repository.MovieRepositoryImpl
+import yr.muhammadyaumil.movieapp.domain.repository.AuthRepository
 import yr.muhammadyaumil.movieapp.domain.repository.MovieRepository
 import javax.inject.Singleton
 
@@ -93,4 +98,19 @@ object AppModule {
     @Provides
     @Singleton
     fun provideSupabaseStorage(client: SupabaseClient): Storage = client.storage
+
+    @Provides
+    @Singleton
+    fun provideAuthApiServices(client: SupabaseClient): AuthApiServices = AuthApiServicesImpl(client)
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(
+        authApiServices: AuthApiServices,
+        sessionManager: SessionManager,
+    ): AuthRepository =
+        AuthRepositoryImpl(
+            authRemote = authApiServices,
+            sessionManager = sessionManager,
+        )
 }

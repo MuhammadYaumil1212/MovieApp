@@ -144,4 +144,7 @@ dependencies {
     implementation(libs.postgrest.kt)
     implementation(libs.storage.kt)
     implementation(libs.auth.kt)
+
+    // dataStore
+    implementation(libs.androidx.datastore.preferences)
 }
