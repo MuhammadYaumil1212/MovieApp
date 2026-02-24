@@ -78,7 +78,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(20.dp))
                 Text("Login to continue", fontSize = 30.sp, fontWeight = FontWeight.W700)
                 Spacer(modifier = Modifier.height(20.dp))
-                EmailAndPasswordTextfield(
+                FormTextfield(
                     emailState = emailState,
                     passwordState = passwordState,
                     onForgotPasswordClick = {
@@ -155,7 +155,7 @@ fun OtherLoginMethod() {
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun EmailAndPasswordTextfield(
+fun FormTextfield(
     emailState: TextFieldState,
     passwordState: TextFieldState,
     onForgotPasswordClick: () -> Unit,
@@ -184,7 +184,7 @@ fun EmailAndPasswordTextfield(
             Spacer(modifier = Modifier.height(15.dp))
             Text(
                 modifier = Modifier.clickable(onClick = onForgotPasswordClick),
-                text = "Lupa password?",
+                text = "Forgot Password?",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.W500,
                 fontSize = 12.sp,
