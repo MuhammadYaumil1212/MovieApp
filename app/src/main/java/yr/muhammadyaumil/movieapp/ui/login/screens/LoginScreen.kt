@@ -110,7 +110,7 @@ fun RegisterNavigation(onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "Belum mendaftar ?",
+            text = "Haven't register yet?",
             fontSize = 14.sp,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
@@ -121,7 +121,7 @@ fun RegisterNavigation(onClick: () -> Unit) {
                 Modifier
                     .clip(CircleShape)
                     .clickable(onClick = onClick),
-            text = "Daftar disini",
+            text = "Register Here",
             fontSize = 14.sp,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold,

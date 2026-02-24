@@ -24,6 +24,7 @@ import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -105,19 +106,19 @@ fun LoginNavigation(onClick: () -> Unit) {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        androidx.compose.material.Text(
-            text = "Belum mendaftar ?",
+        Text(
+            text = "Have been register?",
             fontSize = 14.sp,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
         )
         Spacer(Modifier.width(5.dp))
-        androidx.compose.material.Text(
+        Text(
             modifier =
                 Modifier
                     .clip(CircleShape)
                     .clickable(onClick = onClick),
-            text = "Daftar disini",
+            text = "Login Here",
             fontSize = 14.sp,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold,
