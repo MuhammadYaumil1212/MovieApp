@@ -152,7 +152,7 @@ fun HomeScreen(
                         Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
                             MovieRecommendationItem(
                                 title = movies[index]?.title ?: "",
-                                description = movies[index]?.overview ?: "",
+                                description = movies[index]?.overview ?: "No Descriptions",
                                 duration = movies[index]?.releaseDate.formatDate(),
                                 imageUrl = "${BuildConfig.IMAGE_URL}${movies[index]?.posterPath}",
                             )
