@@ -151,7 +151,7 @@ fun HomeScreen(
                     items(movies.size) { index ->
                         Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
                             MovieRecommendationItem(
-                                title = movies[index]?.originalTitle ?: "",
+                                title = movies[index]?.title ?: "",
                                 description = movies[index]?.overview ?: "",
                                 duration = movies[index]?.releaseDate.formatDate(),
                                 imageUrl = "${BuildConfig.IMAGE_URL}${movies[index]?.posterPath}",
