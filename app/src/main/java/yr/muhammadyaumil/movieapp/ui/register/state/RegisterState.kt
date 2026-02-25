@@ -8,5 +8,6 @@ data class RegisterState(
     val password: TextFieldState = TextFieldState(),
     val confirmPassword: TextFieldState = TextFieldState(),
     val isLoading: Boolean = false,
+    val isSuccess: Boolean = false,
     val errorMessage: String? = null,
 )

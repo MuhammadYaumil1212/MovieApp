@@ -32,6 +32,10 @@ class LoginViewModel
                 is LoginEvent.LoginClicked -> {
                     onLogin()
                 }
+
+                is LoginEvent.LoginNavigate -> {
+                    _state.update { it.copy(isSuccess = false) }
+                }
             }
         }
 
@@ -56,7 +60,11 @@ class LoginViewModel
                                 currentState.copy(isLoading = true, errorMessage = null)
                             },
                             onSuccess = { currentState, data ->
-                                currentState.copy(isLoading = false, errorMessage = null)
+                                currentState.copy(
+                                    isLoading = false,
+                                    errorMessage = null,
+                                    isSuccess = true,
+                                )
                             },
                             onError = { currentState, message ->
                                 currentState.copy(isLoading = false, errorMessage = message)

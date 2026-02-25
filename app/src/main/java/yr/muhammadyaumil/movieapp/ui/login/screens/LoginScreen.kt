@@ -13,18 +13,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.input.TextFieldState
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Password
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,10 +48,12 @@ import yr.muhammadyaumil.movieapp.ui.login.state.LoginState
 fun LoginScreen(
     modifier: Modifier = Modifier,
     navigateToRegister: () -> Unit,
+    navigateToHome: () -> Unit,
     onBackClick: () -> Unit,
     onEvent: (onEvent: LoginEvent) -> Unit,
     state: StateFlow<LoginState>,
 ) {
+    val uiState by state.collectAsState()
     Scaffold(
         topBar = {
             Icon(
@@ -70,6 +73,12 @@ fun LoginScreen(
                 onEvent(LoginEvent.ErrorConsumed)
             }
         }
+        LaunchedEffect(uiState.isSuccess) {
+            if (uiState.isSuccess) {
+                navigateToHome()
+                onEvent(LoginEvent.LoginNavigate)
+            }
+        }
         Box(
             modifier =
                 Modifier
@@ -82,14 +91,12 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(20.dp))
                 Text("Login to continue", fontSize = 30.sp, fontWeight = FontWeight.W700)
                 Spacer(modifier = Modifier.height(20.dp))
-                with(state.collectAsState()) {
+                with(uiState) {
                     FormTextfield(
-                        emailState = this.value.email,
-                        passwordState = this.value.password,
-                        isLoginLoading = this.value.isLoading,
-                        onForgotPasswordClick = {
-                            // Navigasi ke layar lupa password
-                        },
+                        emailState = email,
+                        passwordState = password,
+                        isLoginLoading = isLoading,
+                        onForgotPasswordClick = {},
                         onLoginClick = {
                             onEvent(LoginEvent.LoginClicked)
                         },

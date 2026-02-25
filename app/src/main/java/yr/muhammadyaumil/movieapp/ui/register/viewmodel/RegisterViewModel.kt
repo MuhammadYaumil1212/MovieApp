@@ -62,7 +62,11 @@ class RegisterViewModel
                             currentState.copy(isLoading = true, errorMessage = null)
                         },
                         onSuccess = { currentState, data ->
-                            currentState.copy(isLoading = false, errorMessage = null)
+                            currentState.copy(
+                                isLoading = false,
+                                errorMessage = null,
+                                isSuccess = true,
+                            )
                         },
                         onError = { currentState, message ->
                             currentState.copy(isLoading = false, errorMessage = message)

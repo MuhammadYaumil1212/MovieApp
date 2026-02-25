@@ -117,6 +117,7 @@ fun MovieApp() {
                     },
                     onEvent = loginViewModel::onEvent,
                     state = state,
+                    navigateToHome = { navController.navigate(Screen.Home.route) },
                 )
             }
             composable(Screen.Register.route) {

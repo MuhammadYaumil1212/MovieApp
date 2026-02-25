@@ -6,5 +6,6 @@ data class LoginState(
     val email: TextFieldState = TextFieldState(),
     val password: TextFieldState = TextFieldState(),
     val isLoading: Boolean = false,
+    val isSuccess: Boolean = false,
     val errorMessage: String? = null,
 )
