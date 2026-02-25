@@ -111,6 +111,5 @@ object AppModule {
     ): AuthRepository =
         AuthRepositoryImpl(
             authRemote = authApiServices,
-            sessionManager = sessionManager,
         )
 }

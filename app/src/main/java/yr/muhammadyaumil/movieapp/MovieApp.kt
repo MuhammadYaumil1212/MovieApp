@@ -26,6 +26,7 @@ import yr.muhammadyaumil.movieapp.core.composables.MovieBottomBar
 import yr.muhammadyaumil.movieapp.core.composables.ObserveAsEvents
 import yr.muhammadyaumil.movieapp.core.navigation.Screen
 import yr.muhammadyaumil.movieapp.ui.home.screens.HomeScreen
+import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 import yr.muhammadyaumil.movieapp.ui.login.screens.LoginScreen
 import yr.muhammadyaumil.movieapp.ui.login.viewmodel.LoginViewModel
 import yr.muhammadyaumil.movieapp.ui.register.screens.RegisterScreen
@@ -95,9 +96,15 @@ fun MovieApp() {
             modifier = Modifier.padding(innerPadding),
         ) {
             composable(Screen.Home.route) {
-                HomeScreen(modifier = Modifier, navigateToLogin = {
-                    navController.navigate(Screen.Login.route)
-                })
+                val homeViewModel = hiltViewModel<HomeViewModel>()
+                HomeScreen(
+                    modifier = Modifier,
+                    navigateToLogin = {
+                        navController.navigate(Screen.Login.route)
+                    },
+                    state = homeViewModel.state,
+                    onEvent = homeViewModel::onEvent,
+                )
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(modifier = Modifier, navigateToLogin = {
@@ -106,7 +113,6 @@ fun MovieApp() {
             }
             composable(Screen.Login.route) {
                 val loginViewModel = hiltViewModel<LoginViewModel>()
-                val state = loginViewModel.state
                 LoginScreen(
                     modifier = Modifier,
                     onBackClick = {
@@ -116,7 +122,7 @@ fun MovieApp() {
                         navController.navigate(Screen.Register.route)
                     },
                     onEvent = loginViewModel::onEvent,
-                    state = state,
+                    state = loginViewModel.state,
                     navigateToHome = { navController.navigate(Screen.Home.route) },
                 )
             }

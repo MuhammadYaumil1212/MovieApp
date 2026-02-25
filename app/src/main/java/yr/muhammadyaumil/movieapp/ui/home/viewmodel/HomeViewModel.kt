@@ -3,13 +3,16 @@ package yr.muhammadyaumil.movieapp.ui.home.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import yr.muhammadyaumil.movieapp.core.state.Resources
+import yr.muhammadyaumil.movieapp.domain.repository.AuthRepository
 import yr.muhammadyaumil.movieapp.domain.repository.MovieRepository
+import yr.muhammadyaumil.movieapp.ui.home.event.HomeEvent
 import yr.muhammadyaumil.movieapp.ui.home.state.HomeState
 import javax.inject.Inject
 
@@ -18,6 +21,7 @@ class HomeViewModel
     @Inject
     constructor(
         private val movieRepository: MovieRepository,
+        private val authRepository: AuthRepository,
     ) : ViewModel() {
         private val _state = MutableStateFlow(HomeState())
         val state: StateFlow<HomeState> = _state.asStateFlow()
@@ -25,6 +29,75 @@ class HomeViewModel
         init {
             getMovies()
             getNowPlayingMovies()
+            getCurrentUserInfo()
+            observeSession()
+        }
+
+        fun onEvent(event: HomeEvent) {
+            when (event) {
+                is HomeEvent.ErrorConsumed -> {
+                    _state.update { it.copy(errorMessage = null) }
+                }
+
+                is HomeEvent.RefreshUi -> {
+                    getMovies()
+                    getNowPlayingMovies()
+                    observeSession()
+                }
+            }
+        }
+
+        private fun observeSession() {
+            viewModelScope.launch {
+                authRepository.getSessionStatus().collect { resources ->
+                    when (resources) {
+                        is Resources.Success -> {
+                            val status = resources.data
+                            _state.update { currentState ->
+                                currentState.copy(
+                                    isLoading = false,
+                                    sessionStatus = status,
+                                    isUserLoggedIn = status is SessionStatus.Authenticated,
+                                )
+                            }
+                            if (status is SessionStatus.Authenticated) {
+                                getCurrentUserInfo()
+                            } else {
+                                _state.update { it.copy(userName = null) }
+                            }
+                        }
+
+                        is Resources.Error -> {
+                            _state.update {
+                                it.copy(isLoading = false, errorMessage = resources.message)
+                            }
+                        }
+
+                        is Resources.Loading -> {
+                            _state.update { it.copy(isLoading = true) }
+                        }
+                    }
+                }
+            }
+        }
+
+        private fun getCurrentUserInfo() {
+            viewModelScope.launch {
+                authRepository.getUserInfo().collect { userResources ->
+                    when (userResources) {
+                        is Resources.Success -> {
+                            val user = userResources.data
+                            val name = user?.email
+                            _state.update { it.copy(userName = name) }
+                        }
+
+                        is Resources.Error -> {
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
         }
 
         private fun getMovies() =

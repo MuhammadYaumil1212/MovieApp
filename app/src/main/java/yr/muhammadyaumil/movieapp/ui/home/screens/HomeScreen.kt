@@ -3,7 +3,9 @@ package yr.muhammadyaumil.movieapp.ui.home.screens
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,11 +31,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import kotlinx.coroutines.flow.StateFlow
 import yr.muhammadyaumil.movieapp.BuildConfig
 import yr.muhammadyaumil.movieapp.core.utils.formatDate
 import yr.muhammadyaumil.movieapp.core.utils.formatRating
 import yr.muhammadyaumil.movieapp.ui.home.composables.MovieRecentItem
 import yr.muhammadyaumil.movieapp.ui.home.composables.MovieRecommendationItem
+import yr.muhammadyaumil.movieapp.ui.home.event.HomeEvent
+import yr.muhammadyaumil.movieapp.ui.home.state.HomeState
 import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 
 @Suppress("ktlint:standard:function-naming")
@@ -41,6 +46,8 @@ import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 fun HomeScreen(
     modifier: Modifier,
     navigateToLogin: () -> Unit,
+    onEvent: (onEvent: HomeEvent) -> Unit,
+    state: StateFlow<HomeState>,
 ) {
     val homeViewModel: HomeViewModel = hiltViewModel()
     val state by homeViewModel.state.collectAsState()
@@ -69,12 +76,26 @@ fun HomeScreen(
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     item {
-                        Box(
+                        Row(
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
                                     .padding(horizontal = 16.dp, vertical = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
+                            Column {
+                                Text(
+                                    text = "Welcome back,",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color.Gray,
+                                )
+                                Text(
+                                    text = state.userName ?: "Guest",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            }
                             Icon(
                                 imageVector = Icons.Outlined.AccountCircle,
                                 contentDescription = null,
@@ -83,8 +104,7 @@ fun HomeScreen(
                                     Modifier
                                         .size(40.dp)
                                         .clip(RoundedCornerShape(10.dp))
-                                        .clickable { navigateToLogin() }
-                                        .align(Alignment.CenterEnd),
+                                        .clickable { navigateToLogin() },
                             )
                         }
                     }
@@ -118,7 +138,6 @@ fun HomeScreen(
                             }
                         }
                     }
-
                     item {
                         Text(
                             modifier =
@@ -129,7 +148,6 @@ fun HomeScreen(
                             style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp),
                         )
                     }
-
                     items(movies.size) { index ->
                         Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
                             MovieRecommendationItem(
