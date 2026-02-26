@@ -42,7 +42,15 @@ class HomeViewModel
                 is HomeEvent.RefreshUi -> {
                     getMovies()
                     getNowPlayingMovies()
-                    observeSession()
+                }
+
+                is HomeEvent.OnSessionExpired -> {
+                    _state.update {
+                        it.copy(
+                            userName = null,
+                            isUserLoggedIn = false,
+                        )
+                    }
                 }
             }
         }
@@ -53,17 +61,17 @@ class HomeViewModel
                     when (resources) {
                         is Resources.Success -> {
                             val status = resources.data
+                            val isAuthenticated = status is SessionStatus.Authenticated
                             _state.update { currentState ->
                                 currentState.copy(
                                     isLoading = false,
                                     sessionStatus = status,
                                     isUserLoggedIn = status is SessionStatus.Authenticated,
+                                    userName = if (isAuthenticated) currentState.userName else null,
                                 )
                             }
-                            if (status is SessionStatus.Authenticated) {
+                            if (isAuthenticated) {
                                 getCurrentUserInfo()
-                            } else {
-                                _state.update { it.copy(userName = null) }
                             }
                         }
 
@@ -156,6 +164,18 @@ class HomeViewModel
                                 )
                             }
                         }
+                    }
+                }
+            }
+
+        private fun logout() =
+            viewModelScope.launch {
+                authRepository.logout().collect { resources ->
+                    _state.update {
+                        it.copy(
+                            isLoading = false,
+                            errorMessage = resources.message,
+                        )
                     }
                 }
             }
