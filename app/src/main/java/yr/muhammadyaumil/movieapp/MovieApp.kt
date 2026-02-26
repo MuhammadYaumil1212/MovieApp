@@ -29,6 +29,8 @@ import yr.muhammadyaumil.movieapp.ui.home.screens.HomeScreen
 import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 import yr.muhammadyaumil.movieapp.ui.login.screens.LoginScreen
 import yr.muhammadyaumil.movieapp.ui.login.viewmodel.LoginViewModel
+import yr.muhammadyaumil.movieapp.ui.profile.screens.ProfileScreen
+import yr.muhammadyaumil.movieapp.ui.profile.viewmodel.ProfileViewModel
 import yr.muhammadyaumil.movieapp.ui.register.screens.RegisterScreen
 import yr.muhammadyaumil.movieapp.ui.register.viewmodel.RegisterViewModel
 import yr.muhammadyaumil.movieapp.ui.settings.screens.SettingsScreen
@@ -102,6 +104,9 @@ fun MovieApp() {
                     navigateToLogin = {
                         navController.navigate(Screen.Login.route)
                     },
+                    navigateToProfile = {
+                        navController.navigate(Screen.Profile.route)
+                    },
                     state = homeViewModel.state,
                     onEvent = homeViewModel::onEvent,
                 )
@@ -134,6 +139,17 @@ fun MovieApp() {
                     onEvent = registerViewModel::onEvent,
                     state = state,
                     onBackClick = {
+                        navController.popBackStack()
+                    },
+                )
+            }
+            composable(Screen.Profile.route) {
+                val profileViewModel = hiltViewModel<ProfileViewModel>()
+                ProfileScreen(
+                    modifier = Modifier,
+                    onEvent = profileViewModel::onEvent,
+                    state = profileViewModel.state,
+                    navigateBack = {
                         navController.popBackStack()
                     },
                 )

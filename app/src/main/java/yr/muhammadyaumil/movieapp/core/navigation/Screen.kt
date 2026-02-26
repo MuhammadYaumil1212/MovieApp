@@ -23,6 +23,8 @@ sealed class Screen(
 
     object Register : Screen("register", "register", Icons.Filled.Person, Icons.Outlined.Person)
 
+    object Profile : Screen("profile", "profile", Icons.Filled.Person, Icons.Outlined.Person)
+
     companion object {
         val bottomNavItems = listOf(Home, Settings)
     }

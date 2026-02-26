@@ -46,6 +46,7 @@ import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 fun HomeScreen(
     modifier: Modifier,
     navigateToLogin: () -> Unit,
+    navigateToProfile: () -> Unit,
     onEvent: (onEvent: HomeEvent) -> Unit,
     state: StateFlow<HomeState>,
 ) {
@@ -104,7 +105,13 @@ fun HomeScreen(
                                     Modifier
                                         .size(40.dp)
                                         .clip(RoundedCornerShape(10.dp))
-                                        .clickable { navigateToLogin() },
+                                        .clickable {
+                                            if (state.isUserLoggedIn == false) {
+                                                navigateToLogin()
+                                            } else {
+                                                navigateToProfile()
+                                            }
+                                        },
                             )
                         }
                     }
