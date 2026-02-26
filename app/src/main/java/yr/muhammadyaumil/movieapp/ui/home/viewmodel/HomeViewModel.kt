@@ -66,7 +66,7 @@ class HomeViewModel
                                 currentState.copy(
                                     isLoading = false,
                                     sessionStatus = status,
-                                    isUserLoggedIn = status is SessionStatus.Authenticated,
+                                    isUserLoggedIn = isAuthenticated,
                                     userName = if (isAuthenticated) currentState.userName else null,
                                 )
                             }
