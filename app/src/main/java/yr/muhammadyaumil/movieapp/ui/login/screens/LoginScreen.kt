@@ -2,7 +2,6 @@ package yr.muhammadyaumil.movieapp.ui.login.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +20,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,9 +35,8 @@ import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.StateFlow
 import yr.muhammadyaumil.movieapp.R
 import yr.muhammadyaumil.movieapp.core.composables.AppButton
-import yr.muhammadyaumil.movieapp.core.composables.AppSnackbarController
+import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
 import yr.muhammadyaumil.movieapp.core.composables.AppTextfield
-import yr.muhammadyaumil.movieapp.core.composables.SnackbarEvent
 import yr.muhammadyaumil.movieapp.core.composables.SocialAuthButton
 import yr.muhammadyaumil.movieapp.ui.login.event.LoginEvent
 import yr.muhammadyaumil.movieapp.ui.login.state.LoginState
@@ -54,8 +51,19 @@ fun LoginScreen(
     onEvent: (onEvent: LoginEvent) -> Unit,
     state: StateFlow<LoginState>,
 ) {
-    val uiState by state.collectAsState()
-    Scaffold(
+    val state by state.collectAsState()
+    LaunchedEffect(state.isSuccess) {
+        if (state.isSuccess) {
+            navigateToHome()
+            onEvent(LoginEvent.ResetSuccessState)
+        }
+    }
+    AppScaffold(
+        modifier = modifier,
+        isLoading = false,
+        errorMessage = state.errorMessage,
+        showErrorTextCenter = state.errorMessage != null,
+        onErrorConsumed = { onEvent(LoginEvent.DismissError) },
         topBar = {
             IconButton(onClick = { onBackClick() }) {
                 Icon(
@@ -64,46 +72,32 @@ fun LoginScreen(
                 )
             }
         },
-    ) { innerPadding ->
-        LaunchedEffect(state.collectAsState().value.errorMessage) {
-            state.value.errorMessage?.let { msg ->
-                AppSnackbarController.sendEvent(SnackbarEvent(message = msg))
-                onEvent(LoginEvent.ErrorConsumed)
+    ) {
+        Column {
+            Text(
+                text = "Login to continue",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.W700,
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            with(state) {
+                FormTextfield(
+                    emailState = email,
+                    passwordState = password,
+                    isLoginLoading = isLoading,
+                    onForgotPasswordClick = {},
+                    onLoginClick = {
+                        onEvent(LoginEvent.SubmitLogin)
+                    },
+                )
             }
-        }
-        LaunchedEffect(uiState.isSuccess) {
-            if (uiState.isSuccess) {
-                navigateToHome()
-                onEvent(LoginEvent.LoginNavigate)
-            }
-        }
-        Box(
-            modifier =
-                Modifier
-                    .padding(innerPadding)
-                    .padding(16.dp),
-        ) {
-            Column {
-                Text("Login to continue", fontSize = 30.sp, fontWeight = FontWeight.W700)
-                Spacer(modifier = Modifier.height(20.dp))
-                with(uiState) {
-                    FormTextfield(
-                        emailState = email,
-                        passwordState = password,
-                        isLoginLoading = isLoading,
-                        onForgotPasswordClick = {},
-                        onLoginClick = {
-                            onEvent(LoginEvent.LoginClicked)
-                        },
-                    )
-                }
-                Spacer(modifier = Modifier.height(20.dp))
-                OrDivider()
-                OtherLoginMethod()
-                Spacer(modifier = Modifier.weight(1f))
-                RegisterNavigation {
-                    navigateToRegister()
-                }
+            Spacer(modifier = Modifier.height(20.dp))
+            OrDivider()
+            Spacer(modifier = Modifier.height(20.dp))
+            OtherLoginMethod()
+            Spacer(modifier = Modifier.weight(2f))
+            RegisterNavigation {
+                navigateToRegister()
             }
         }
     }

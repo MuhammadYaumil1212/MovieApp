@@ -25,15 +25,15 @@ class LoginViewModel
 
         fun onEvent(event: LoginEvent) {
             when (event) {
-                is LoginEvent.ErrorConsumed -> {
+                is LoginEvent.DismissError -> {
                     _state.update { it.copy(errorMessage = null) }
                 }
 
-                is LoginEvent.LoginClicked -> {
+                is LoginEvent.SubmitLogin -> {
                     onLogin()
                 }
 
-                is LoginEvent.LoginNavigate -> {
+                is LoginEvent.ResetSuccessState -> {
                     _state.update { it.copy(isSuccess = false) }
                 }
             }
