@@ -19,6 +19,7 @@ import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -56,15 +57,12 @@ fun LoginScreen(
     val uiState by state.collectAsState()
     Scaffold(
         topBar = {
-            Icon(
-                imageVector = Icons.Default.ArrowBackIosNew,
-                contentDescription = null,
-                modifier =
-                    Modifier
-                        .clip(CircleShape)
-                        .clickable(onClick = onBackClick)
-                        .padding(16.dp),
-            )
+            IconButton(onClick = { onBackClick() }) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBackIosNew,
+                    contentDescription = null,
+                )
+            }
         },
     ) { innerPadding ->
         LaunchedEffect(state.collectAsState().value.errorMessage) {
