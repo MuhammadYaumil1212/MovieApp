@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.StateFlow
@@ -96,6 +97,7 @@ fun RegisterScreen(
                         usernameState = this.value.username,
                         confirmPasswordState = this.value.confirmPassword,
                         isRegisterLoading = this.value.isLoading,
+                        phoneNumberState = this.value.phoneNumber,
                         onRegisterClick = { onEvent(RegisterEvent.RegisterClicked) },
                     )
                 }
@@ -142,6 +144,7 @@ fun FormTextfield(
     emailState: TextFieldState,
     passwordState: TextFieldState,
     usernameState: TextFieldState,
+    phoneNumberState: TextFieldState,
     confirmPasswordState: TextFieldState,
     onRegisterClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -160,6 +163,15 @@ fun FormTextfield(
             leadingIcon = Icons.Outlined.PersonOutline,
             textfieldState = usernameState,
             hint = "Username",
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        AppTextfield(
+            modifier = Modifier.fillMaxWidth(),
+            leadingIcon = Icons.Outlined.PersonOutline,
+            textfieldState = phoneNumberState,
+            keyboardType = KeyboardType.Number,
+            hint = "Phone Number",
         )
 
         Spacer(modifier = Modifier.height(20.dp))

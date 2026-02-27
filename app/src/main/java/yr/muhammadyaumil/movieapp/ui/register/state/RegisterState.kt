@@ -6,6 +6,7 @@ data class RegisterState(
     val email: TextFieldState = TextFieldState(),
     val username: TextFieldState = TextFieldState(),
     val password: TextFieldState = TextFieldState(),
+    val phoneNumber: TextFieldState = TextFieldState(),
     val confirmPassword: TextFieldState = TextFieldState(),
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,

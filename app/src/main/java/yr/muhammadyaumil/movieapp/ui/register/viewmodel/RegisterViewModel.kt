@@ -41,12 +41,19 @@ class RegisterViewModel
             val pass =
                 _state.value.password.text
                     .toString()
+            val username =
+                _state.value.username.text
+                    .toString()
+
+            val phoneNumber =
+                _state.value.phoneNumber.text
+                    .toString()
             val confirmPass =
                 _state.value.confirmPassword.text
                     .toString()
-            if (email.isEmpty() || pass.isEmpty() || confirmPass.isEmpty()) {
+            if (email.isEmpty() || pass.isEmpty() || confirmPass.isEmpty() || username.isEmpty() || phoneNumber.isEmpty()) {
                 _state.value =
-                    _state.value.copy(errorMessage = "Email, Password or Confirm Password cannot be blank")
+                    _state.value.copy(errorMessage = "Email, Password, Username,Phone Number or Confirm Password cannot be blank")
                 return
             }
             if (!pass.contains(confirmPass)) {
@@ -55,24 +62,30 @@ class RegisterViewModel
                 return
             }
             viewModelScope.launch {
-                authRepository.register(email, pass).collect { result ->
-                    _state.handleResource(
-                        resource = result,
-                        onLoading = { currentState ->
-                            currentState.copy(isLoading = true, errorMessage = null)
-                        },
-                        onSuccess = { currentState, data ->
-                            currentState.copy(
-                                isLoading = false,
-                                errorMessage = null,
-                                isSuccess = true,
-                            )
-                        },
-                        onError = { currentState, message ->
-                            currentState.copy(isLoading = false, errorMessage = message)
-                        },
-                    )
-                }
+                authRepository
+                    .register(
+                        email = email,
+                        password = pass,
+                        username = username,
+                        phoneNumber = phoneNumber,
+                    ).collect { resources ->
+                        _state.handleResource(
+                            resource = resources,
+                            onLoading = { currentState ->
+                                currentState.copy(isLoading = true, errorMessage = null)
+                            },
+                            onSuccess = { currentState, data ->
+                                currentState.copy(
+                                    isLoading = false,
+                                    errorMessage = null,
+                                    isSuccess = true,
+                                )
+                            },
+                            onError = { currentState, message ->
+                                currentState.copy(isLoading = false, errorMessage = message)
+                            },
+                        )
+                    }
             }
         }
     }
