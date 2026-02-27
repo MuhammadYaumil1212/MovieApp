@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,7 +16,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Password
-import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -82,13 +82,10 @@ fun LoginScreen(
         Box(
             modifier =
                 Modifier
-                    .fillMaxSize()
-                    .padding(16.dp)
-                    .padding(innerPadding),
-            contentAlignment = Alignment.Center,
+                    .padding(innerPadding)
+                    .padding(16.dp),
         ) {
             Column {
-                Spacer(modifier = Modifier.height(20.dp))
                 Text("Login to continue", fontSize = 30.sp, fontWeight = FontWeight.W700)
                 Spacer(modifier = Modifier.height(20.dp))
                 with(uiState) {
@@ -104,7 +101,6 @@ fun LoginScreen(
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 OrDivider()
-                Spacer(modifier = Modifier.height(20.dp))
                 OtherLoginMethod()
                 Spacer(modifier = Modifier.weight(1f))
                 RegisterNavigation {
@@ -124,7 +120,7 @@ fun RegisterNavigation(onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            text = "Haven't register yet?",
+            text = "Not registered yet ?",
             fontSize = 14.sp,
             color = MaterialTheme.colorScheme.onBackground,
             fontWeight = FontWeight.Bold,
@@ -226,21 +222,23 @@ fun OrDivider(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.weight(1f),
             thickness = 1.dp,
+            color = DividerDefaults.color,
         )
 
         Text(
             text = text,
-            modifier = Modifier.padding(horizontal = 12.dp),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+            modifier = Modifier.padding(horizontal = 10.dp),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
         )
 
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.weight(1f),
             thickness = 1.dp,
+            color = DividerDefaults.color,
         )
     }
 }
