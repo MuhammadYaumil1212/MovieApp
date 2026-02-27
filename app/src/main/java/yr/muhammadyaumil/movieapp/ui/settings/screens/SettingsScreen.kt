@@ -53,9 +53,9 @@ fun SettingsScreen(
     navigateToLogin: () -> Unit,
     navigateToProfile: () -> Unit,
     onEvent: (onEvent: SettingsEvent) -> Unit,
-    stateFlow: StateFlow<SettingsState>,
+    state: StateFlow<SettingsState>,
 ) {
-    val state by stateFlow.collectAsState()
+    val state by state.collectAsState()
 
     val listItemAkun =
         remember {
