@@ -2,13 +2,10 @@ package yr.muhammadyaumil.movieapp.ui.settings.screens
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.calculateEndPadding
-import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,16 +28,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import kotlinx.coroutines.flow.StateFlow
 import yr.muhammadyaumil.movieapp.core.composables.AppButton
@@ -50,7 +46,7 @@ import yr.muhammadyaumil.movieapp.ui.settings.composables.SettingsItem
 import yr.muhammadyaumil.movieapp.ui.settings.event.SettingsEvent
 import yr.muhammadyaumil.movieapp.ui.settings.state.SettingsState
 
-data class SettingsItem(
+data class SettingsMenuOption(
     val icon: ImageVector? = null,
     val title: String,
 )
@@ -64,196 +60,200 @@ fun SettingsScreen(
     onEvent: (onEvent: SettingsEvent) -> Unit,
     state: StateFlow<SettingsState>,
 ) {
-    val state = state.collectAsState().value
+    val state by state.collectAsState()
+
     val listItemAkun =
-        listOf(
-            SettingsItem(icon = Icons.Outlined.Person, title = "Edit Profile"),
-            SettingsItem(icon = Icons.Outlined.ConfirmationNumber, title = "My Ticket"),
-            SettingsItem(icon = Icons.Outlined.Link, title = "Linked Account"),
-        )
+        remember {
+            listOf(
+                SettingsMenuOption(icon = Icons.Outlined.Person, title = "Edit Profile"),
+                SettingsMenuOption(icon = Icons.Outlined.ConfirmationNumber, title = "My Ticket"),
+                SettingsMenuOption(icon = Icons.Outlined.Link, title = "Linked Account"),
+            )
+        }
 
     val listItemFilm =
-        listOf(
-            SettingsItem(icon = Icons.Outlined.Movie, title = "My Films"),
-            SettingsItem(icon = Icons.Outlined.VideoLibrary, title = "Watchlist"),
-            SettingsItem(icon = Icons.Outlined.FavoriteBorder, title = "Favorite"),
-        )
-    Scaffold { innerPadding ->
+        remember {
+            listOf(
+                SettingsMenuOption(icon = Icons.Outlined.Movie, title = "My Films"),
+                SettingsMenuOption(icon = Icons.Outlined.VideoLibrary, title = "Watchlist"),
+                SettingsMenuOption(icon = Icons.Outlined.FavoriteBorder, title = "Favorite"),
+            )
+        }
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            LaunchedEffect(state.errorMessage) {
-                state.errorMessage?.let { msg ->
-                    AppSnackbarController.sendEvent(SnackbarEvent(message = msg))
-                    onEvent(SettingsEvent.ErrorConsumed)
-                }
-            }
+    LaunchedEffect(state.errorMessage) {
+        state.errorMessage?.let { msg ->
+            AppSnackbarController.sendEvent(SnackbarEvent(message = msg))
+            onEvent(SettingsEvent.ErrorConsumed)
+        }
+    }
+
+    Scaffold { innerPadding ->
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                    .padding(innerPadding),
+        ) {
             when {
                 state.isLoading -> {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                 }
 
-                state.errorMessage != null -> {
+                state.errorMessage != null && !state.isAuthenticated -> {
                     Text(
-                        text = state.errorMessage,
-                        color = Color.Red,
+                        text = state.errorMessage!!,
+                        color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.align(Alignment.Center),
                     )
                 }
 
                 else -> {
-                    Column {
-                        Box(
+                    Column(
+                        modifier =
+                            Modifier
+                                .fillMaxSize(),
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             modifier =
                                 Modifier
-                                    .padding(
-                                        start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
-                                        end =
-                                            innerPadding.calculateEndPadding(
-                                                LayoutDirection.Rtl,
-                                            ),
-                                    ).padding(start = 16.dp, end = 16.dp)
-                                    .clickable(onClick = if (!state.isAuthenticated) navigateToLogin else navigateToProfile),
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .border(
+                                        width = 1.dp,
+                                        color = MaterialTheme.colorScheme.outlineVariant,
+                                        shape = RoundedCornerShape(8.dp),
+                                    ).clickable {
+                                        if (!state.isAuthenticated) navigateToLogin() else navigateToProfile()
+                                    }.padding(16.dp),
                         ) {
-                            Row(
-                                modifier =
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .border(
-                                            width = 1.dp,
-                                            color = MaterialTheme.colorScheme.outline,
-                                            shape = RoundedCornerShape(8.dp),
-                                        ).padding(vertical = 8.dp),
-                            ) {
-                                if (!state.isAuthenticated) {
-                                    Icon(
-                                        Icons.Outlined.AccountCircle,
-                                        contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.secondary,
-                                        modifier =
-                                            Modifier
-                                                .padding(horizontal = 10.dp, vertical = 10.dp)
-                                                .size(40.dp)
-                                                .clip(RoundedCornerShape(10.dp)),
+                            if (!state.isAuthenticated) {
+                                Icon(
+                                    imageVector = Icons.Outlined.AccountCircle,
+                                    contentDescription = "Profile Icon",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier =
+                                        Modifier
+                                            .size(48.dp)
+                                            .clip(RoundedCornerShape(8.dp)),
+                                )
+                                Spacer(modifier = Modifier.size(12.dp))
+                                Column {
+                                    Text(
+                                        text = "Login or Register Account",
+                                        style = MaterialTheme.typography.titleSmall,
+                                        fontWeight = FontWeight.Bold,
                                     )
-                                    Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
-                                        Text(
-                                            "Login or Register Account",
-                                            fontSize = 13.sp,
-                                            fontWeight = FontWeight.Bold,
-                                        )
-                                        Text(
-                                            "Login or register with a registered account",
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.W500,
-                                            color = MaterialTheme.colorScheme.secondary,
-                                        )
-                                    }
-                                } else {
-                                    AsyncImage(
-                                        model = "https://image.tmdb.org/t/p/w200/uje1ecKMnNpZp0at5TxlvVgVXqI.jpg",
-                                        contentDescription = null,
-                                        modifier =
-                                            Modifier
-                                                .padding(horizontal = 10.dp)
-                                                .size(60.dp)
-                                                .clip(RoundedCornerShape(10.dp)),
-                                        contentScale = ContentScale.Crop,
+                                    Text(
+                                        text = "Login or register with a registered account",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     )
-                                    Column(verticalArrangement = Arrangement.spacedBy(0.dp)) {
-                                        Text(
-                                            state.name,
-                                            fontSize = 13.sp,
-                                            fontWeight = FontWeight.Bold,
-                                        )
-                                        Text(
-                                            state.phoneNumber,
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.W500,
-                                            color =
-                                                if (!state.phoneNumber.contains(
-                                                        "Please verify your phone number",
-                                                    )
-                                                ) {
-                                                    MaterialTheme.colorScheme.secondary
-                                                } else {
-                                                    Color.Red
-                                                },
-                                        )
-                                    }
+                                }
+                            } else {
+                                AsyncImage(
+                                    model = "https://image.tmdb.org/t/p/w200/uje1ecKMnNpZp0at5TxlvVgVXqI.jpg",
+                                    contentDescription = "Profile Picture",
+                                    contentScale = ContentScale.Crop,
+                                    modifier =
+                                        Modifier
+                                            .size(48.dp)
+                                            .clip(RoundedCornerShape(8.dp)),
+                                )
+                                Spacer(modifier = Modifier.size(12.dp))
+                                Column {
+                                    Text(
+                                        text = state.name,
+                                        style = MaterialTheme.typography.titleSmall,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                    Text(
+                                        text = state.phoneNumber,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color =
+                                            if (!state.phoneNumber.contains("Please verify")) {
+                                                MaterialTheme.colorScheme.onSurfaceVariant
+                                            } else {
+                                                MaterialTheme.colorScheme.error
+                                            },
+                                    )
                                 }
                             }
                         }
-                        Spacer(modifier = Modifier.height(20.dp))
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
                         Text(
                             text = "Account",
-                            fontSize = 14.sp,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(start = 16.dp),
+                            modifier = Modifier.padding(bottom = 8.dp),
                         )
-                        Box(modifier = modifier.padding(16.dp)) {
-                            Column(
-                                modifier =
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .border(
-                                            width = 1.dp,
-                                            color = MaterialTheme.colorScheme.outline,
-                                            shape = RoundedCornerShape(8.dp),
-                                        ).padding(vertical = 8.dp),
-                            ) {
-                                listItemAkun.forEach { item ->
-                                    SettingsItem(
-                                        leadingIcon = item.icon,
-                                        title = item.title,
-                                    )
-                                }
+                        Column(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .border(
+                                        width = 1.dp,
+                                        color = MaterialTheme.colorScheme.outlineVariant,
+                                        shape = RoundedCornerShape(8.dp),
+                                    ).padding(vertical = 4.dp),
+                        ) {
+                            listItemAkun.forEach { item ->
+                                SettingsItem(
+                                    leadingIcon = item.icon,
+                                    title = item.title,
+                                )
                             }
                         }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
                         Text(
                             text = "Film",
-                            fontSize = 14.sp,
+                            style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(start = 16.dp),
+                            modifier = Modifier.padding(bottom = 8.dp),
                         )
-                        Box(modifier = modifier.padding(16.dp)) {
-                            Column(
-                                modifier =
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .border(
-                                            width = 1.dp,
-                                            color = MaterialTheme.colorScheme.outline,
-                                            shape = RoundedCornerShape(8.dp),
-                                        ).padding(vertical = 8.dp),
-                            ) {
-                                listItemFilm.forEach { item ->
-                                    SettingsItem(
-                                        leadingIcon = item.icon,
-                                        title = item.title,
-                                    )
-                                }
+                        Column(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .border(
+                                        width = 1.dp,
+                                        color = MaterialTheme.colorScheme.outlineVariant,
+                                        shape = RoundedCornerShape(8.dp),
+                                    ).padding(vertical = 4.dp),
+                        ) {
+                            listItemFilm.forEach { item ->
+                                SettingsItem(
+                                    leadingIcon = item.icon,
+                                    title = item.title,
+                                )
                             }
                         }
+
                         Spacer(modifier = Modifier.weight(1f))
+
                         if (state.isAuthenticated) {
                             AppButton(
-                                modifier = Modifier.padding(start = 16.dp, end = 16.dp),
+                                modifier = Modifier.fillMaxWidth(),
                                 onClick = { onEvent(SettingsEvent.onLogout) },
                                 text = "Logout",
                                 isLoading = state.logoutLoading,
-                                containerColor = Color.Red,
-                                contentColor = Color.White,
+                                containerColor = MaterialTheme.colorScheme.error,
+                                contentColor = MaterialTheme.colorScheme.onError,
                             )
                         }
-                        Spacer(modifier = Modifier.height(20.dp))
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
                         Text(
-                            "Version 1.0 (Comedy)",
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.W200,
-                            modifier =
-                                Modifier.align(
-                                    Alignment.CenterHorizontally,
-                                ),
+                            text = "Version 1.0 (Comedy)",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
                         )
                     }
                 }
