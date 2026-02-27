@@ -24,7 +24,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,7 +33,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import kotlinx.coroutines.flow.StateFlow
 import yr.muhammadyaumil.movieapp.BuildConfig
 import yr.muhammadyaumil.movieapp.core.utils.formatDate
@@ -43,7 +41,6 @@ import yr.muhammadyaumil.movieapp.ui.home.composables.MovieRecentItem
 import yr.muhammadyaumil.movieapp.ui.home.composables.MovieRecommendationItem
 import yr.muhammadyaumil.movieapp.ui.home.event.HomeEvent
 import yr.muhammadyaumil.movieapp.ui.home.state.HomeState
-import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
@@ -54,8 +51,7 @@ fun HomeScreen(
     onEvent: (onEvent: HomeEvent) -> Unit,
     state: StateFlow<HomeState>,
 ) {
-    val homeViewModel: HomeViewModel = hiltViewModel()
-    val state by homeViewModel.state.collectAsState()
+    val state = state.collectAsState().value
     Scaffold { innerPadding ->
         Box(
             modifier =
@@ -75,7 +71,7 @@ fun HomeScreen(
 
                 state.errorMessage != null -> {
                     Text(
-                        text = state.errorMessage ?: "Terjadi kesalahan",
+                        text = state.errorMessage,
                         color = Color.Red,
                         modifier = Modifier.align(Alignment.Center),
                     )

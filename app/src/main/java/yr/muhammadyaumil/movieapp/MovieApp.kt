@@ -34,6 +34,7 @@ import yr.muhammadyaumil.movieapp.ui.profile.viewmodel.ProfileViewModel
 import yr.muhammadyaumil.movieapp.ui.register.screens.RegisterScreen
 import yr.muhammadyaumil.movieapp.ui.register.viewmodel.RegisterViewModel
 import yr.muhammadyaumil.movieapp.ui.settings.screens.SettingsScreen
+import yr.muhammadyaumil.movieapp.ui.settings.viewmodel.SettingsViewModel
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
@@ -112,9 +113,18 @@ fun MovieApp() {
                 )
             }
             composable(Screen.Settings.route) {
-                SettingsScreen(modifier = Modifier, navigateToLogin = {
-                    navController.navigate(Screen.Login.route)
-                })
+                val settingsViewModel = hiltViewModel<SettingsViewModel>()
+                SettingsScreen(
+                    modifier = Modifier,
+                    onEvent = settingsViewModel::onEvent,
+                    state = settingsViewModel.state,
+                    navigateToLogin = {
+                        navController.navigate(Screen.Login.route)
+                    },
+                    navigateToProfile = {
+                        navController.navigate(Screen.Profile.route)
+                    },
+                )
             }
             composable(Screen.Login.route) {
                 val loginViewModel = hiltViewModel<LoginViewModel>()
