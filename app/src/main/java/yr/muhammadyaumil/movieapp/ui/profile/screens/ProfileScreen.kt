@@ -1,6 +1,5 @@
 package yr.muhammadyaumil.movieapp.ui.profile.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,6 +31,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,10 +41,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
 import yr.muhammadyaumil.movieapp.ui.profile.event.ProfileEvent
 import yr.muhammadyaumil.movieapp.ui.profile.state.ProfileState
@@ -93,10 +94,6 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item {
-                ImageProfileEdit()
-                Spacer(modifier = Modifier.height(20.dp))
-            }
-            item {
                 ProfileInfoCard()
                 Spacer(modifier = Modifier.height(20.dp))
             }
@@ -106,20 +103,34 @@ fun ProfileScreen(
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun ImageProfileEdit() {
+fun ImageProfileEdit(state: ProfileState) {
     Box(
         modifier = Modifier.size(120.dp),
     ) {
-        Image(
-            painter = painterResource(id = android.R.drawable.ic_menu_report_image),
-            contentDescription = "Foto Profil",
-            contentScale = ContentScale.Crop,
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .clip(CircleShape)
-                    .background(Color(0xFF4A5144)),
-        )
+        if (state.profileUrl.isNotEmpty()) {
+            AsyncImage(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape)
+                        .background(Color(0xFF4A5144)),
+                model = state.profileUrl,
+                contentDescription = "Foto Profil",
+                contentScale = ContentScale.Crop,
+            )
+        } else {
+            Icon(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(5.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFF4A5144)),
+                tint = MaterialTheme.colorScheme.background,
+                imageVector = Icons.Outlined.AccountCircle,
+                contentDescription = "Profile Icon",
+            )
+        }
 
         Surface(
             shape = CircleShape,
@@ -130,8 +141,8 @@ fun ImageProfileEdit() {
                     .clip(CircleShape)
                     .align(Alignment.BottomEnd)
                     .offset(
-                        x = 4.dp,
-                        y = 4.dp,
+                        x = 0.dp,
+                        y = 0.dp,
                     ).clickable { /*camera edit button*/ },
             shadowElevation = 2.dp,
         ) {
