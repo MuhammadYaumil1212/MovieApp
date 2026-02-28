@@ -6,6 +6,8 @@ import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserInfo
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 import javax.inject.Inject
 
 interface AuthApiServices {
@@ -52,7 +54,12 @@ class AuthApiServicesImpl
             Email,
         ) {
             this.email = email.trim()
-            this.password = password
+            this.password = password.trim()
+            this.data =
+                buildJsonObject {
+                    put("display_name", username)
+                    put("phone", phoneNumber)
+                }
         }
 
         override suspend fun authWithGoogle() {

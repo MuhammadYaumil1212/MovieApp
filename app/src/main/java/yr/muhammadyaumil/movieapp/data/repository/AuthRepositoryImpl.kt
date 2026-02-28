@@ -41,7 +41,12 @@ class AuthRepositoryImpl
             password: String,
         ): Flow<Resources<Unit>> =
             flow<Resources<Unit>> {
-                authRemote.signUpWithEmailAndPassword(email, password, username, phoneNumber)
+                authRemote.signUpWithEmailAndPassword(
+                    email = email,
+                    password = password,
+                    phoneNumber = phoneNumber,
+                    username = username,
+                )
                 emit(Resources.Success(Unit))
             }.onStart {
                 emit(Resources.Loading())
