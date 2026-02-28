@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -158,10 +159,11 @@ fun MovieApp() {
             }
             composable(Screen.Profile.route) {
                 val profileViewModel = hiltViewModel<ProfileViewModel>()
+                val state by profileViewModel.state.collectAsStateWithLifecycle()
                 ProfileScreen(
                     modifier = Modifier,
                     onEvent = profileViewModel::onEvent,
-                    state = profileViewModel.state,
+                    state = state,
                     navigateBack = {
                         navController.popBackStack()
                     },
