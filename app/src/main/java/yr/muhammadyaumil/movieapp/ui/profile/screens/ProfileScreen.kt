@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -81,9 +82,14 @@ fun ProfileScreen(
                 windowInsets = WindowInsets(0.dp),
             )
         },
-    ) {
+    ) { innerPadding ->
         LazyColumn(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding =
+                PaddingValues(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = innerPadding.calculateBottomPadding(),
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item {
@@ -148,7 +154,10 @@ fun ImageProfileEdit() {
 @Composable
 fun ProfileInfoCard(modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
