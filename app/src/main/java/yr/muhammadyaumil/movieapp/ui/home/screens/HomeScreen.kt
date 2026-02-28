@@ -135,8 +135,9 @@ fun HomeScreen(
                 }
             }
             item {
+                Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     text = "Latest Movies",
                     style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp),
                 )
