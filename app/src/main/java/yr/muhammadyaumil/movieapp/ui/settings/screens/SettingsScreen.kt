@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.ConfirmationNumber
@@ -81,77 +83,14 @@ fun SettingsScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
                     .padding(innerPadding),
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .border(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.outlineVariant,
-                            shape = RoundedCornerShape(8.dp),
-                        ).clickable {
-                            if (!state.isAuthenticated) navigateToLogin() else navigateToProfile()
-                        }.padding(16.dp),
-            ) {
-                if (!state.isAuthenticated) {
-                    Icon(
-                        imageVector = Icons.Outlined.AccountCircle,
-                        contentDescription = "Profile Icon",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier =
-                            Modifier
-                                .size(48.dp)
-                                .clip(RoundedCornerShape(8.dp)),
-                    )
-                    Spacer(modifier = Modifier.size(12.dp))
-                    Column {
-                        Text(
-                            text = "Login or Register Account",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Text(
-                            text = "Login or register with a registered account",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                    }
-                } else {
-                    AsyncImage(
-                        model = "https://image.tmdb.org/t/p/w200/uje1ecKMnNpZp0at5TxlvVgVXqI.jpg",
-                        contentDescription = "Profile Picture",
-                        contentScale = ContentScale.Crop,
-                        modifier =
-                            Modifier
-                                .size(48.dp)
-                                .clip(RoundedCornerShape(8.dp)),
-                    )
-                    Spacer(modifier = Modifier.size(12.dp))
-                    Column {
-                        Text(
-                            text = state.name,
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                        )
-                        Text(
-                            text = state.phoneNumber,
-                            style = MaterialTheme.typography.bodySmall,
-                            color =
-                                if (!state.phoneNumber.contains("Please verify")) {
-                                    MaterialTheme.colorScheme.onSurfaceVariant
-                                } else {
-                                    MaterialTheme.colorScheme.error
-                                },
-                        )
-                    }
-                }
-            }
-
+            ProfileHeader(
+                state = state,
+                navigateToLogin = { navigateToLogin() },
+                navigateToProfile = { navigateToProfile() },
+            )
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
@@ -230,6 +169,83 @@ fun SettingsScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             )
+        }
+    }
+}
+
+@Suppress("ktlint:standard:function-naming")
+@Composable
+fun ProfileHeader(
+    state: SettingsState,
+    navigateToLogin: () -> Unit,
+    navigateToProfile: () -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                .clip(RoundedCornerShape(8.dp))
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                    shape = RoundedCornerShape(8.dp),
+                ).clickable {
+                    if (!state.isAuthenticated) navigateToLogin() else navigateToProfile()
+                }.padding(16.dp),
+    ) {
+        if (!state.isAuthenticated) {
+            Icon(
+                imageVector = Icons.Outlined.AccountCircle,
+                contentDescription = "Profile Icon",
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier =
+                    Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+            )
+            Spacer(modifier = Modifier.size(12.dp))
+            Column {
+                Text(
+                    text = "Login or Register Account",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = "Login or register with a registered account",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        } else {
+            AsyncImage(
+                model = "https://image.tmdb.org/t/p/w200/uje1ecKMnNpZp0at5TxlvVgVXqI.jpg",
+                contentDescription = "Profile Picture",
+                contentScale = ContentScale.Crop,
+                modifier =
+                    Modifier
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(8.dp)),
+            )
+            Spacer(modifier = Modifier.size(12.dp))
+            Column {
+                Text(
+                    text = state.name,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = state.phoneNumber,
+                    style = MaterialTheme.typography.bodySmall,
+                    color =
+                        if (!state.phoneNumber.contains("Please verify")) {
+                            MaterialTheme.colorScheme.onSurfaceVariant
+                        } else {
+                            MaterialTheme.colorScheme.error
+                        },
+                )
+            }
         }
     }
 }
