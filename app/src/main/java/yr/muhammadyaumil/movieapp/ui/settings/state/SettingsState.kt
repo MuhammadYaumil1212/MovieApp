@@ -3,6 +3,7 @@ package yr.muhammadyaumil.movieapp.ui.settings.state
 data class SettingsState(
     val name: String = "",
     val phoneNumber: String = "",
+    val profileUrl: String = "",
     val isLoading: Boolean = false,
     val logoutLoading: Boolean = false,
     val isSuccess: Boolean = false,

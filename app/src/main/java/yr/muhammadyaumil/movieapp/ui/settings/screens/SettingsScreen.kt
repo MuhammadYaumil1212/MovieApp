@@ -219,15 +219,24 @@ fun ProfileHeader(
                 )
             }
         } else {
-            AsyncImage(
-                model = "https://image.tmdb.org/t/p/w200/uje1ecKMnNpZp0at5TxlvVgVXqI.jpg",
-                contentDescription = "Profile Picture",
-                contentScale = ContentScale.Crop,
-                modifier =
-                    Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-            )
+            if (state.profileUrl.isNotEmpty()) {
+                AsyncImage(
+                    model = state.profileUrl,
+                    contentDescription = "Profile Picture",
+                    contentScale = ContentScale.Crop,
+                    modifier =
+                        Modifier
+                            .size(48.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                )
+            } else {
+                Icon(
+                    modifier = Modifier.size(48.dp),
+                    tint = MaterialTheme.colorScheme.secondary,
+                    imageVector = Icons.Outlined.AccountCircle,
+                    contentDescription = "Profile Icon",
+                )
+            }
             Spacer(modifier = Modifier.size(12.dp))
             Column {
                 Text(
