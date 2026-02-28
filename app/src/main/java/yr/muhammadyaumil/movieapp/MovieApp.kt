@@ -130,6 +130,7 @@ fun MovieApp() {
             }
             composable(Screen.Login.route) {
                 val loginViewModel = hiltViewModel<LoginViewModel>()
+                val state by loginViewModel.state.collectAsStateWithLifecycle()
                 LoginScreen(
                     modifier = Modifier,
                     onBackClick = {
@@ -139,7 +140,7 @@ fun MovieApp() {
                         navController.navigate(Screen.Register.route)
                     },
                     onEvent = loginViewModel::onEvent,
-                    state = loginViewModel.state,
+                    state = state,
                     navigateToHome = { navController.navigate(Screen.Home.route) },
                 )
             }

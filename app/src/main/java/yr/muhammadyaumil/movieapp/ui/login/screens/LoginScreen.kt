@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,8 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +31,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.flow.StateFlow
 import yr.muhammadyaumil.movieapp.R
 import yr.muhammadyaumil.movieapp.core.composables.AppButton
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
@@ -49,9 +47,8 @@ fun LoginScreen(
     navigateToHome: () -> Unit,
     onBackClick: () -> Unit,
     onEvent: (onEvent: LoginEvent) -> Unit,
-    state: StateFlow<LoginState>,
+    state: LoginState,
 ) {
-    val state by state.collectAsState()
     LaunchedEffect(state.isSuccess) {
         if (state.isSuccess) {
             navigateToHome()
@@ -72,9 +69,15 @@ fun LoginScreen(
                 )
             }
         },
-    ) {
-        Column {
+    ) { innerPadding ->
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+        ) {
             Text(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
                 text = "Login to continue",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.W700,
@@ -82,6 +85,7 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(20.dp))
             with(state) {
                 FormTextfield(
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     emailState = email,
                     passwordState = password,
                     isLoginLoading = isLoading,
@@ -92,9 +96,9 @@ fun LoginScreen(
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))
-            OrDivider()
+            OrDivider(modifier = Modifier.padding(horizontal = 16.dp))
             Spacer(modifier = Modifier.height(20.dp))
-            OtherLoginMethod()
+            OtherLoginMethod(modifier = Modifier.padding(horizontal = 16.dp))
             Spacer(modifier = Modifier.weight(2f))
             RegisterNavigation {
                 navigateToRegister()
@@ -133,8 +137,8 @@ fun RegisterNavigation(onClick: () -> Unit) {
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun OtherLoginMethod() {
-    Column {
+fun OtherLoginMethod(modifier: Modifier) {
+    Column(modifier = modifier) {
         SocialAuthButton(
             onClick = { },
             text = "Login with Google",
