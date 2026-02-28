@@ -146,7 +146,7 @@ fun MovieApp() {
             }
             composable(Screen.Register.route) {
                 val registerViewModel = hiltViewModel<RegisterViewModel>()
-                val state = registerViewModel.state
+                val state by registerViewModel.state.collectAsStateWithLifecycle()
                 RegisterScreen(
                     modifier = Modifier,
                     onEvent = registerViewModel::onEvent,

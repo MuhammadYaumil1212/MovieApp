@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,8 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,12 +33,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.flow.StateFlow
 import yr.muhammadyaumil.movieapp.R
 import yr.muhammadyaumil.movieapp.core.composables.AppButton
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
 import yr.muhammadyaumil.movieapp.core.composables.AppTextfield
 import yr.muhammadyaumil.movieapp.core.composables.SocialAuthButton
+import yr.muhammadyaumil.movieapp.ui.login.screens.OrDivider
 import yr.muhammadyaumil.movieapp.ui.register.event.RegisterEvent
 import yr.muhammadyaumil.movieapp.ui.register.state.RegisterState
 
@@ -50,9 +49,8 @@ fun RegisterScreen(
     onBackClick: () -> Unit,
     navigateToLogin: () -> Unit,
     onEvent: (onEvent: RegisterEvent) -> Unit,
-    state: StateFlow<RegisterState>,
+    state: RegisterState,
 ) {
-    val state by state.collectAsState()
     LaunchedEffect(state.isSuccess) {
         if (state.isSuccess) {
             navigateToLogin()
@@ -73,17 +71,23 @@ fun RegisterScreen(
                 )
             }
         },
-    ) {
-        Column {
-            Spacer(modifier = Modifier.height(20.dp))
-            androidx.compose.material.Text(
-                "Register to continue",
+    ) { innerPadding ->
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
+        ) {
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
+                text = "Register to continue",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.W700,
             )
             Spacer(modifier = Modifier.height(20.dp))
             with(state) {
                 FormTextfield(
+                    modifier = Modifier.padding(horizontal = 16.dp),
                     emailState = this.email,
                     passwordState = this.password,
                     usernameState = this.username,
@@ -94,9 +98,9 @@ fun RegisterScreen(
                 )
             }
             Spacer(modifier = Modifier.height(20.dp))
-            OrDivider()
+            OrDivider(modifier = Modifier.padding(horizontal = 16.dp))
             Spacer(modifier = Modifier.height(20.dp))
-            OtherRegisterMethod()
+            OtherRegisterMethod(modifier = Modifier.padding(horizontal = 16.dp))
             Spacer(modifier = Modifier.weight(2f))
             LoginNavigation {
                 onBackClick()
@@ -107,8 +111,8 @@ fun RegisterScreen(
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun OtherRegisterMethod() {
-    Column {
+fun OtherRegisterMethod(modifier: Modifier) {
+    Column(modifier = modifier) {
         SocialAuthButton(
             onClick = { },
             text = "Register with Google",
