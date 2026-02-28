@@ -116,10 +116,11 @@ fun MovieApp() {
             }
             composable(Screen.Settings.route) {
                 val settingsViewModel = hiltViewModel<SettingsViewModel>()
+                val state by settingsViewModel.state.collectAsStateWithLifecycle()
                 SettingsScreen(
                     modifier = Modifier,
                     onEvent = settingsViewModel::onEvent,
-                    state = settingsViewModel.state,
+                    state = state,
                     navigateToLogin = {
                         navController.navigate(Screen.Login.route)
                     },

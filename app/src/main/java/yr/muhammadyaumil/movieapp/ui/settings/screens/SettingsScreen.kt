@@ -23,8 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +32,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import kotlinx.coroutines.flow.StateFlow
 import yr.muhammadyaumil.movieapp.core.composables.AppButton
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
 import yr.muhammadyaumil.movieapp.ui.settings.composables.SettingsItem
@@ -53,10 +50,8 @@ fun SettingsScreen(
     navigateToLogin: () -> Unit,
     navigateToProfile: () -> Unit,
     onEvent: (onEvent: SettingsEvent) -> Unit,
-    state: StateFlow<SettingsState>,
+    state: SettingsState,
 ) {
-    val state by state.collectAsState()
-
     val listItemAkun =
         remember {
             listOf(
@@ -81,15 +76,19 @@ fun SettingsScreen(
         errorMessage = state.errorMessage,
         showErrorTextCenter = !state.isAuthenticated,
         onErrorConsumed = { onEvent(SettingsEvent.ErrorConsumed) },
-    ) {
+    ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier =
                     Modifier
                         .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .border(
                             width = 1.dp,
@@ -159,12 +158,13 @@ fun SettingsScreen(
                 text = "Account",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp),
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
             )
             Column(
                 modifier =
                     Modifier
                         .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                         .border(
                             width = 1.dp,
                             color = MaterialTheme.colorScheme.outlineVariant,
@@ -185,12 +185,13 @@ fun SettingsScreen(
                 text = "Film",
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 8.dp),
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
             )
             Column(
                 modifier =
                     Modifier
                         .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                         .border(
                             width = 1.dp,
                             color = MaterialTheme.colorScheme.outlineVariant,
@@ -209,7 +210,10 @@ fun SettingsScreen(
 
             if (state.isAuthenticated) {
                 AppButton(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp),
                     onClick = { onEvent(SettingsEvent.onLogout) },
                     text = "Logout",
                     isLoading = state.logoutLoading,
