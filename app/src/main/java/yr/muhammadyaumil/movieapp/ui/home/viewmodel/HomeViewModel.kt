@@ -95,7 +95,16 @@ class HomeViewModel
                     when (userResources) {
                         is Resources.Success -> {
                             val user = userResources.data
-                            val name = user?.email
+                            val rawDisplayName =
+                                user
+                                    ?.userMetadata
+                                    ?.get("display_name")
+                                    ?.toString()
+                                    ?.trim('"')
+                            val name =
+                                rawDisplayName?.takeIf { it.isNotBlank() }
+                                    ?: user?.email?.substringBefore("@")
+                                    ?: "Guest"
                             _state.update { it.copy(userName = name) }
                         }
 
@@ -164,18 +173,6 @@ class HomeViewModel
                                 )
                             }
                         }
-                    }
-                }
-            }
-
-        private fun logout() =
-            viewModelScope.launch {
-                authRepository.logout().collect { resources ->
-                    _state.update {
-                        it.copy(
-                            isLoading = false,
-                            errorMessage = resources.message,
-                        )
                     }
                 }
             }
