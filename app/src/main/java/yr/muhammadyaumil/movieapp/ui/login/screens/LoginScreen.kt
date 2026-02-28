@@ -76,7 +76,7 @@ fun LoginScreen(
         Column {
             Text(
                 text = "Login to continue",
-                style = MaterialTheme.typography.titleLarge,
+                style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.W700,
             )
             Spacer(modifier = Modifier.height(20.dp))

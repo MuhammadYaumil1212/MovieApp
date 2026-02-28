@@ -24,12 +24,16 @@ class RegisterViewModel
 
         fun onEvent(event: RegisterEvent) {
             when (event) {
-                is RegisterEvent.ErrorConsumed -> {
+                is RegisterEvent.DismissError -> {
                     _state.value = _state.value.copy(errorMessage = null)
                 }
 
-                is RegisterEvent.RegisterClicked -> {
+                is RegisterEvent.SubmitRegistration -> {
                     onRegister()
+                }
+
+                is RegisterEvent.ResetSucessState -> {
+                    _state.value = _state.value.copy(isSuccess = false)
                 }
             }
         }

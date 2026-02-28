@@ -148,6 +148,9 @@ fun MovieApp() {
                     modifier = Modifier,
                     onEvent = registerViewModel::onEvent,
                     state = state,
+                    navigateToLogin = {
+                        navController.navigate(Screen.Login.route)
+                    },
                     onBackClick = {
                         navController.popBackStack()
                     },

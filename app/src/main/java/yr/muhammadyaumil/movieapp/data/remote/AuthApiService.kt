@@ -6,7 +6,6 @@ import io.github.jan.supabase.auth.providers.builtin.Email
 import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserInfo
 import kotlinx.coroutines.flow.StateFlow
-import org.slf4j.MDC.put
 import javax.inject.Inject
 
 interface AuthApiServices {
@@ -51,14 +50,9 @@ class AuthApiServicesImpl
             password: String,
         ) = client.auth.signUpWith(
             Email,
-            redirectUrl = "https://movieapps-auth-redirect.vercel.app/redirect-pages-movie-app.html",
         ) {
-            this.email = email
+            this.email = email.trim()
             this.password = password
-            this.data?.apply {
-                put("Display Name", username)
-                put("Phone", phoneNumber)
-            }
         }
 
         override suspend fun authWithGoogle() {
