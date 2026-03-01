@@ -93,7 +93,21 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item {
-                ProfileInfoCard()
+                with(state.userData) {
+                    ProfileInfoCard(
+                        email = this?.email,
+                        username =
+                            this
+                                ?.userMetadata
+                                ?.get("display_name")
+                                ?.toString()
+                                ?.trim('"')
+                                .takeIf { it != null } ?: "",
+                        phone =
+                            this?.phone.takeIf { it != null }
+                                ?: "Please verify your phone number",
+                    )
+                }
             }
         }
     }
@@ -161,7 +175,12 @@ fun ImageProfileEdit(state: ProfileState) {
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun ProfileInfoCard(modifier: Modifier = Modifier) {
+fun ProfileInfoCard(
+    modifier: Modifier = Modifier,
+    email: String?,
+    username: String?,
+    phone: String?,
+) {
     Card(
         modifier =
             modifier
@@ -176,7 +195,7 @@ fun ProfileInfoCard(modifier: Modifier = Modifier) {
         ) {
             InfoRowItem(
                 label = "Name",
-                value = "John Doe",
+                value = username ?: "No Name",
                 onClick = { /* Handle click event */ },
             )
             HorizontalDivider(
@@ -186,7 +205,7 @@ fun ProfileInfoCard(modifier: Modifier = Modifier) {
             )
             InfoRowItem(
                 label = "Email",
-                value = "email@email.com",
+                value = email ?: "No Email",
                 onClick = { /* Handle click event */ },
             )
             HorizontalDivider(
@@ -196,7 +215,7 @@ fun ProfileInfoCard(modifier: Modifier = Modifier) {
             )
             InfoRowItem(
                 label = "Phone Number",
-                value = "081267197393",
+                value = phone ?: "No Phone Number",
                 onClick = { /* Handle click event */ },
             )
             HorizontalDivider(

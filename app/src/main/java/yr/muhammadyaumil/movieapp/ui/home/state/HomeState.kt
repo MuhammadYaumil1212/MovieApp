@@ -1,8 +1,8 @@
 package yr.muhammadyaumil.movieapp.ui.home.state
 
 import io.github.jan.supabase.auth.status.SessionStatus
-import yr.muhammadyaumil.movieapp.domain.entity.MovieGeneralEntity
-import yr.muhammadyaumil.movieapp.domain.entity.NowPlayingMovieEntity
+import yr.muhammadyaumil.movieapp.domain.entity.Movie.MovieGeneralEntity
+import yr.muhammadyaumil.movieapp.domain.entity.Movie.NowPlayingMovieEntity
 
 data class HomeState(
     val isLoading: Boolean = false,

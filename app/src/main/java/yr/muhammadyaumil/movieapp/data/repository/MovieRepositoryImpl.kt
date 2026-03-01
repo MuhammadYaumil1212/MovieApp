@@ -10,8 +10,8 @@ import yr.muhammadyaumil.movieapp.core.constants.AppConstants
 import yr.muhammadyaumil.movieapp.core.state.Resources
 import yr.muhammadyaumil.movieapp.core.utils.toEntity
 import yr.muhammadyaumil.movieapp.data.remote.MovieApiServices
-import yr.muhammadyaumil.movieapp.domain.entity.MovieGeneralEntity
-import yr.muhammadyaumil.movieapp.domain.entity.NowPlayingMovieEntity
+import yr.muhammadyaumil.movieapp.domain.entity.Movie.MovieGeneralEntity
+import yr.muhammadyaumil.movieapp.domain.entity.Movie.NowPlayingMovieEntity
 import yr.muhammadyaumil.movieapp.domain.repository.MovieRepository
 import javax.inject.Inject
 
