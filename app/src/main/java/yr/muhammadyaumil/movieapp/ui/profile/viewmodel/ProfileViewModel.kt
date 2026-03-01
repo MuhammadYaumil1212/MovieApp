@@ -1,5 +1,7 @@
 package yr.muhammadyaumil.movieapp.ui.profile.viewmodel
 
+import android.util.Log
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,8 +38,65 @@ class ProfileViewModel
                 is ProfileEvent.DismissError -> {
                     _state.update { it.copy(errorMessage = null) }
                 }
+
+                is ProfileEvent.EditNameProfile -> {
+                    _state.update { it.copy(isUsernameEdit = true) }
+                    val currentName =
+                        _state.value.userData
+                            ?.userMetadata
+                            ?.get("display_name")
+                            ?.toString()
+                            ?.trim('"')
+                            ?: ""
+                    _state.value.usernameState.setTextAndPlaceCursorAtEnd(currentName)
+                }
+
+                is ProfileEvent.EditEmailProfile -> {
+                    _state.update { it.copy(isEmailEdit = true) }
+                    val currentEmail = _state.value.userData?.email ?: ""
+                    _state.value.emailState.setTextAndPlaceCursorAtEnd(currentEmail)
+                }
+
+                is ProfileEvent.EditPhoneProfile -> {
+                    _state.update { it.copy(isPhoneEdit = true) }
+                    val currentPhone = _state.value.userData?.phone ?: ""
+                    _state.value.phoneState.setTextAndPlaceCursorAtEnd(currentPhone)
+                }
+
+                is ProfileEvent.ResetUsernameProfile -> {
+                    _state.update { it.copy(isUsernameEdit = false) }
+                }
+
+                is ProfileEvent.ResetEmailProfile -> {
+                    _state.update { it.copy(isEmailEdit = false) }
+                }
+
+                is ProfileEvent.ResetPhoneProfile -> {
+                    _state.update { it.copy(isPhoneEdit = false) }
+                }
+
+                is ProfileEvent.UpdateProfile -> {
+                    updateUserInfo()
+                }
             }
         }
+
+        private fun updateUserInfo() =
+            viewModelScope.launch {
+                val email: String =
+                    _state.value.emailState.text
+                        .toString()
+                val username: String =
+                    _state.value.usernameState.text
+                        .toString()
+                val phone: String =
+                    _state.value.phoneState.text
+                        .toString()
+
+                Log.d("EMAIL VIEWMODEL ", "Email: $email")
+                Log.d("USERNAME VIEWMODEL ", "Username: $username")
+                Log.d("PHONE VIEWMODEL ", "Phone: $phone")
+            }
 
         private fun getCurrentUserInfo() =
             viewModelScope.launch {

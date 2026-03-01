@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
@@ -45,11 +46,13 @@ fun AppTextfield(
     leadingIcon: ImageVector? = null,
     trailingIcon: ImageVector? = null,
     trailingText: String? = null,
+    disableBorder: Boolean = false,
     hint: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
     isPassword: Boolean = false,
     onLeadingClick: () -> Unit = {},
     onTrailingClick: () -> Unit = {},
+    onSave: () -> Unit = {},
 ) {
     if (isPassword) {
         AppPasswordTextfield(
@@ -67,10 +70,12 @@ fun AppTextfield(
             leadingIcon = leadingIcon,
             trailingIcon = trailingIcon,
             trailingText = trailingText,
+            disableBorder = disableBorder,
             hint = hint,
             keyboardType = keyboardType,
             onLeadingClick = onLeadingClick,
             onTrailingClick = onTrailingClick,
+            onSave = onSave,
         )
     }
 }
@@ -84,9 +89,11 @@ fun AppBasicTextfield(
     trailingIcon: ImageVector? = null,
     trailingText: String? = null,
     hint: String? = null,
+    disableBorder: Boolean,
     keyboardType: KeyboardType = KeyboardType.Text,
     onLeadingClick: () -> Unit = {},
     onTrailingClick: () -> Unit = {},
+    onSave: () -> Unit = {},
 ) {
     BasicTextField(
         state = textfieldState,
@@ -94,24 +101,73 @@ fun AppBasicTextfield(
             LocalTextStyle.current.copy(
                 color = MaterialTheme.colorScheme.onBackground,
             ),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = ImeAction.Done),
+        onKeyboardAction = { onSave() },
         lineLimits = TextFieldLineLimits.SingleLine,
         cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         modifier = modifier,
         decorator = { innerTextfield ->
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .border(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                            shape = RoundedCornerShape(8.dp),
-                        ).padding(horizontal = 12.dp, vertical = 14.dp),
-            ) {
+            if (!disableBorder) {
+                Box(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                                shape = RoundedCornerShape(8.dp),
+                            ).padding(horizontal = 12.dp, vertical = 14.dp),
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        if (leadingIcon != null) {
+                            Icon(
+                                imageVector = leadingIcon,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurface.copy(0.5f),
+                                modifier = Modifier.clickable { onLeadingClick() },
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                        }
+                        Box(modifier = Modifier.weight(1f)) {
+                            if (textfieldState.text.isEmpty() && hint != null) {
+                                Text(
+                                    text = hint,
+                                    color = MaterialTheme.colorScheme.onSurface.copy(0.4f),
+                                )
+                            }
+                            innerTextfield()
+                        }
+
+                        if (trailingIcon != null) {
+                            Icon(
+                                imageVector = trailingIcon,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurface.copy(0.5f),
+                                modifier = Modifier.clickable { onTrailingClick() },
+                            )
+                        } else if (trailingText != null) {
+                            Text(
+                                text = trailingText,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier =
+                                    Modifier
+                                        .padding(end = 4.dp)
+                                        .clickable { onTrailingClick() },
+                            )
+                        }
+                    }
+                }
+            } else {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 12.dp, vertical = 14.dp)
+                            .fillMaxWidth(),
                 ) {
                     if (leadingIcon != null) {
                         Icon(
@@ -122,7 +178,6 @@ fun AppBasicTextfield(
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                     }
-
                     Box(modifier = Modifier.weight(1f)) {
                         if (textfieldState.text.isEmpty() && hint != null) {
                             Text(

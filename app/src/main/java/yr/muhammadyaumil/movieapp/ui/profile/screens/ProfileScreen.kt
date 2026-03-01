@@ -18,9 +18,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material3.Card
@@ -41,10 +43,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
+import yr.muhammadyaumil.movieapp.core.composables.AppTextfield
 import yr.muhammadyaumil.movieapp.ui.profile.event.ProfileEvent
 import yr.muhammadyaumil.movieapp.ui.profile.state.ProfileState
 
@@ -93,23 +97,93 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item {
-                with(state.userData) {
-                    ProfileInfoCard(
-                        email = this?.email,
-                        username =
-                            this
-                                ?.userMetadata
-                                ?.get("display_name")
-                                ?.toString()
-                                ?.trim('"')
-                                .takeIf { it != null } ?: "",
-                        phone =
-                            this?.phone.takeIf { it != null }
-                                ?: "Please verify your phone number",
-                    )
+                Card(
+                    modifier =
+                        modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                ) {
+                    with(state.userData) {
+                        EditableProfileItem(
+                            label = "Name",
+                            displayValue =
+                                this
+                                    ?.userMetadata
+                                    ?.get("display_name")
+                                    ?.toString()
+                                    ?.trim('"')
+                                    .takeIf { it != null } ?: "",
+                            textfieldState = state.usernameState,
+                            isEditing = state.isUsernameEdit,
+                            onEditClick = { onEvent(ProfileEvent.EditNameProfile) },
+                            onCancelClick = { onEvent(ProfileEvent.ResetUsernameProfile) },
+                            onSave = { onEvent(ProfileEvent.UpdateProfile) },
+                        )
+                        EditableProfileItem(
+                            label = "Email",
+                            displayValue =
+                                this
+                                    ?.email
+                                    .takeIf { it != null } ?: "",
+                            textfieldState = state.emailState,
+                            isEditing = state.isEmailEdit,
+                            onEditClick = { onEvent(ProfileEvent.EditEmailProfile) },
+                            onCancelClick = { onEvent(ProfileEvent.ResetEmailProfile) },
+                            onSave = { onEvent(ProfileEvent.UpdateProfile) },
+                        )
+                        EditableProfileItem(
+                            label = "Phone Number",
+                            displayValue =
+                                this
+                                    ?.phone
+                                    .takeIf { it != null } ?: "",
+                            textfieldState = state.phoneState,
+                            isEditing = state.isPhoneEdit,
+                            onEditClick = { onEvent(ProfileEvent.EditPhoneProfile) },
+                            onCancelClick = { onEvent(ProfileEvent.ResetPhoneProfile) },
+                            onSave = { onEvent(ProfileEvent.UpdateProfile) },
+                        )
+                    }
                 }
             }
         }
+    }
+}
+
+@Suppress("ktlint:standard:function-naming")
+@Composable
+fun EditableProfileItem(
+    modifier: Modifier = Modifier,
+    label: String,
+    displayValue: String,
+    textfieldState: TextFieldState,
+    isEditing: Boolean,
+    onEditClick: () -> Unit,
+    onCancelClick: () -> Unit,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    onSave: () -> Unit = {},
+) {
+    if (isEditing) {
+        AppTextfield(
+            textfieldState = textfieldState,
+            hint = "Insert New $label",
+            keyboardType = keyboardType,
+            disableBorder = true,
+            modifier = Modifier.fillMaxWidth(),
+            trailingIcon = Icons.Default.Clear,
+            onTrailingClick = { onCancelClick() },
+            onSave = { onSave() },
+        )
+    } else {
+        InfoRowItem(
+            modifier = Modifier.padding(horizontal = 10.dp),
+            label = label,
+            value = displayValue,
+            onClick = { onEditClick() },
+        )
     }
 }
 
@@ -253,6 +327,7 @@ fun InfoRowItem(
             text = label,
             fontSize = 16.sp,
             color = Color.DarkGray,
+            fontWeight = FontWeight.W500,
         )
         Row(
             verticalAlignment = Alignment.CenterVertically,
