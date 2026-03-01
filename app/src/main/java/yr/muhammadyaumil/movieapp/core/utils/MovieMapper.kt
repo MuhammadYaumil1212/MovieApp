@@ -4,10 +4,10 @@ import yr.muhammadyaumil.movieapp.data.model.Movie.MovieModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.NowPlayingMovieModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.ResultModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.ResultNowPlayingModel
-import yr.muhammadyaumil.movieapp.domain.entity.MovieEntity
-import yr.muhammadyaumil.movieapp.domain.entity.MovieGeneralEntity
-import yr.muhammadyaumil.movieapp.domain.entity.NowPlayingMovieEntity
-import yr.muhammadyaumil.movieapp.domain.entity.ResultNowPlayingEntity
+import yr.muhammadyaumil.movieapp.domain.entity.Movie.MovieEntity
+import yr.muhammadyaumil.movieapp.domain.entity.Movie.MovieGeneralEntity
+import yr.muhammadyaumil.movieapp.domain.entity.Movie.NowPlayingMovieEntity
+import yr.muhammadyaumil.movieapp.domain.entity.Movie.ResultNowPlayingEntity
 
 fun MovieModel.toEntity(): MovieGeneralEntity =
     MovieGeneralEntity(

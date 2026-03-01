@@ -1,4 +1,4 @@
-package yr.muhammadyaumil.movieapp.domain.entity
+package yr.muhammadyaumil.movieapp.domain.entity.Movie
 
 data class MovieEntity(
     val adult: Boolean?,
