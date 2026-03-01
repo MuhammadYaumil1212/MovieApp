@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import yr.muhammadyaumil.movieapp.core.state.Resources
+import yr.muhammadyaumil.movieapp.core.utils.handleResource
 import yr.muhammadyaumil.movieapp.domain.repository.AuthRepository
 import yr.muhammadyaumil.movieapp.domain.repository.MovieRepository
 import yr.muhammadyaumil.movieapp.ui.home.event.HomeEvent
@@ -92,27 +93,32 @@ class HomeViewModel
         private fun getCurrentUserInfo() {
             viewModelScope.launch {
                 authRepository.getUserInfo().collect { userResources ->
-                    when (userResources) {
-                        is Resources.Success -> {
-                            val user = userResources.data
+                    _state.handleResource(
+                        resource = userResources,
+                        onLoading = { currentState ->
+                            currentState.copy(isLoading = true, errorMessage = null)
+                        },
+                        onSuccess = { currentState, data ->
                             val rawDisplayName =
-                                user
+                                data
                                     ?.userMetadata
                                     ?.get("display_name")
                                     ?.toString()
                                     ?.trim('"')
                             val name =
                                 rawDisplayName?.takeIf { it.isNotBlank() }
-                                    ?: user?.email?.substringBefore("@")
+                                    ?: data?.email?.substringBefore("@")
                                     ?: "Guest"
-                            _state.update { it.copy(userName = name) }
-                        }
-
-                        is Resources.Error -> {
-                        }
-
-                        else -> {}
-                    }
+                            currentState.copy(
+                                isLoading = false,
+                                errorMessage = null,
+                                userName = name,
+                            )
+                        },
+                        onError = { currentState, message ->
+                            currentState.copy(isLoading = false, errorMessage = message)
+                        },
+                    )
                 }
             }
         }
@@ -122,58 +128,44 @@ class HomeViewModel
                 movieRepository
                     .getMovies()
                     .collect { resources ->
-                        when (resources) {
-                            is Resources.Loading -> {
-                                _state.update { it.copy(isLoading = true) }
-                            }
-
-                            is Resources.Success -> {
-                                _state.update {
-                                    it.copy(
-                                        isLoading = false,
-                                        movieList = resources.data,
-                                    )
-                                }
-                            }
-
-                            is Resources.Error -> {
-                                _state.update {
-                                    it.copy(
-                                        isLoading = false,
-                                        errorMessage = resources.message,
-                                    )
-                                }
-                            }
-                        }
+                        _state.handleResource(
+                            resource = resources,
+                            onLoading = { currentState ->
+                                currentState.copy(isLoading = true, errorMessage = null)
+                            },
+                            onSuccess = { currentState, data ->
+                                currentState.copy(
+                                    isLoading = false,
+                                    errorMessage = null,
+                                    movieList = data,
+                                )
+                            },
+                            onError = { currentState, message ->
+                                currentState.copy(isLoading = false, errorMessage = message)
+                            },
+                        )
                     }
             }
 
         private fun getNowPlayingMovies() =
             viewModelScope.launch {
                 movieRepository.getNowPlayingMovies().collect { resources ->
-                    when (resources) {
-                        is Resources.Loading -> {
-                            _state.update { it.copy(isLoading = true) }
-                        }
-
-                        is Resources.Success -> {
-                            _state.update {
-                                it.copy(
-                                    isLoading = false,
-                                    nowPlayingList = resources.data,
-                                )
-                            }
-                        }
-
-                        is Resources.Error -> {
-                            _state.update {
-                                it.copy(
-                                    isLoading = false,
-                                    errorMessage = resources.message,
-                                )
-                            }
-                        }
-                    }
+                    _state.handleResource(
+                        resource = resources,
+                        onLoading = { currentState ->
+                            currentState.copy(isLoading = true, errorMessage = null)
+                        },
+                        onSuccess = { currentState, data ->
+                            currentState.copy(
+                                isLoading = false,
+                                errorMessage = null,
+                                nowPlayingList = data,
+                            )
+                        },
+                        onError = { currentState, message ->
+                            currentState.copy(isLoading = false, errorMessage = message)
+                        },
+                    )
                 }
             }
     }
