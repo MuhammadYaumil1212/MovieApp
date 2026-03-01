@@ -1,6 +1,5 @@
 package yr.muhammadyaumil.movieapp.data.repository
 
-import android.util.Log
 import io.github.jan.supabase.auth.status.SessionStatus
 import io.github.jan.supabase.auth.user.UserInfo
 import kotlinx.coroutines.Dispatchers
@@ -54,10 +53,28 @@ class AuthRepositoryImpl
                 emit(Resources.Error(e.toDynamicError()))
             }.flowOn(Dispatchers.IO)
 
+        override suspend fun updateProfile(
+            email: String,
+            username: String,
+            phoneNumber: String,
+        ): Flow<Resources<UserInfo?>> =
+            flow<Resources<UserInfo?>> {
+                val userUpdate =
+                    authRemote.updateProfile(
+                        email = email,
+                        username = username,
+                        phoneNumber = phoneNumber,
+                    )
+                emit(Resources.Success(userUpdate))
+            }.onStart {
+                emit(Resources.Loading())
+            }.catch { e ->
+                emit(Resources.Error(e.toDynamicError()))
+            }.flowOn(Dispatchers.IO)
+
         override suspend fun getUserInfo(): Flow<Resources<UserInfo?>> =
             flow<Resources<UserInfo?>> {
                 val userResult = authRemote.getCurrentUser()
-                Log.d("USER_INFO", "${userResult?.email}")
                 emit(Resources.Success(userResult))
             }.onStart {
                 emit(Resources.Loading())

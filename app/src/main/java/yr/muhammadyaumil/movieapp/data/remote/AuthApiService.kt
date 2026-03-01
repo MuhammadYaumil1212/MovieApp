@@ -29,6 +29,12 @@ interface AuthApiServices {
 
     suspend fun getSessionStatus(): StateFlow<SessionStatus>
 
+    suspend fun updateProfile(
+        email: String,
+        username: String,
+        phoneNumber: String,
+    ): UserInfo?
+
     suspend fun logout()
 }
 
@@ -69,6 +75,19 @@ class AuthApiServicesImpl
         override suspend fun getCurrentUser(): UserInfo? = client.auth.currentUserOrNull()
 
         override suspend fun getSessionStatus(): StateFlow<SessionStatus> = client.auth.sessionStatus
+
+        override suspend fun updateProfile(
+            email: String,
+            username: String,
+            phoneNumber: String,
+        ) = client.auth.updateUser {
+            this.email = email
+            this.phone = phoneNumber
+            this.data =
+                buildJsonObject {
+                    put("display_name", username)
+                }
+        }
 
         override suspend fun logout() = client.auth.signOut()
     }

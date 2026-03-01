@@ -55,7 +55,7 @@ fun ProfileScreen(
     }
     AppScaffold(
         modifier = modifier,
-        isLoading = false,
+        isLoading = state.isLoading,
         errorMessage = state.errorMessage,
         showErrorTextCenter = state.errorMessage != null,
         onErrorConsumed = { onEvent(ProfileEvent.DismissError) },
@@ -111,7 +111,10 @@ fun ProfileScreen(
                             isEditing = state.isUsernameEdit,
                             onEditClick = { onEvent(ProfileEvent.EditNameProfile) },
                             onCancelClick = { onEvent(ProfileEvent.ResetUsernameProfile) },
-                            onSave = { onEvent(ProfileEvent.UpdateProfile) },
+                            onSave = {
+                                onEvent(ProfileEvent.UpdateProfile)
+                                onEvent(ProfileEvent.ResetPhoneProfile)
+                            },
                         )
                         EditableProfileItem(
                             label = "Email",
@@ -123,7 +126,10 @@ fun ProfileScreen(
                             isEditing = state.isEmailEdit,
                             onEditClick = { onEvent(ProfileEvent.EditEmailProfile) },
                             onCancelClick = { onEvent(ProfileEvent.ResetEmailProfile) },
-                            onSave = { onEvent(ProfileEvent.UpdateProfile) },
+                            onSave = {
+                                onEvent(ProfileEvent.UpdateProfile)
+                                onEvent(ProfileEvent.ResetEmailProfile)
+                            },
                         )
                         EditableProfileItem(
                             label = "Phone Number",
@@ -135,7 +141,10 @@ fun ProfileScreen(
                             isEditing = state.isPhoneEdit,
                             onEditClick = { onEvent(ProfileEvent.EditPhoneProfile) },
                             onCancelClick = { onEvent(ProfileEvent.ResetPhoneProfile) },
-                            onSave = { onEvent(ProfileEvent.UpdateProfile) },
+                            onSave = {
+                                onEvent(ProfileEvent.UpdateProfile)
+                                onEvent(ProfileEvent.ResetPhoneProfile)
+                            },
                         )
                     }
                 }

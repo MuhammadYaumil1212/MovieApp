@@ -1,6 +1,5 @@
 package yr.muhammadyaumil.movieapp.ui.profile.viewmodel
 
-import android.util.Log
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import yr.muhammadyaumil.movieapp.core.state.Resources
+import yr.muhammadyaumil.movieapp.core.utils.handleResource
 import yr.muhammadyaumil.movieapp.domain.repository.AuthRepository
 import yr.muhammadyaumil.movieapp.ui.profile.event.ProfileEvent
 import yr.muhammadyaumil.movieapp.ui.profile.state.ProfileState
@@ -93,9 +93,26 @@ class ProfileViewModel
                     _state.value.phoneState.text
                         .toString()
 
-                Log.d("EMAIL VIEWMODEL ", "Email: $email")
-                Log.d("USERNAME VIEWMODEL ", "Username: $username")
-                Log.d("PHONE VIEWMODEL ", "Phone: $phone")
+                authRepository
+                    .updateProfile(email = email, username = username, phoneNumber = phone)
+                    .collect { resources ->
+                        _state.handleResource(
+                            resource = resources,
+                            onLoading = { currentState ->
+                                currentState.copy(isLoading = true, errorMessage = null)
+                            },
+                            onSuccess = { currentState, data ->
+                                currentState.copy(
+                                    isLoading = false,
+                                    errorMessage = "Success Update Profile",
+                                    isSuccess = true,
+                                )
+                            },
+                            onError = { currentState, message ->
+                                currentState.copy(isLoading = false, errorMessage = message)
+                            },
+                        )
+                    }
             }
 
         private fun getCurrentUserInfo() =

@@ -18,6 +18,12 @@ interface AuthRepository {
         password: String,
     ): Flow<Resources<Unit>>
 
+    suspend fun updateProfile(
+        email: String,
+        username: String,
+        phoneNumber: String,
+    ): Flow<Resources<UserInfo?>>
+
     suspend fun getUserInfo(): Flow<Resources<UserInfo?>>
 
     suspend fun getSessionStatus(): Flow<Resources<SessionStatus>>
