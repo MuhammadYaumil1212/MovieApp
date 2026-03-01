@@ -61,6 +61,10 @@ fun ProfileScreen(
         onErrorConsumed = { onEvent(ProfileEvent.DismissError) },
         topBar = {
             CenterAlignedTopAppBar(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
                 title = { Text("Profile", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = navigateBack) {
