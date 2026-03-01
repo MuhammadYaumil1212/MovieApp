@@ -18,6 +18,7 @@ fun AppScaffold(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
     errorMessage: String? = null,
+    successMessage: String? = null,
     showErrorTextCenter: Boolean = false,
     onErrorConsumed: () -> Unit = {},
     topBar: @Composable () -> Unit = {},
@@ -28,6 +29,11 @@ fun AppScaffold(
         errorMessage?.let { msg ->
             AppSnackbarController.sendEvent(SnackbarEvent(message = msg))
             onErrorConsumed()
+        }
+    }
+    LaunchedEffect(successMessage) {
+        errorMessage?.let { msg ->
+            AppSnackbarController.sendEvent(SnackbarEvent(message = msg))
         }
     }
 

@@ -102,9 +102,10 @@ class ProfileViewModel
                                 currentState.copy(isLoading = true, errorMessage = null)
                             },
                             onSuccess = { currentState, data ->
+                                getCurrentUserInfo()
                                 currentState.copy(
                                     isLoading = false,
-                                    errorMessage = "Success Update Profile",
+                                    successMessage = "Profile Updated",
                                     isSuccess = true,
                                 )
                             },

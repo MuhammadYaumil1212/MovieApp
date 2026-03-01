@@ -58,6 +58,7 @@ fun ProfileScreen(
         modifier = modifier,
         isLoading = state.isLoading,
         errorMessage = state.errorMessage,
+        successMessage = state.successMessage,
         showErrorTextCenter = state.errorMessage != null,
         onErrorConsumed = { onEvent(ProfileEvent.DismissError) },
         topBar = {
