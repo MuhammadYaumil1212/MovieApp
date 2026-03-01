@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
@@ -214,10 +215,12 @@ fun InfoRowItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = value,
+                text = value.replace(".{10}(?=@)".toRegex(), "..."),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
                 color = Color.Black,
+                maxLines = 1,
+                overflow = TextOverflow.StartEllipsis,
             )
             Spacer(modifier = Modifier.width(4.dp))
             Icon(
