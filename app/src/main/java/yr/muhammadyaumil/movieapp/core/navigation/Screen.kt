@@ -23,6 +23,11 @@ sealed class Screen(
 ) {
     object Home : Screen("home", "Home", Icons.Filled.Home, Icons.Outlined.Home)
 
+    object DetailHome :
+        Screen("detailHome/{movieId}", "Detail Home", Icons.Filled.Home, Icons.Outlined.Home) {
+        fun createRoute(movieId: Int) = "detailHome/$movieId"
+    }
+
     object Settings : Screen("settings", "Settings", Icons.Filled.Settings, Icons.Outlined.Settings)
 
     object Login : Screen("login", "login", Icons.Filled.Person, Icons.Outlined.Person)

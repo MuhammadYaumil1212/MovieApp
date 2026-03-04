@@ -17,15 +17,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import kotlinx.coroutines.launch
 import yr.muhammadyaumil.movieapp.core.composables.AppSnackbarController
 import yr.muhammadyaumil.movieapp.core.composables.MovieBottomBar
 import yr.muhammadyaumil.movieapp.core.composables.ObserveAsEvents
 import yr.muhammadyaumil.movieapp.core.navigation.Screen
+import yr.muhammadyaumil.movieapp.ui.DetailHome.screens.DetailHomeScreen
+import yr.muhammadyaumil.movieapp.ui.DetailHome.viewmodel.DetailHomeViewModel
 import yr.muhammadyaumil.movieapp.ui.home.screens.HomeScreen
 import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 import yr.muhammadyaumil.movieapp.ui.login.screens.LoginScreen
@@ -110,8 +114,27 @@ fun MovieApp() {
                     navigateToProfile = {
                         navController.navigate(Screen.Profile.route)
                     },
+                    navigateToDetail = { movieId ->
+                        navController.navigate(Screen.DetailHome.createRoute(movieId = movieId))
+                    },
                     state = state,
                     onEvent = homeViewModel::onEvent,
+                )
+            }
+            composable(
+                route = Screen.DetailHome.route,
+                arguments = listOf(navArgument("movieId") { type = NavType.IntType }),
+            ) { navBackStackEntry ->
+                val movieId = navBackStackEntry.arguments?.getInt("movieId") ?: return@composable
+                val detailHomeViewModel = hiltViewModel<DetailHomeViewModel>()
+                val state by detailHomeViewModel.state.collectAsStateWithLifecycle()
+                DetailHomeScreen(
+                    modifier = Modifier,
+                    onEvent = detailHomeViewModel::onEvent,
+                    state = state,
+                    navigateBack = {
+                        navController.popBackStack()
+                    },
                 )
             }
             composable(Screen.Settings.route) {

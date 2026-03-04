@@ -36,7 +36,7 @@ class HomeViewModel
 
         fun onEvent(event: HomeEvent) {
             when (event) {
-                is HomeEvent.ErrorConsumed -> {
+                is HomeEvent.ResetError -> {
                     _state.update { it.copy(errorMessage = null) }
                 }
 

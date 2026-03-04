@@ -1,9 +1,17 @@
 package yr.muhammadyaumil.movieapp.core.utils
 
+import yr.muhammadyaumil.movieapp.data.model.DetailMovie.BelongsToCollectionModel
+import yr.muhammadyaumil.movieapp.data.model.DetailMovie.GenreModel
+import yr.muhammadyaumil.movieapp.data.model.DetailMovie.MovieDetailModel
+import yr.muhammadyaumil.movieapp.data.model.DetailMovie.ProductionCompanyModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.MovieModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.NowPlayingMovieModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.ResultModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.ResultNowPlayingModel
+import yr.muhammadyaumil.movieapp.domain.entity.DetailMovie.Genre
+import yr.muhammadyaumil.movieapp.domain.entity.DetailMovie.MovieCollection
+import yr.muhammadyaumil.movieapp.domain.entity.DetailMovie.MovieDetail
+import yr.muhammadyaumil.movieapp.domain.entity.DetailMovie.ProductionCompany
 import yr.muhammadyaumil.movieapp.domain.entity.Movie.MovieEntity
 import yr.muhammadyaumil.movieapp.domain.entity.Movie.MovieGeneralEntity
 import yr.muhammadyaumil.movieapp.domain.entity.Movie.NowPlayingMovieEntity
@@ -59,4 +67,49 @@ fun ResultNowPlayingModel.toEntity(): ResultNowPlayingEntity =
         video = this.video,
         voteAverage = this.voteAverage,
         voteCount = this.voteCount,
+    )
+
+fun MovieDetailModel.toEntity(): MovieDetail =
+    MovieDetail(
+        id = this.id ?: 0,
+        title = this.title ?: "Unknown Title",
+        originalTitle = this.originalTitle ?: "",
+        overview = this.overview ?: "No overview available.",
+        posterPath = this.posterPath ?: "",
+        backdropPath = this.backdropPath ?: "",
+        releaseDate = this.releaseDate ?: "",
+        runtime = this.runtime ?: 0,
+        voteAverage = this.voteAverage ?: 0.0,
+        voteCount = this.voteCount ?: 0,
+        genres = this.genres?.map { it?.toEntity() ?: Genre(0, "Unknown Genre") } ?: emptyList(),
+        belongsToCollection = this.belongsToCollection?.toEntity(),
+        productionCompanies =
+            this.productionCompanies?.map {
+                it?.toEntity() ?: ProductionCompany(
+                    0,
+                    "Unknown Company",
+                    "",
+                )
+            } ?: emptyList(),
+    )
+
+fun BelongsToCollectionModel.toEntity(): MovieCollection =
+    MovieCollection(
+        id = this.id ?: 0,
+        name = this.name ?: "",
+        posterPath = this.posterPath ?: "",
+        backdropPath = this.backdropPath ?: "",
+    )
+
+fun GenreModel.toEntity(): Genre =
+    Genre(
+        id = this.id ?: 0,
+        name = this.name ?: "",
+    )
+
+fun ProductionCompanyModel.toEntity(): ProductionCompany =
+    ProductionCompany(
+        id = this.id ?: 0,
+        name = this.name ?: "",
+        logoPath = this.logoPath ?: "",
     )

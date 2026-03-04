@@ -1,21 +1,16 @@
-package yr.muhammadyaumil.movieapp.ui.home.composables
+package yr.muhammadyaumil.movieapp.ui.DetailHome.composables
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,77 +28,15 @@ import yr.muhammadyaumil.movieapp.R
 
 @Suppress("ktlint:standard:function-naming")
 @Composable
-fun MovieRecentItem(
-    modifier: Modifier = Modifier,
-    title: String = "No Title",
-    rating: Double = 0.0,
-    imageUrl: String = "",
-    onClick: () -> Unit = {},
-) {
-    Column(
-        modifier =
-            modifier
-                .width(160.dp)
-                .clickable(onClick = { onClick() })
-                .padding(horizontal = 5.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = "Poster of $title",
-            contentScale = ContentScale.Crop,
-            placeholder = painterResource(id = R.drawable.placeholder),
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(0.67f)
-                    .clip(RoundedCornerShape(24.dp)),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = Color(0xFF14142B),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-        )
-        Spacer(modifier = Modifier.height(6.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Star,
-                contentDescription = "Rating Star",
-                tint = Color(0xFFFFC300),
-                modifier = Modifier.size(18.dp),
-            )
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(
-                text = rating.toString(),
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Medium,
-                color = Color(0xFF4E4B66),
-            )
-        }
-    }
-}
-
-@Suppress("ktlint:standard:function-naming")
-@Composable
-fun MovieRecommendationItem(
+fun MovieItem(
     modifier: Modifier = Modifier,
     title: String = "No Title",
     description: String = "No Descriptions",
     duration: String = "0h 0min",
     imageUrl: String = "",
-    onClick: () -> Unit,
 ) {
     Card(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .clickable(onClick = { onClick() }),
+        modifier = modifier.fillMaxWidth(),
         colors =
             CardDefaults.cardColors(
                 containerColor = Color.Transparent,

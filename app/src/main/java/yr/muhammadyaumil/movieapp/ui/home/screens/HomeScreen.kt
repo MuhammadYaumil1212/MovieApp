@@ -43,6 +43,7 @@ fun HomeScreen(
     modifier: Modifier,
     navigateToLogin: () -> Unit,
     navigateToProfile: () -> Unit,
+    navigateToDetail: (movieId: Int) -> Unit,
     onEvent: (onEvent: HomeEvent) -> Unit,
     state: HomeState,
 ) {
@@ -52,7 +53,7 @@ fun HomeScreen(
         showErrorTextCenter = true,
         errorMessage = state.errorMessage,
         onErrorConsumed = {
-            onEvent(HomeEvent.ErrorConsumed)
+            onEvent(HomeEvent.ResetError)
         },
     ) { innerPadding ->
         val movies = state.movieList?.results ?: emptyList()
@@ -129,6 +130,9 @@ fun HomeScreen(
                                         .formatRating()
                                         .toDouble(),
                                 imageUrl = "${BuildConfig.IMAGE_URL}${this.posterPath}",
+                                onClick = {
+                                    navigateToDetail(this.id ?: 0)
+                                },
                             )
                         }
                     }
@@ -150,6 +154,9 @@ fun HomeScreen(
                         description = this?.overview ?: "No Descriptions",
                         duration = this?.releaseDate.formatDate(),
                         imageUrl = "${BuildConfig.IMAGE_URL}${this?.posterPath}",
+                        onClick = {
+                            navigateToDetail(this?.id ?: 0)
+                        },
                     )
                 }
             }
