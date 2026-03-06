@@ -8,6 +8,7 @@ import yr.muhammadyaumil.movieapp.core.constants.ApiUrl
 import yr.muhammadyaumil.movieapp.data.model.DetailMovie.MovieDetailModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.MovieModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.NowPlayingMovieModel
+import yr.muhammadyaumil.movieapp.domain.entity.MovieImage.ImageMovieModel
 import javax.inject.Inject
 
 interface MovieApiServices {
@@ -16,6 +17,8 @@ interface MovieApiServices {
     suspend fun getNowPlayingMovies(): NowPlayingMovieModel
 
     suspend fun getDetailMovie(movieId: Int): MovieDetailModel
+
+    suspend fun getMovieImages(movieId: Int): ImageMovieModel
 }
 
 class MovieApiServicesImpl
@@ -36,4 +39,13 @@ class MovieApiServicesImpl
                         appendPathSegments(movieId.toString())
                     }
                 }.body()
+
+        override suspend fun getMovieImages(movieId: Int): ImageMovieModel =
+            client
+                .get(
+                    ApiUrl.GET_IMAGE_MOVIE.replace(
+                        "{movieId}",
+                        movieId.toString(),
+                    ),
+                ).body()
     }
