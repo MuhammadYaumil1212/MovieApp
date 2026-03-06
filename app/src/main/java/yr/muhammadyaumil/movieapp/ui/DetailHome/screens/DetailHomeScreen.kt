@@ -15,15 +15,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,6 +56,9 @@ fun DetailHomeScreen(
     navigateBack: () -> Unit,
     state: DetailHomeState,
 ) {
+    var isExpanded by remember { mutableStateOf(false) }
+    var showReadMoreButton by remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
     AppScaffold(
         modifier = modifier,
         isLoading = state.isLoading,
@@ -123,33 +133,36 @@ fun DetailHomeScreen(
                         modifier =
                             Modifier
                                 .fillMaxSize()
+                                .verticalScroll(scrollState)
                                 .padding(horizontal = 32.dp, vertical = 24.dp),
                     ) {
                         Spacer(modifier = Modifier.height(24.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(
-                                text = state.detailMovie?.title ?: "",
-                                fontSize = 36.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                color = Color.DarkGray,
-                            )
-                            Text(
-                                state.detailMovie?.releaseDate.formatDate(),
-                                fontSize = 18.sp,
-                                color = Color.Gray,
-                            )
-                        }
+                        Text(
+                            text = state.detailMovie?.title ?: "",
+                            fontSize = 24.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Color.DarkGray,
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Watch Time: ${state.detailMovie?.runtime} hours",
+                            state.detailMovie?.releaseDate.formatDate(),
+                            fontSize = 15.sp,
+                            maxLines = 1,
+                            color = Color.Gray,
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "${state.detailMovie?.runtime?.div(60)} hours ${
+                                state.detailMovie?.runtime?.mod(
+                                    60,
+                                )
+                            } minutes",
                             fontSize = 14.sp,
                             color = Color.Gray,
                         )
-
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text =
                                 state.detailMovie?.genres?.joinToString(separator = ", ") { it.name }
@@ -163,10 +176,28 @@ fun DetailHomeScreen(
                             fontSize = 15.sp,
                             color = Color.DarkGray,
                             lineHeight = 24.sp,
-                            maxLines = 4,
-                            overflow = TextOverflow.Ellipsis,
+                            maxLines = if (isExpanded) Int.MAX_VALUE else 3,
+                            onTextLayout = { textLayoutRes ->
+                                if (textLayoutRes.hasVisualOverflow) {
+                                    showReadMoreButton = true
+                                }
+                            },
                         )
+                        if (showReadMoreButton) {
+                            Text(
+                                text = if (isExpanded) "Show less" else "Show more",
+                                color = MaterialTheme.colorScheme.primary,
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                modifier =
+                                    Modifier
+                                        .padding(top = 4.dp)
+                                        .clickable { isExpanded = !isExpanded }
+                                        .padding(vertical = 4.dp),
+                            )
+                        }
 
+                        Spacer(modifier = Modifier.height(24.dp))
                         Spacer(modifier = Modifier.weight(1f))
 
                         Row(
