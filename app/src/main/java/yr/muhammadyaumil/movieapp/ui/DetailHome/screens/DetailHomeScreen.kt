@@ -170,7 +170,7 @@ fun DetailHomeScreen(
                             fontSize = 14.sp,
                             color = Color.Gray,
                         )
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(15.dp))
                         Text(
                             text = state.detailMovie?.overview ?: "No Overview",
                             fontSize = 15.sp,
