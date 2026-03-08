@@ -1,5 +1,7 @@
 package yr.muhammadyaumil.movieapp.ui.DetailHome.screens
 
+import android.util.Base64
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -8,7 +10,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,10 +23,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,7 +43,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import yr.muhammadyaumil.movieapp.BuildConfig
 import yr.muhammadyaumil.movieapp.core.composables.AppButton
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
 import yr.muhammadyaumil.movieapp.core.utils.formatDate
@@ -48,17 +50,32 @@ import yr.muhammadyaumil.movieapp.ui.DetailHome.event.DetailHomeEvent
 import yr.muhammadyaumil.movieapp.ui.DetailHome.state.DetailHomeState
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Suppress("ktlint:standard:function-naming")
 @Composable
 fun DetailHomeScreen(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     onEvent: (onEvent: DetailHomeEvent) -> Unit,
     navigateBack: () -> Unit,
     state: DetailHomeState,
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var showReadMoreButton by remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+    val scaffoldState = rememberBottomSheetScaffoldState()
+
+    val base64String = state.compressedMovieImage
+    val imageByteArray =
+        remember(base64String) {
+            if (!base64String.isNullOrEmpty()) {
+                try {
+                    Base64.decode(base64String, Base64.DEFAULT)
+                } catch (e: IllegalArgumentException) {
+                    null
+                }
+            } else {
+                null
+            }
+        }
+
     AppScaffold(
         modifier = modifier,
         isLoading = state.isLoading,
@@ -68,180 +85,181 @@ fun DetailHomeScreen(
             onEvent(DetailHomeEvent.ResetError)
         },
     ) { innerPadding ->
-        Box(
-            modifier =
-                Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    .background(Color.Black),
+        BottomSheetScaffold(
+            modifier = Modifier.padding(innerPadding),
+            scaffoldState = scaffoldState,
+            sheetShape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp),
+            sheetPeekHeight = 15.dp,
+            sheetContainerColor = Color.White,
+            sheetContent = {
+                FilmBottomSheets(
+                    scrollState = scrollState,
+                    state = state,
+                )
+            },
         ) {
-            AsyncImage(
-                model = "${BuildConfig.IMAGE_URL}${state.detailMovie?.posterPath}",
-                contentDescription = state.detailMovie?.title,
-                contentScale = ContentScale.Crop,
-                onLoading = { state.isLoading },
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.6f)
-                        .align(Alignment.TopCenter),
-            )
-
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBackIosNew,
-                    contentDescription = "Back",
-                    tint = Color.White,
-                    modifier =
-                        Modifier
-                            .size(28.dp)
-                            .clickable { navigateBack() },
-                )
-                Icon(
-                    imageVector = Icons.Default.BookmarkBorder,
-                    contentDescription = "Bookmark",
-                    tint = Color.White,
-                    modifier =
-                        Modifier
-                            .size(28.dp)
-                            .clickable { /* TODO: Bookmark action */ },
-                )
-            }
-
             Box(
                 modifier =
                     Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(0.55f)
-                        .align(Alignment.BottomCenter),
+                        .fillMaxSize()
+                        .background(Color.Black),
             ) {
-                Surface(
-                    shape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp),
-                    color = Color.White,
+                AsyncImage(
+                    model = imageByteArray,
+                    contentDescription = "Image Posters",
+                    contentScale = ContentScale.Fit,
+                    onLoading = { state.isLoading },
+                    modifier = Modifier.fillMaxSize(),
+                )
+                Row(
                     modifier =
                         Modifier
-                            .fillMaxSize()
-                            .padding(top = 36.dp),
+                            .fillMaxWidth()
+                            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Column(
+                    Icon(
+                        imageVector = Icons.Default.ArrowBackIosNew,
+                        contentDescription = "Back",
+                        tint = Color.White,
                         modifier =
                             Modifier
-                                .fillMaxSize()
-                                .verticalScroll(scrollState)
-                                .padding(horizontal = 32.dp, vertical = 24.dp),
-                    ) {
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Text(
-                            text = state.detailMovie?.title ?: "",
-                            fontSize = 24.sp,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = Color.DarkGray,
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            state.detailMovie?.releaseDate.formatDate(),
-                            fontSize = 15.sp,
-                            maxLines = 1,
-                            color = Color.Gray,
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "${state.detailMovie?.runtime?.div(60)} hours ${
-                                state.detailMovie?.runtime?.mod(
-                                    60,
-                                )
-                            } minutes",
-                            fontSize = 14.sp,
-                            color = Color.Gray,
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text =
-                                state.detailMovie?.genres?.joinToString(separator = ", ") { it.name }
-                                    ?: "",
-                            fontSize = 14.sp,
-                            color = Color.Gray,
-                        )
-                        Spacer(modifier = Modifier.height(15.dp))
-                        Text(
-                            text = state.detailMovie?.overview ?: "No Overview",
-                            fontSize = 15.sp,
-                            color = Color.DarkGray,
-                            lineHeight = 24.sp,
-                            maxLines = if (isExpanded) Int.MAX_VALUE else 3,
-                            onTextLayout = { textLayoutRes ->
-                                if (textLayoutRes.hasVisualOverflow) {
-                                    showReadMoreButton = true
-                                }
-                            },
-                        )
-                        if (showReadMoreButton) {
-                            Text(
-                                text = if (isExpanded) "Show less" else "Show more",
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                modifier =
-                                    Modifier
-                                        .padding(top = 4.dp)
-                                        .clickable { isExpanded = !isExpanded }
-                                        .padding(vertical = 4.dp),
-                            )
-                        }
+                                .size(28.dp)
+                                .clickable { navigateBack() },
+                    )
+                    Icon(
+                        imageVector = Icons.Default.BookmarkBorder,
+                        contentDescription = "Bookmark",
+                        tint = Color.White,
+                        modifier =
+                            Modifier
+                                .size(28.dp)
+                                .clickable {},
+                    )
+                }
+            }
+        }
+    }
+}
 
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Spacer(modifier = Modifier.weight(1f))
+@Suppress("ktlint:standard:function-naming")
+@Composable
+fun FilmBottomSheets(
+    modifier: Modifier = Modifier,
+    scrollState: ScrollState,
+    state: DetailHomeState,
+) {
+    var isExpanded by remember { mutableStateOf(false) }
+    var showReadMoreButton by remember { mutableStateOf(false) }
 
-                        Row(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 16.dp),
-                            horizontalArrangement = Arrangement.Absolute.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            AppButton(
-                                modifier =
-                                    Modifier
-                                        .weight(1f)
-                                        .height(56.dp),
-                                isLoading = state.buyTicketLoading,
-                                onClick = {},
-                                text = "But Ticket",
-                            )
-                            Spacer(modifier = Modifier.width(16.dp))
-
-                            Box(
-                                contentAlignment = Alignment.Center,
-                                modifier =
-                                    Modifier
-                                        .size(56.dp)
-                                        .border(2.dp, Color.Gray, CircleShape),
-                            ) {
-                                Text(
-                                    text =
-                                        state.detailMovie?.voteAverage?.let {
-                                            String.format(
-                                                Locale.getDefault(),
-                                                "%.1f",
-                                                it,
-                                            )
-                                        } ?: "0.0",
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 18.sp,
-                                    color = Color.Gray,
-                                )
-                            }
-                        }
+    Column(
+        modifier =
+            modifier
+                .fillMaxWidth(),
+    ) {
+        Column(
+            modifier =
+                Modifier
+                    .weight(1f, fill = false)
+                    .verticalScroll(scrollState)
+                    .padding(horizontal = 32.dp, vertical = 24.dp),
+        ) {
+            Text(
+                text = state.detailMovie?.title ?: "",
+                fontSize = 24.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.ExtraBold,
+                color = Color.DarkGray,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = state.detailMovie?.releaseDate?.formatDate() ?: "",
+                fontSize = 15.sp,
+                maxLines = 1,
+                color = Color.Gray,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "${state.detailMovie?.runtime?.div(60)} hours ${
+                    state.detailMovie?.runtime?.mod(
+                        60,
+                    )
+                } minutes",
+                fontSize = 14.sp,
+                color = Color.Gray,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = state.detailMovie?.genres?.joinToString(separator = ", ") { it.name } ?: "",
+                fontSize = 14.sp,
+                color = Color.Gray,
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+            Text(
+                text = state.detailMovie?.overview ?: "No Overview",
+                fontSize = 15.sp,
+                color = Color.DarkGray,
+                lineHeight = 24.sp,
+                maxLines = if (isExpanded) Int.MAX_VALUE else 3,
+                onTextLayout = { textLayoutRes ->
+                    if (textLayoutRes.hasVisualOverflow) {
+                        showReadMoreButton = true
                     }
+                },
+            )
+            if (showReadMoreButton) {
+                Text(
+                    text = if (isExpanded) "Show less" else "Show more",
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier =
+                        Modifier
+                            .padding(top = 4.dp)
+                            .clickable { isExpanded = !isExpanded }
+                            .padding(vertical = 4.dp),
+                )
+            }
+            Spacer(
+                modifier =
+                    Modifier
+                        .weight(1f, fill = true)
+                        .height(10.dp),
+            )
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Absolute.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                AppButton(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .height(56.dp),
+                    isLoading = state.buyTicketLoading,
+                    onClick = {},
+                    text = "Buy Ticket",
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier =
+                        Modifier
+                            .size(56.dp)
+                            .border(2.dp, Color.Gray, CircleShape),
+                ) {
+                    Text(
+                        text =
+                            state.detailMovie?.voteAverage?.let {
+                                String.format(Locale.getDefault(), "%.1f", it)
+                            } ?: "0.0",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        color = Color.Gray,
+                    )
                 }
             }
         }

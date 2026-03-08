@@ -8,7 +8,7 @@ import yr.muhammadyaumil.movieapp.core.constants.ApiUrl
 import yr.muhammadyaumil.movieapp.data.model.DetailMovie.MovieDetailModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.MovieModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.NowPlayingMovieModel
-import yr.muhammadyaumil.movieapp.domain.entity.MovieImage.ImageMovieModel
+import yr.muhammadyaumil.movieapp.data.model.MovieImage.ImageMovieModel
 import javax.inject.Inject
 
 interface MovieApiServices {

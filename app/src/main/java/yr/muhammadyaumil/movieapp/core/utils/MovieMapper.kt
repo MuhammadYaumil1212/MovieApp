@@ -8,6 +8,10 @@ import yr.muhammadyaumil.movieapp.data.model.Movie.MovieModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.NowPlayingMovieModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.ResultModel
 import yr.muhammadyaumil.movieapp.data.model.Movie.ResultNowPlayingModel
+import yr.muhammadyaumil.movieapp.data.model.MovieImage.BackdropModel
+import yr.muhammadyaumil.movieapp.data.model.MovieImage.ImageMovieModel
+import yr.muhammadyaumil.movieapp.data.model.MovieImage.LogoModel
+import yr.muhammadyaumil.movieapp.data.model.MovieImage.PosterModel
 import yr.muhammadyaumil.movieapp.domain.entity.DetailMovie.Genre
 import yr.muhammadyaumil.movieapp.domain.entity.DetailMovie.MovieCollection
 import yr.muhammadyaumil.movieapp.domain.entity.DetailMovie.MovieDetail
@@ -16,6 +20,10 @@ import yr.muhammadyaumil.movieapp.domain.entity.Movie.MovieEntity
 import yr.muhammadyaumil.movieapp.domain.entity.Movie.MovieGeneralEntity
 import yr.muhammadyaumil.movieapp.domain.entity.Movie.NowPlayingMovieEntity
 import yr.muhammadyaumil.movieapp.domain.entity.Movie.ResultNowPlayingEntity
+import yr.muhammadyaumil.movieapp.domain.entity.MovieImage.BackdropEntity
+import yr.muhammadyaumil.movieapp.domain.entity.MovieImage.ImageMovieEntity
+import yr.muhammadyaumil.movieapp.domain.entity.MovieImage.LogoEntity
+import yr.muhammadyaumil.movieapp.domain.entity.MovieImage.PosterEntity
 
 fun MovieModel.toEntity(): MovieGeneralEntity =
     MovieGeneralEntity(
@@ -112,4 +120,48 @@ fun ProductionCompanyModel.toEntity(): ProductionCompany =
         id = this.id ?: 0,
         name = this.name ?: "",
         logoPath = this.logoPath ?: "",
+    )
+
+fun ImageMovieModel.toEntity(): ImageMovieEntity =
+    ImageMovieEntity(
+        backdrops = this.backdrops?.map { it?.toEntity() },
+        id = this.id,
+        logos = this.logos?.map { it?.toEntity() },
+        posters = this.posters?.map { it?.toEntity() },
+    )
+
+fun BackdropModel.toEntity(): BackdropEntity =
+    BackdropEntity(
+        aspectRatio = this.aspectRatio,
+        filePath = this.filePath,
+        height = this.height,
+        iso31661 = this.iso31661,
+        iso6391 = this.iso6391,
+        voteAverage = this.voteAverage,
+        voteCount = this.voteCount,
+        width = this.width,
+    )
+
+fun PosterModel.toEntity(): PosterEntity =
+    PosterEntity(
+        aspectRatio = this.aspectRatio,
+        height = this.height,
+        iso31661 = this.iso31661,
+        iso6391 = this.iso6391,
+        voteAverage = this.voteAverage,
+        voteCount = this.voteCount,
+        width = this.width,
+        filePath = this.filePath,
+    )
+
+fun LogoModel.toEntity(): LogoEntity =
+    LogoEntity(
+        aspectRatio = this.aspectRatio,
+        filePath = this.filePath,
+        height = this.height,
+        iso31661 = this.iso31661,
+        iso6391 = this.iso6391,
+        voteAverage = this.voteAverage,
+        voteCount = this.voteCount,
+        width = this.width,
     )

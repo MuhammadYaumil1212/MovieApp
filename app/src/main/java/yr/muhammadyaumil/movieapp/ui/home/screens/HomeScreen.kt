@@ -129,7 +129,7 @@ fun HomeScreen(
                                     this.voteAverage
                                         .formatRating()
                                         .toDouble(),
-                                imageUrl = "${BuildConfig.IMAGE_URL}${this.posterPath}",
+                                imageUrl = "${BuildConfig.IMAGE_URL}/w200/${this.posterPath}",
                                 onClick = {
                                     navigateToDetail(this.id ?: 0)
                                 },
@@ -153,7 +153,7 @@ fun HomeScreen(
                         title = this?.title ?: "No Title",
                         description = this?.overview ?: "No Descriptions",
                         duration = this?.releaseDate.formatDate(),
-                        imageUrl = "${BuildConfig.IMAGE_URL}${this?.posterPath}",
+                        imageUrl = "${BuildConfig.IMAGE_URL}/w200/${this?.posterPath}",
                         onClick = {
                             navigateToDetail(this?.id ?: 0)
                         },

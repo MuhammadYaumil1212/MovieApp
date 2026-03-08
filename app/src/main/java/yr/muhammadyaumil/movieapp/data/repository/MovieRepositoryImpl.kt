@@ -14,6 +14,7 @@ import yr.muhammadyaumil.movieapp.data.remote.MovieApiServices
 import yr.muhammadyaumil.movieapp.domain.entity.DetailMovie.MovieDetail
 import yr.muhammadyaumil.movieapp.domain.entity.Movie.MovieGeneralEntity
 import yr.muhammadyaumil.movieapp.domain.entity.Movie.NowPlayingMovieEntity
+import yr.muhammadyaumil.movieapp.domain.entity.MovieImage.ImageMovieEntity
 import yr.muhammadyaumil.movieapp.domain.repository.MovieRepository
 import javax.inject.Inject
 
@@ -65,5 +66,18 @@ class MovieRepositoryImpl
             }.catch { e ->
                 Log.e(AppConstants.API_LOGGER, e.localizedMessage ?: AppConstants.NULL_MESSAGE)
                 emit(Resources.Error(e.localizedMessage))
+            }.flowOn(Dispatchers.IO)
+
+        override suspend fun getImageMovie(movieId: Int): Flow<Resources<ImageMovieEntity>> =
+            flow<Resources<ImageMovieEntity>> {
+                val imageMovieResponse =
+                    movieApiServices
+                        .getMovieImages(movieId)
+                emit(Resources.Success(imageMovieResponse.toEntity()))
+            }.onStart {
+                emit(Resources.Loading())
+            }.catch {
+                Log.e(AppConstants.API_LOGGER, it.localizedMessage ?: AppConstants.NULL_MESSAGE)
+                emit(Resources.Error(it.localizedMessage))
             }.flowOn(Dispatchers.IO)
     }
