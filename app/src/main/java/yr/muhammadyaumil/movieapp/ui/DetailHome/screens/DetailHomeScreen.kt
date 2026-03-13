@@ -1,9 +1,11 @@
 package yr.muhammadyaumil.movieapp.ui.DetailHome.screens
 
 import android.util.Base64
-import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,24 +14,28 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material.icons.rounded.CalendarMonth
+import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -52,7 +58,9 @@ fun DetailHomeScreen(
     state: DetailHomeState,
 ) {
     val scrollState = rememberScrollState()
-    val scaffoldState = rememberBottomSheetScaffoldState()
+    val genreScrollState = rememberScrollState()
+    var isExpanded by remember { mutableStateOf(false) }
+    var showReadMoreButton by remember { mutableStateOf(false) }
 
     val base64String = state.compressedMovieImage
     val imageByteArray =
@@ -73,138 +81,193 @@ fun DetailHomeScreen(
         isLoading = state.isLoading,
         showErrorTextCenter = true,
         errorMessage = state.errorMessage,
-        topBar = {
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBackIosNew,
-                    contentDescription = "Back",
-                    modifier =
-                        Modifier
-                            .size(28.dp)
-                            .clickable { navigateBack() },
-                )
-                Icon(
-                    imageVector = Icons.Default.BookmarkBorder,
-                    contentDescription = "Bookmark",
-                    modifier =
-                        Modifier
-                            .size(28.dp)
-                            .clickable {},
-                )
-            }
-        },
         onErrorConsumed = {
             onEvent(DetailHomeEvent.ResetError)
         },
     ) { innerPadding ->
-        BottomSheetScaffold(
-            modifier = Modifier.padding(innerPadding),
-            scaffoldState = scaffoldState,
-            sheetShape = RoundedCornerShape(topStart = 40.dp, topEnd = 40.dp),
-            sheetPeekHeight = 15.dp,
-            sheetContainerColor = Color.White,
-            sheetContent = {
-                FilmBottomSheets(
-                    scrollState = scrollState,
-                    state = state,
-                )
-            },
-        ) {
-            AsyncImage(
-                model = imageByteArray,
-                contentDescription = "Image Posters",
-                contentScale = ContentScale.Fit,
-                onLoading = { state.isLoading },
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
-    }
-}
-
-@Suppress("ktlint:standard:function-naming")
-@Composable
-fun FilmBottomSheets(
-    modifier: Modifier = Modifier,
-    scrollState: ScrollState,
-    state: DetailHomeState,
-) {
-    var isExpanded by remember { mutableStateOf(false) }
-    var showReadMoreButton by remember { mutableStateOf(false) }
-
-    Column(
-        modifier =
-            modifier
-                .fillMaxWidth(),
-    ) {
-        Column(
+        Box(
             modifier =
                 Modifier
-                    .weight(1f, fill = false)
-                    .verticalScroll(scrollState)
-                    .padding(horizontal = 32.dp, vertical = 24.dp),
+                    .fillMaxSize()
+                    .padding(innerPadding),
         ) {
-            Text(
-                text = state.detailMovie?.title ?: "",
-                fontSize = 24.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.ExtraBold,
-                color = Color.DarkGray,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = state.detailMovie?.releaseDate?.formatDate() ?: "",
-                fontSize = 15.sp,
-                maxLines = 1,
-                color = Color.Gray,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "${state.detailMovie?.runtime?.div(60)} hours ${
-                    state.detailMovie?.runtime?.mod(
-                        60,
-                    )
-                } minutes",
-                fontSize = 14.sp,
-                color = Color.Gray,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = state.detailMovie?.genres?.joinToString(separator = ", ") { it.name } ?: "",
-                fontSize = 14.sp,
-                color = Color.Gray,
-            )
-            Spacer(modifier = Modifier.height(15.dp))
-            Text(
-                text = state.detailMovie?.overview ?: "No Overview",
-                fontSize = 15.sp,
-                color = Color.DarkGray,
-                lineHeight = 24.sp,
-                maxLines = if (isExpanded) Int.MAX_VALUE else 3,
-                onTextLayout = { textLayoutRes ->
-                    if (textLayoutRes.hasVisualOverflow) {
-                        showReadMoreButton = true
-                    }
-                },
-            )
-            if (showReadMoreButton) {
-                Text(
-                    text = if (isExpanded) "Show less" else "Show more",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState),
+            ) {
+                AsyncImage(
                     modifier =
                         Modifier
-                            .padding(top = 4.dp)
-                            .clickable { isExpanded = !isExpanded }
-                            .padding(vertical = 4.dp),
+                            .fillMaxWidth()
+                            .height(450.dp)
+                            .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp)),
+                    model = imageByteArray,
+                    contentDescription = "Image Posters",
+                    contentScale = ContentScale.Crop,
+                    onLoading = { state.isLoading },
                 )
+                Column(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                ) {
+                    Text(
+                        text = state.detailMovie?.title ?: "Unknown Title",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = MaterialTheme.colorScheme.onBackground,
+                        lineHeight = 34.sp,
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Rounded.CalendarMonth,
+                                contentDescription = null,
+                                tint = Color.Gray,
+                                modifier = Modifier.size(18.dp),
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = state.detailMovie?.releaseDate?.formatDate() ?: "-",
+                                fontSize = 14.sp,
+                                color = Color.Gray,
+                                fontWeight = FontWeight.Medium,
+                            )
+                        }
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Rounded.Schedule,
+                                contentDescription = null,
+                                tint = Color.Gray,
+                                modifier = Modifier.size(18.dp),
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            val hours = state.detailMovie?.runtime?.div(60) ?: 0
+                            val minutes = state.detailMovie?.runtime?.mod(60) ?: 0
+                            Text(
+                                text = "${hours}h ${minutes}m",
+                                fontSize = 14.sp,
+                                color = Color.Gray,
+                                fontWeight = FontWeight.Medium,
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(genreScrollState),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        state.detailMovie?.genres?.forEach { genre ->
+                            Box(
+                                modifier =
+                                    Modifier
+                                        .background(
+                                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                            shape = CircleShape,
+                                        ).padding(horizontal = 16.dp, vertical = 8.dp),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Text(
+                                    text = genre.name,
+                                    fontSize = 13.sp,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Text(
+                        text = "Storyline",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onBackground,
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = state.detailMovie?.overview ?: "No Overview available.",
+                        fontSize = 15.sp,
+                        color = Color.DarkGray,
+                        lineHeight = 24.sp,
+                        maxLines = if (isExpanded) Int.MAX_VALUE else 4,
+                        overflow = TextOverflow.Ellipsis,
+                        onTextLayout = { textLayoutRes ->
+                            if (textLayoutRes.hasVisualOverflow) {
+                                showReadMoreButton = true
+                            }
+                        },
+                    )
+                    if (showReadMoreButton) {
+                        Text(
+                            text = if (isExpanded) "Show less" else "Read more",
+                            color = MaterialTheme.colorScheme.primary,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier =
+                                Modifier
+                                    .padding(top = 4.dp)
+                                    .clickable { isExpanded = !isExpanded }
+                                    .padding(vertical = 4.dp),
+                        )
+                    }
+                }
+            }
+
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 24.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Box(
+                    modifier =
+                        Modifier
+                            .size(40.dp)
+                            .background(Color.Black.copy(alpha = 0.4f), shape = CircleShape)
+                            .clickable { navigateBack() },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBackIosNew,
+                        contentDescription = "Back",
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp),
+                    )
+                }
+
+                Box(
+                    modifier =
+                        Modifier
+                            .size(40.dp)
+                            .background(Color.Black.copy(alpha = 0.4f), shape = CircleShape)
+                            .clickable { /* Handle Bookmark Event */ },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.BookmarkBorder,
+                        contentDescription = "Bookmark",
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
             }
         }
     }
