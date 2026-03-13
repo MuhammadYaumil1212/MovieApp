@@ -2,11 +2,8 @@ package yr.muhammadyaumil.movieapp.ui.DetailHome.screens
 
 import android.util.Base64
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,9 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -34,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -43,12 +37,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import yr.muhammadyaumil.movieapp.core.composables.AppButton
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
 import yr.muhammadyaumil.movieapp.core.utils.formatDate
 import yr.muhammadyaumil.movieapp.ui.DetailHome.event.DetailHomeEvent
 import yr.muhammadyaumil.movieapp.ui.DetailHome.state.DetailHomeState
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("ktlint:standard:function-naming")
@@ -81,6 +73,32 @@ fun DetailHomeScreen(
         isLoading = state.isLoading,
         showErrorTextCenter = true,
         errorMessage = state.errorMessage,
+        topBar = {
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp, start = 16.dp, end = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBackIosNew,
+                    contentDescription = "Back",
+                    modifier =
+                        Modifier
+                            .size(28.dp)
+                            .clickable { navigateBack() },
+                )
+                Icon(
+                    imageVector = Icons.Default.BookmarkBorder,
+                    contentDescription = "Bookmark",
+                    modifier =
+                        Modifier
+                            .size(28.dp)
+                            .clickable {},
+                )
+            }
+        },
         onErrorConsumed = {
             onEvent(DetailHomeEvent.ResetError)
         },
@@ -98,46 +116,13 @@ fun DetailHomeScreen(
                 )
             },
         ) {
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(Color.Black),
-            ) {
-                AsyncImage(
-                    model = imageByteArray,
-                    contentDescription = "Image Posters",
-                    contentScale = ContentScale.Fit,
-                    onLoading = { state.isLoading },
-                    modifier = Modifier.fillMaxSize(),
-                )
-                Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 16.dp, start = 16.dp, end = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBackIosNew,
-                        contentDescription = "Back",
-                        tint = Color.White,
-                        modifier =
-                            Modifier
-                                .size(28.dp)
-                                .clickable { navigateBack() },
-                    )
-                    Icon(
-                        imageVector = Icons.Default.BookmarkBorder,
-                        contentDescription = "Bookmark",
-                        tint = Color.White,
-                        modifier =
-                            Modifier
-                                .size(28.dp)
-                                .clickable {},
-                    )
-                }
-            }
+            AsyncImage(
+                model = imageByteArray,
+                contentDescription = "Image Posters",
+                contentScale = ContentScale.Fit,
+                onLoading = { state.isLoading },
+                modifier = Modifier.fillMaxSize(),
+            )
         }
     }
 }
@@ -220,47 +205,6 @@ fun FilmBottomSheets(
                             .clickable { isExpanded = !isExpanded }
                             .padding(vertical = 4.dp),
                 )
-            }
-            Spacer(
-                modifier =
-                    Modifier
-                        .weight(1f, fill = true)
-                        .height(10.dp),
-            )
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth(),
-                horizontalArrangement = Arrangement.Absolute.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                AppButton(
-                    modifier =
-                        Modifier
-                            .weight(1f)
-                            .height(56.dp),
-                    isLoading = state.buyTicketLoading,
-                    onClick = {},
-                    text = "Buy Ticket",
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier =
-                        Modifier
-                            .size(56.dp)
-                            .border(2.dp, Color.Gray, CircleShape),
-                ) {
-                    Text(
-                        text =
-                            state.detailMovie?.voteAverage?.let {
-                                String.format(Locale.getDefault(), "%.1f", it)
-                            } ?: "0.0",
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        color = Color.Gray,
-                    )
-                }
             }
         }
     }
