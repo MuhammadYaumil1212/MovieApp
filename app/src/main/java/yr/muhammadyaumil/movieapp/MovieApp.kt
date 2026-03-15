@@ -125,7 +125,7 @@ fun MovieApp() {
                 route = Screen.DetailHome.route,
                 arguments = listOf(navArgument("movieId") { type = NavType.IntType }),
             ) { navBackStackEntry ->
-                val movieId = navBackStackEntry.arguments?.getInt("movieId") ?: return@composable
+                navBackStackEntry.arguments?.getInt("movieId") ?: return@composable
                 val detailHomeViewModel = hiltViewModel<DetailHomeViewModel>()
                 val state by detailHomeViewModel.state.collectAsStateWithLifecycle()
                 DetailHomeScreen(
