@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -22,8 +23,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.Schedule
+import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +49,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
 import yr.muhammadyaumil.movieapp.core.utils.formatDate
+import yr.muhammadyaumil.movieapp.core.utils.formatRating
 import yr.muhammadyaumil.movieapp.ui.DetailHome.event.DetailHomeEvent
 import yr.muhammadyaumil.movieapp.ui.DetailHome.state.DetailHomeState
 
@@ -97,17 +102,84 @@ fun DetailHomeScreen(
                         .fillMaxSize()
                         .verticalScroll(scrollState),
             ) {
-                AsyncImage(
+                Box(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .height(450.dp)
-                            .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp)),
-                    model = imageByteArray,
-                    contentDescription = "Image Posters",
-                    contentScale = ContentScale.Crop,
-                    onLoading = { state.isLoading },
-                )
+                            .height(450.dp),
+                ) {
+                    AsyncImage(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(450.dp)
+                                .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)),
+                        model = imageByteArray,
+                        contentDescription = "Image Posters",
+                        contentScale = ContentScale.Crop,
+                        onLoading = { state.isLoading },
+                    )
+                    Row(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 24.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(40.dp)
+                                    .background(Color.Gray.copy(alpha = 0.4f), shape = CircleShape)
+                                    .clickable { navigateBack() },
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ArrowBackIosNew,
+                                contentDescription = "Back",
+                                tint = Color.White,
+                                modifier = Modifier.size(20.dp),
+                            )
+                        }
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(40.dp)
+                                    .background(Color.Gray.copy(alpha = 0.4f), shape = CircleShape)
+                                    .clickable { /* Handle Bookmark Event */ },
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.BookmarkBorder,
+                                contentDescription = "Bookmark",
+                                tint = Color.White,
+                                modifier = Modifier.size(24.dp),
+                            )
+                        }
+                    }
+                    Box(
+                        modifier =
+                            Modifier
+                                .align(Alignment.BottomEnd)
+                                .padding(end = 16.dp, bottom = 16.dp)
+                                .size(48.dp)
+                                .offset(y = 35.dp)
+                                .shadow(elevation = 10.dp, shape = CircleShape)
+                                .background(Color.White, shape = CircleShape)
+                                .clickable { /* TODO:action when film loved */ },
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.FavoriteBorder,
+                            contentDescription = "Favorite",
+                            tint = Color.Red,
+                            modifier =
+                                Modifier
+                                    .size(26.dp)
+                                    .height(450.dp),
+                        )
+                    }
+                }
                 Column(
                     modifier =
                         Modifier
@@ -123,10 +195,40 @@ fun DetailHomeScreen(
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
+
                     Row(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(rememberScrollState()),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
+                        // Rating
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Rounded.Star,
+                                contentDescription = "Rating",
+                                tint = Color(0xFFFFC107),
+                                modifier = Modifier.size(20.dp),
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            val rating = state.detailMovie?.voteAverage ?: 0.0
+                            Text(
+                                text = rating.formatRating(),
+                                fontSize = 15.sp,
+                                color = MaterialTheme.colorScheme.onBackground,
+                                fontWeight = FontWeight.Bold,
+                            )
+                            Text(
+                                text = "/10",
+                                fontSize = 13.sp,
+                                color = Color.Gray,
+                                fontWeight = FontWeight.Medium,
+                            )
+                        }
+
+                        // Release Date
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = Icons.Rounded.CalendarMonth,
@@ -142,6 +244,8 @@ fun DetailHomeScreen(
                                 fontWeight = FontWeight.Medium,
                             )
                         }
+
+                        // Runtime
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
                                 imageVector = Icons.Rounded.Schedule,
@@ -227,46 +331,6 @@ fun DetailHomeScreen(
                                     .padding(vertical = 4.dp),
                         )
                     }
-                }
-            }
-
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 24.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Box(
-                    modifier =
-                        Modifier
-                            .size(40.dp)
-                            .background(Color.Black.copy(alpha = 0.4f), shape = CircleShape)
-                            .clickable { navigateBack() },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.ArrowBackIosNew,
-                        contentDescription = "Back",
-                        tint = Color.White,
-                        modifier = Modifier.size(20.dp),
-                    )
-                }
-
-                Box(
-                    modifier =
-                        Modifier
-                            .size(40.dp)
-                            .background(Color.Black.copy(alpha = 0.4f), shape = CircleShape)
-                            .clickable { /* Handle Bookmark Event */ },
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.BookmarkBorder,
-                        contentDescription = "Bookmark",
-                        tint = Color.White,
-                        modifier = Modifier.size(24.dp),
-                    )
                 }
             }
         }
