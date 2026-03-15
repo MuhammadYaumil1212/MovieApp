@@ -57,7 +57,9 @@ fun HomeScreen(
     ) {
         val movies = state.movieList?.results ?: emptyList()
         val nowPlayingMovies = state.nowPlayingList?.results ?: emptyList()
-        LazyColumn {
+        LazyColumn(
+            modifier = Modifier.padding(top = 16.dp),
+        ) {
             // item for Headers
             item {
                 Row(
