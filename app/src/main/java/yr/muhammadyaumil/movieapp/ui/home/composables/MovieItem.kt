@@ -44,8 +44,7 @@ fun MovieRecentItem(
         modifier =
             modifier
                 .width(160.dp)
-                .clickable(onClick = { onClick() })
-                .padding(horizontal = 5.dp),
+                .clickable(onClick = { onClick() }),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         AsyncImage(
@@ -56,8 +55,9 @@ fun MovieRecentItem(
             modifier =
                 Modifier
                     .fillMaxWidth()
+                    .padding(end = 16.dp)
                     .aspectRatio(0.67f)
-                    .clip(RoundedCornerShape(24.dp)),
+                    .clip(RoundedCornerShape(10.dp)),
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
@@ -103,6 +103,7 @@ fun MovieRecommendationItem(
         modifier =
             modifier
                 .fillMaxWidth()
+                .padding(horizontal = 16.dp)
                 .clickable(onClick = { onClick() }),
         colors =
             CardDefaults.cardColors(

@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -55,25 +54,17 @@ fun HomeScreen(
         onErrorConsumed = {
             onEvent(HomeEvent.ResetError)
         },
-    ) { innerPadding ->
+    ) {
         val movies = state.movieList?.results ?: emptyList()
         val nowPlayingMovies = state.nowPlayingList?.results ?: emptyList()
-        LazyColumn(
-            modifier =
-                Modifier
-                    .fillMaxSize(),
-            contentPadding =
-                PaddingValues(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = innerPadding.calculateBottomPadding(),
-                ),
-        ) {
+        LazyColumn {
+            // item for Headers
             item {
                 Row(
                     modifier =
                         Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
@@ -108,18 +99,19 @@ fun HomeScreen(
                 }
                 Spacer(modifier = Modifier.height(20.dp))
             }
+            // item for header now playing
             item {
                 Text(
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = modifier.padding(horizontal = 16.dp),
                     text = "Now Playing",
                     style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp),
                 )
                 Spacer(modifier = Modifier.height(15.dp))
+            }
+            // item for now playing list
+            item {
                 LazyRow(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 10.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp),
                 ) {
                     items(nowPlayingMovies.size) { index ->
                         with(nowPlayingMovies[index]) {
@@ -138,18 +130,19 @@ fun HomeScreen(
                     }
                 }
             }
+            // item for header latest movies
             item {
                 Spacer(modifier = Modifier.height(20.dp))
                 Text(
-                    modifier = Modifier.padding(horizontal = 16.dp),
+                    modifier = modifier.padding(horizontal = 16.dp),
                     text = "Latest Movies",
                     style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp),
                 )
             }
+            // item for list of latest movies
             items(movies.size) { index ->
                 with(movies[index]) {
                     MovieRecommendationItem(
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                         title = this?.title ?: "No Title",
                         description = this?.overview ?: "No Descriptions",
                         duration = this?.releaseDate.formatDate(),
