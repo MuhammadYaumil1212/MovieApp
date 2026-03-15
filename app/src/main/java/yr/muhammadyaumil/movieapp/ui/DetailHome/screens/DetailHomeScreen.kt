@@ -90,247 +90,237 @@ fun DetailHomeScreen(
             onEvent(DetailHomeEvent.ResetError)
         },
     ) { innerPadding ->
-        Box(
+        Column(
             modifier =
                 Modifier
+                    .padding(innerPadding)
                     .fillMaxSize()
-                    .padding(innerPadding),
+                    .verticalScroll(scrollState),
         ) {
-            Column(
+            Box(
                 modifier =
                     Modifier
-                        .fillMaxSize()
-                        .verticalScroll(scrollState),
+                        .fillMaxWidth()
+                        .height(450.dp),
             ) {
-                Box(
+                AsyncImage(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .height(450.dp),
+                            .height(450.dp)
+                            .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)),
+                    model = imageByteArray,
+                    contentDescription = "Image Posters",
+                    contentScale = ContentScale.Crop,
+                    onLoading = { state.isLoading },
+                )
+                Row(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 24.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    AsyncImage(
+                    Box(
                         modifier =
                             Modifier
-                                .fillMaxWidth()
-                                .height(450.dp)
-                                .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp)),
-                        model = imageByteArray,
-                        contentDescription = "Image Posters",
-                        contentScale = ContentScale.Crop,
-                        onLoading = { state.isLoading },
-                    )
-                    Row(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp, vertical = 24.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                                .size(40.dp)
+                                .background(Color.Gray.copy(alpha = 0.4f), shape = CircleShape)
+                                .clickable { navigateBack() },
+                        contentAlignment = Alignment.Center,
                     ) {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .size(40.dp)
-                                    .background(Color.Gray.copy(alpha = 0.4f), shape = CircleShape)
-                                    .clickable { navigateBack() },
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.ArrowBackIosNew,
-                                contentDescription = "Back",
-                                tint = Color.White,
-                                modifier = Modifier.size(20.dp),
-                            )
-                        }
-                        Box(
-                            modifier =
-                                Modifier
-                                    .size(40.dp)
-                                    .background(Color.Gray.copy(alpha = 0.4f), shape = CircleShape)
-                                    .clickable { /* Handle Bookmark Event */ },
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.BookmarkBorder,
-                                contentDescription = "Bookmark",
-                                tint = Color.White,
-                                modifier = Modifier.size(24.dp),
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Default.ArrowBackIosNew,
+                            contentDescription = "Back",
+                            tint = Color.White,
+                            modifier = Modifier.size(20.dp),
+                        )
                     }
                     Box(
                         modifier =
                             Modifier
-                                .align(Alignment.BottomEnd)
-                                .padding(end = 16.dp, bottom = 16.dp)
-                                .size(48.dp)
-                                .offset(y = 35.dp)
-                                .shadow(elevation = 10.dp, shape = CircleShape)
-                                .background(Color.White, shape = CircleShape)
-                                .clickable { /* TODO:action when film loved */ },
+                                .size(40.dp)
+                                .background(Color.Gray.copy(alpha = 0.4f), shape = CircleShape)
+                                .clickable { /* Handle Bookmark Event */ },
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
-                            imageVector = Icons.Default.FavoriteBorder,
-                            contentDescription = "Favorite",
-                            tint = Color.Red,
-                            modifier =
-                                Modifier
-                                    .size(26.dp)
-                                    .height(450.dp),
+                            imageVector = Icons.Default.BookmarkBorder,
+                            contentDescription = "Bookmark",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp),
                         )
                     }
                 }
-                Column(
+                Box(
+                    modifier =
+                        Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(end = 16.dp, bottom = 16.dp)
+                            .size(48.dp)
+                            .offset(y = 35.dp)
+                            .shadow(elevation = 10.dp, shape = CircleShape)
+                            .background(Color.White, shape = CircleShape)
+                            .clickable { /* TODO:action when film loved */ },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.FavoriteBorder,
+                        contentDescription = "Favorite",
+                        tint = Color.Red,
+                        modifier =
+                            Modifier
+                                .size(26.dp)
+                                .height(450.dp),
+                    )
+                }
+            }
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+            ) {
+                Text(
+                    text = state.detailMovie?.title ?: "Unknown Title",
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    lineHeight = 34.sp,
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
+                            .horizontalScroll(rememberScrollState()),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    Text(
-                        text = state.detailMovie?.title ?: "Unknown Title",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        lineHeight = 34.sp,
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .horizontalScroll(rememberScrollState()),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    ) {
-                        // Rating
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Rounded.Star,
-                                contentDescription = "Rating",
-                                tint = Color(0xFFFFC107),
-                                modifier = Modifier.size(20.dp),
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            val rating = state.detailMovie?.voteAverage ?: 0.0
-                            Text(
-                                text = rating.formatRating(),
-                                fontSize = 15.sp,
-                                color = MaterialTheme.colorScheme.onBackground,
-                                fontWeight = FontWeight.Bold,
-                            )
-                            Text(
-                                text = "/10",
-                                fontSize = 13.sp,
-                                color = Color.Gray,
-                                fontWeight = FontWeight.Medium,
-                            )
-                        }
-
-                        // Release Date
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Rounded.CalendarMonth,
-                                contentDescription = null,
-                                tint = Color.Gray,
-                                modifier = Modifier.size(18.dp),
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = state.detailMovie?.releaseDate?.formatDate() ?: "-",
-                                fontSize = 14.sp,
-                                color = Color.Gray,
-                                fontWeight = FontWeight.Medium,
-                            )
-                        }
-
-                        // Runtime
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Rounded.Schedule,
-                                contentDescription = null,
-                                tint = Color.Gray,
-                                modifier = Modifier.size(18.dp),
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            val hours = state.detailMovie?.runtime?.div(60) ?: 0
-                            val minutes = state.detailMovie?.runtime?.mod(60) ?: 0
-                            Text(
-                                text = "${hours}h ${minutes}m",
-                                fontSize = 14.sp,
-                                color = Color.Gray,
-                                fontWeight = FontWeight.Medium,
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .horizontalScroll(genreScrollState),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        state.detailMovie?.genres?.forEach { genre ->
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .background(
-                                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
-                                            shape = CircleShape,
-                                        ).padding(horizontal = 16.dp, vertical = 8.dp),
-                                contentAlignment = Alignment.Center,
-                            ) {
-                                Text(
-                                    text = genre.name,
-                                    fontSize = 13.sp,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight.SemiBold,
-                                )
-                            }
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Text(
-                        text = "Storyline",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground,
-                    )
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = state.detailMovie?.overview ?: "No Overview available.",
-                        fontSize = 15.sp,
-                        color = Color.DarkGray,
-                        lineHeight = 24.sp,
-                        maxLines = if (isExpanded) Int.MAX_VALUE else 4,
-                        overflow = TextOverflow.Ellipsis,
-                        onTextLayout = { textLayoutRes ->
-                            if (textLayoutRes.hasVisualOverflow) {
-                                showReadMoreButton = true
-                            }
-                        },
-                    )
-                    if (showReadMoreButton) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Rounded.Star,
+                            contentDescription = "Rating",
+                            tint = Color(0xFFFFC107),
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        val rating = state.detailMovie?.voteAverage ?: 0.0
                         Text(
-                            text = if (isExpanded) "Show less" else "Read more",
-                            color = MaterialTheme.colorScheme.primary,
-                            fontSize = 14.sp,
+                            text = rating.formatRating(),
+                            fontSize = 15.sp,
+                            color = MaterialTheme.colorScheme.onBackground,
                             fontWeight = FontWeight.Bold,
-                            modifier =
-                                Modifier
-                                    .padding(top = 4.dp)
-                                    .clickable { isExpanded = !isExpanded }
-                                    .padding(vertical = 4.dp),
+                        )
+                        Text(
+                            text = "/10",
+                            fontSize = 13.sp,
+                            color = Color.Gray,
+                            fontWeight = FontWeight.Medium,
                         )
                     }
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Rounded.CalendarMonth,
+                            contentDescription = null,
+                            tint = Color.Gray,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = state.detailMovie?.releaseDate?.formatDate() ?: "-",
+                            fontSize = 14.sp,
+                            color = Color.Gray,
+                            fontWeight = FontWeight.Medium,
+                        )
+                    }
+
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Rounded.Schedule,
+                            contentDescription = null,
+                            tint = Color.Gray,
+                            modifier = Modifier.size(18.dp),
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        val hours = state.detailMovie?.runtime?.div(60) ?: 0
+                        val minutes = state.detailMovie?.runtime?.mod(60) ?: 0
+                        Text(
+                            text = "${hours}h ${minutes}m",
+                            fontSize = 14.sp,
+                            color = Color.Gray,
+                            fontWeight = FontWeight.Medium,
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Row(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(genreScrollState),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    state.detailMovie?.genres?.forEach { genre ->
+                        Box(
+                            modifier =
+                                Modifier
+                                    .background(
+                                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                                        shape = CircleShape,
+                                    ).padding(horizontal = 16.dp, vertical = 8.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = genre.name,
+                                fontSize = 13.sp,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = "Storyline",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = state.detailMovie?.overview ?: "No Overview available.",
+                    fontSize = 15.sp,
+                    color = Color.DarkGray,
+                    lineHeight = 24.sp,
+                    maxLines = if (isExpanded) Int.MAX_VALUE else 4,
+                    overflow = TextOverflow.Ellipsis,
+                    onTextLayout = { textLayoutRes ->
+                        if (textLayoutRes.hasVisualOverflow) {
+                            showReadMoreButton = true
+                        }
+                    },
+                )
+                if (showReadMoreButton) {
+                    Text(
+                        text = if (isExpanded) "Show less" else "Read more",
+                        color = MaterialTheme.colorScheme.primary,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier =
+                            Modifier
+                                .padding(top = 4.dp)
+                                .clickable { isExpanded = !isExpanded }
+                                .padding(vertical = 4.dp),
+                    )
                 }
             }
         }
