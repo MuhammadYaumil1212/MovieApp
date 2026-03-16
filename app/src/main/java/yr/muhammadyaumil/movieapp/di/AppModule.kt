@@ -22,7 +22,6 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import yr.muhammadyaumil.movieapp.core.constants.AppConstants
-import yr.muhammadyaumil.movieapp.data.local.SessionManager
 import yr.muhammadyaumil.movieapp.data.remote.AuthApiServices
 import yr.muhammadyaumil.movieapp.data.remote.AuthApiServicesImpl
 import yr.muhammadyaumil.movieapp.data.remote.MovieApiServices
@@ -105,10 +104,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(
-        authApiServices: AuthApiServices,
-        sessionManager: SessionManager,
-    ): AuthRepository =
+    fun provideAuthRepository(authApiServices: AuthApiServices): AuthRepository =
         AuthRepositoryImpl(
             authRemote = authApiServices,
         )
