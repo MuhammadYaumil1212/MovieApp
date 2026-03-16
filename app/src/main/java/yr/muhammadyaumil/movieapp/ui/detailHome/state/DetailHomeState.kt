@@ -1,4 +1,4 @@
-package yr.muhammadyaumil.movieapp.ui.DetailHome.state
+package yr.muhammadyaumil.movieapp.ui.detailHome.state
 
 import android.net.Uri
 import yr.muhammadyaumil.movieapp.domain.entity.DetailMovie.MovieDetail

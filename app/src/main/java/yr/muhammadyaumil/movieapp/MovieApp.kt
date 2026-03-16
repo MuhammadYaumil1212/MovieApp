@@ -28,9 +28,9 @@ import yr.muhammadyaumil.movieapp.core.composables.AppSnackbarController
 import yr.muhammadyaumil.movieapp.core.composables.MovieBottomBar
 import yr.muhammadyaumil.movieapp.core.composables.ObserveAsEvents
 import yr.muhammadyaumil.movieapp.core.navigation.Screen
-import yr.muhammadyaumil.movieapp.ui.Community.screens.CommunityScreen
-import yr.muhammadyaumil.movieapp.ui.DetailHome.screens.DetailHomeScreen
-import yr.muhammadyaumil.movieapp.ui.DetailHome.viewmodel.DetailHomeViewModel
+import yr.muhammadyaumil.movieapp.ui.community.screens.CommunityScreen
+import yr.muhammadyaumil.movieapp.ui.detailHome.screens.DetailHomeScreen
+import yr.muhammadyaumil.movieapp.ui.detailHome.viewmodel.DetailHomeViewModel
 import yr.muhammadyaumil.movieapp.ui.home.screens.HomeScreen
 import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 import yr.muhammadyaumil.movieapp.ui.login.screens.LoginScreen

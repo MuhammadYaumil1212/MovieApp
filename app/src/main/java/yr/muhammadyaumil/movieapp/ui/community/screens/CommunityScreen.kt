@@ -1,4 +1,4 @@
-package yr.muhammadyaumil.movieapp.ui.Community.screens
+package yr.muhammadyaumil.movieapp.ui.community.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,8 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
-import yr.muhammadyaumil.movieapp.ui.Community.composables.StoryItem
-import yr.muhammadyaumil.movieapp.ui.Community.composables.ThreadItem
+import yr.muhammadyaumil.movieapp.ui.community.composables.StoryItem
+import yr.muhammadyaumil.movieapp.ui.community.composables.ThreadItem
 
 @Suppress("ktlint:standard:function-naming")
 @Composable

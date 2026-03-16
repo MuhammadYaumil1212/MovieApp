@@ -1,4 +1,4 @@
-package yr.muhammadyaumil.movieapp.ui.DetailHome.viewmodel
+package yr.muhammadyaumil.movieapp.ui.detailHome.viewmodel
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -23,8 +23,8 @@ import kotlinx.coroutines.withContext
 import yr.muhammadyaumil.movieapp.BuildConfig
 import yr.muhammadyaumil.movieapp.core.utils.handleResource
 import yr.muhammadyaumil.movieapp.domain.repository.MovieRepository
-import yr.muhammadyaumil.movieapp.ui.DetailHome.event.DetailHomeEvent
-import yr.muhammadyaumil.movieapp.ui.DetailHome.state.DetailHomeState
+import yr.muhammadyaumil.movieapp.ui.detailHome.event.DetailHomeEvent
+import yr.muhammadyaumil.movieapp.ui.detailHome.state.DetailHomeState
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 

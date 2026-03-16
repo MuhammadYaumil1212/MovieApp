@@ -1,4 +1,4 @@
-package yr.muhammadyaumil.movieapp.ui.DetailHome.screens
+package yr.muhammadyaumil.movieapp.ui.detailHome.screens
 
 import android.util.Base64
 import androidx.compose.foundation.background
@@ -49,8 +49,8 @@ import coil3.compose.AsyncImage
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
 import yr.muhammadyaumil.movieapp.core.utils.formatDate
 import yr.muhammadyaumil.movieapp.core.utils.formatRating
-import yr.muhammadyaumil.movieapp.ui.DetailHome.event.DetailHomeEvent
-import yr.muhammadyaumil.movieapp.ui.DetailHome.state.DetailHomeState
+import yr.muhammadyaumil.movieapp.ui.detailHome.event.DetailHomeEvent
+import yr.muhammadyaumil.movieapp.ui.detailHome.state.DetailHomeState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Suppress("ktlint:standard:function-naming")

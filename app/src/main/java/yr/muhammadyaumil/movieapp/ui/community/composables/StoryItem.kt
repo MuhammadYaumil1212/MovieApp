@@ -1,4 +1,4 @@
-package yr.muhammadyaumil.movieapp.ui.Community.composables
+package yr.muhammadyaumil.movieapp.ui.community.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package yr.muhammadyaumil.movieapp.ui.DetailHome.composables
+package yr.muhammadyaumil.movieapp.ui.detailHome.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
