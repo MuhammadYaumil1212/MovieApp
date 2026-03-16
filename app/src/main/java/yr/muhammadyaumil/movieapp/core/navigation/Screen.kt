@@ -1,18 +1,18 @@
 package yr.muhammadyaumil.movieapp.core.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Groups
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Theaters
-import androidx.compose.material.icons.outlined.Bookmark
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.Theaters
 import androidx.compose.ui.graphics.vector.ImageVector
 
 sealed class Screen(
@@ -36,18 +36,15 @@ sealed class Screen(
 
     object Profile : Screen("profile", "profile", Icons.Filled.Person, Icons.Outlined.Person)
 
-    object WatchParty :
-        Screen("watchParty", "watchParty", Icons.Filled.Theaters, Icons.Outlined.Theaters)
-
     object Community : Screen("community", "community", Icons.Filled.Groups, Icons.Outlined.Groups)
 
     object WatchList :
-        Screen("watchList", "Watch List", Icons.Filled.Bookmark, Icons.Outlined.Bookmark)
+        Screen("watchList", "Watch List", Icons.Filled.PlayArrow, Icons.Outlined.PlayArrow)
 
-    object FilmDetail :
-        Screen("filmDetail", "filmDetail", Icons.Filled.Person, Icons.Outlined.Person)
+    object Favorite :
+        Screen("favorite", "Favorite", Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder)
 
     companion object {
-        val bottomNavItems = listOf(Home, WatchList, Community, Settings)
+        val bottomNavItems = listOf(Home, Community, Settings)
     }
 }

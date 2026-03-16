@@ -28,6 +28,7 @@ import yr.muhammadyaumil.movieapp.core.composables.AppSnackbarController
 import yr.muhammadyaumil.movieapp.core.composables.MovieBottomBar
 import yr.muhammadyaumil.movieapp.core.composables.ObserveAsEvents
 import yr.muhammadyaumil.movieapp.core.navigation.Screen
+import yr.muhammadyaumil.movieapp.ui.Community.screens.CommunityScreen
 import yr.muhammadyaumil.movieapp.ui.DetailHome.screens.DetailHomeScreen
 import yr.muhammadyaumil.movieapp.ui.DetailHome.viewmodel.DetailHomeViewModel
 import yr.muhammadyaumil.movieapp.ui.home.screens.HomeScreen
@@ -193,6 +194,11 @@ fun MovieApp() {
                     navigateBack = {
                         navController.popBackStack()
                     },
+                )
+            }
+            composable(Screen.Community.route) {
+                CommunityScreen(
+                    modifier = Modifier,
                 )
             }
         }
