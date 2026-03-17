@@ -28,6 +28,7 @@ fun FavoriteScreen(
     modifier: Modifier = Modifier,
     state: FavoriteState,
     onEvent: (onEvent: FavoriteEvent) -> Unit,
+    navigateToDetail: (movieId: Int) -> Unit,
     onBackClick: () -> Unit,
 ) {
     AppScaffold(
@@ -65,7 +66,7 @@ fun FavoriteScreen(
                         description = descriptions,
                         duration = duration,
                         imageUrl = posterUrl,
-                        onClick = {},
+                        onClick = { navigateToDetail(movieId) },
                     )
                 }
             }

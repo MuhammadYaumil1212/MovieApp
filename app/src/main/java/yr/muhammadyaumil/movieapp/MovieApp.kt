@@ -217,6 +217,9 @@ fun MovieApp() {
                     onBackClick = {
                         navController.popBackStack()
                     },
+                    navigateToDetail = { idMovie ->
+                        navController.navigate(Screen.DetailHome.createRoute(movieId = idMovie))
+                    },
                 )
             }
         }
