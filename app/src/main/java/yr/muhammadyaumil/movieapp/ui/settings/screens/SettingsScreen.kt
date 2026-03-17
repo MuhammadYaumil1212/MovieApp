@@ -91,74 +91,74 @@ fun SettingsScreen(
             )
             Spacer(modifier = Modifier.height(24.dp))
 
-            Text(
-                text = "Account",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
-            )
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-                        .border(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.outlineVariant,
-                            shape = RoundedCornerShape(8.dp),
-                        ).padding(vertical = 4.dp),
-            ) {
-                listItemAkun.forEach { item ->
-                    SettingsItem(
-                        leadingIcon = item.icon,
-                        title = item.title,
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Text(
-                text = "Film",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
-            )
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-                        .border(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.outlineVariant,
-                            shape = RoundedCornerShape(8.dp),
-                        ).padding(vertical = 4.dp),
-            ) {
-                listItemFilm.forEach { item ->
-                    SettingsItem(
-                        leadingIcon = item.icon,
-                        title = item.title,
-                        onClick = {
-                            when (item.title) {
-                                "My Films" -> {}
-
-                                "Watchlist" -> {}
-
-                                "Favorite" -> {
-                                    navigateToFavorite()
-                                }
-
-                                else -> {}
-                            }
-                        },
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
             if (state.isAuthenticated) {
+                Text(
+                    text = "Account",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                )
+                Column(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant,
+                                shape = RoundedCornerShape(8.dp),
+                            ).padding(vertical = 4.dp),
+                ) {
+                    listItemAkun.forEach { item ->
+                        SettingsItem(
+                            leadingIcon = item.icon,
+                            title = item.title,
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Text(
+                    text = "Film",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+                )
+                Column(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.outlineVariant,
+                                shape = RoundedCornerShape(8.dp),
+                            ).padding(vertical = 4.dp),
+                ) {
+                    listItemFilm.forEach { item ->
+                        SettingsItem(
+                            leadingIcon = item.icon,
+                            title = item.title,
+                            onClick = {
+                                when (item.title) {
+                                    "My Films" -> {}
+
+                                    "Watchlist" -> {}
+
+                                    "Favorite" -> {
+                                        navigateToFavorite()
+                                    }
+
+                                    else -> {}
+                                }
+                            },
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(20.dp))
+
                 AppButton(
                     modifier =
                         Modifier
@@ -171,15 +171,6 @@ fun SettingsScreen(
                     contentColor = MaterialTheme.colorScheme.onError,
                 )
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Text(
-                text = "Version 1.0 (Comedy)",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-            )
         }
     }
 }
