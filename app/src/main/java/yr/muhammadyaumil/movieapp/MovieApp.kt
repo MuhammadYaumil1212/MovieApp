@@ -31,6 +31,8 @@ import yr.muhammadyaumil.movieapp.core.navigation.Screen
 import yr.muhammadyaumil.movieapp.ui.community.screens.CommunityScreen
 import yr.muhammadyaumil.movieapp.ui.detailHome.screens.DetailHomeScreen
 import yr.muhammadyaumil.movieapp.ui.detailHome.viewmodel.DetailHomeViewModel
+import yr.muhammadyaumil.movieapp.ui.favorite.screens.FavoriteScreen
+import yr.muhammadyaumil.movieapp.ui.favorite.viewmodel.FavoriteViewModel
 import yr.muhammadyaumil.movieapp.ui.home.screens.HomeScreen
 import yr.muhammadyaumil.movieapp.ui.home.viewmodel.HomeViewModel
 import yr.muhammadyaumil.movieapp.ui.login.screens.LoginScreen
@@ -151,6 +153,9 @@ fun MovieApp() {
                     navigateToProfile = {
                         navController.navigate(Screen.Profile.route)
                     },
+                    navigateToFavorite = {
+                        navController.navigate(Screen.Favorite.route)
+                    },
                 )
             }
             composable(Screen.Login.route) {
@@ -199,6 +204,19 @@ fun MovieApp() {
             composable(Screen.Community.route) {
                 CommunityScreen(
                     modifier = Modifier,
+                )
+            }
+
+            composable(Screen.Favorite.route) {
+                val favoriteViewModel = hiltViewModel<FavoriteViewModel>()
+                val state by favoriteViewModel.state.collectAsStateWithLifecycle()
+                FavoriteScreen(
+                    modifier = Modifier,
+                    state = state,
+                    onEvent = favoriteViewModel::onEvent,
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
                 )
             }
         }

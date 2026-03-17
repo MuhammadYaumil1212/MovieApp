@@ -1,8 +1,11 @@
 package yr.muhammadyaumil.movieapp.di
 
+import android.content.Context
+import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.Auth
@@ -22,6 +25,8 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import yr.muhammadyaumil.movieapp.core.constants.AppConstants
+import yr.muhammadyaumil.movieapp.data.local.Dao.FavoriteMovieDao
+import yr.muhammadyaumil.movieapp.data.local.database.AppDatabase
 import yr.muhammadyaumil.movieapp.data.remote.AuthApiServices
 import yr.muhammadyaumil.movieapp.data.remote.AuthApiServicesImpl
 import yr.muhammadyaumil.movieapp.data.remote.MovieApiServices
@@ -67,8 +72,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMovieRepository(movieApiServices: MovieApiServices): MovieRepository =
-        MovieRepositoryImpl(movieApiServices = movieApiServices)
+    fun provideMovieRepository(
+        movieApiServices: MovieApiServices,
+        favDao: FavoriteMovieDao,
+    ): MovieRepository = MovieRepositoryImpl(movieApiServices = movieApiServices, favDao = favDao)
 
     @Provides
     @Singleton
@@ -108,4 +115,21 @@ object AppModule {
         AuthRepositoryImpl(
             authRemote = authApiServices,
         )
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(
+        @ApplicationContext context: Context,
+    ): AppDatabase =
+        Room
+            .databaseBuilder(
+                context,
+                AppDatabase::class.java,
+                "movie_app_database",
+            ).fallbackToDestructiveMigration(false)
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideFavoriteMovieDao(appDatabase: AppDatabase): FavoriteMovieDao = appDatabase.favoriteMovieDao()
 }

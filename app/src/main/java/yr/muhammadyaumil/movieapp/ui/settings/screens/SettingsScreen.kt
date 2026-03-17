@@ -50,6 +50,7 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     navigateToLogin: () -> Unit,
     navigateToProfile: () -> Unit,
+    navigateToFavorite: () -> Unit,
     onEvent: (onEvent: SettingsEvent) -> Unit,
     state: SettingsState,
 ) {
@@ -138,6 +139,19 @@ fun SettingsScreen(
                     SettingsItem(
                         leadingIcon = item.icon,
                         title = item.title,
+                        onClick = {
+                            when (item.title) {
+                                "My Films" -> {}
+
+                                "Watchlist" -> {}
+
+                                "Favorite" -> {
+                                    navigateToFavorite()
+                                }
+
+                                else -> {}
+                            }
+                        },
                     )
                 }
             }

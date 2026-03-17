@@ -5,11 +5,13 @@ package yr.muhammadyaumil.movieapp.domain.repository
 import kotlinx.coroutines.flow.Flow
 import yr.muhammadyaumil.movieapp.core.state.Resources
 import yr.muhammadyaumil.movieapp.domain.entity.DetailMovie.MovieDetail
+import yr.muhammadyaumil.movieapp.domain.entity.Favorite.FavoriteEntity
 import yr.muhammadyaumil.movieapp.domain.entity.Movie.MovieGeneralEntity
 import yr.muhammadyaumil.movieapp.domain.entity.Movie.NowPlayingMovieEntity
 import yr.muhammadyaumil.movieapp.domain.entity.MovieImage.ImageMovieEntity
 
 interface MovieRepository {
+    // remote db
     suspend fun getMovies(): Flow<Resources<MovieGeneralEntity>>
 
     suspend fun getNowPlayingMovies(): Flow<Resources<NowPlayingMovieEntity>>
@@ -17,4 +19,14 @@ interface MovieRepository {
     suspend fun getDetailMovie(movieId: Int): Flow<Resources<MovieDetail>>
 
     suspend fun getImageMovie(movieId: Int): Flow<Resources<ImageMovieEntity>>
+
+    // local db
+    suspend fun isFavorite(movieId: Int): Flow<Resources<Boolean>>
+
+    suspend fun toggleFavorite(
+        favorite: FavoriteEntity,
+        isCurrentlyFavorite: Boolean,
+    ): Flow<Resources<Unit>>
+
+    suspend fun getFavoriteMovies(): Flow<Resources<List<FavoriteEntity>>>
 }

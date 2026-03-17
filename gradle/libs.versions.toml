@@ -3,6 +3,9 @@ agp = "9.0.1"
 authKt = "3.3.0"
 datastorePreferences = "1.2.0"
 postgrestKt = "3.3.0"
+roomCompiler = "2.8.4"
+roomKtx = "2.8.4"
+roomRuntime = "2.8.4"
 storageKt = "3.3.0"
 supabaseVersion = "3.3.0"
 kotlin = "2.3.10"
@@ -42,6 +45,9 @@ androidx-compose-material = { module = "androidx.compose.material:material", ver
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomKtx" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 auth-kt = { module = "io.github.jan-tennert.supabase:auth-kt", version.ref = "authKt" }
 bom = { module = "io.github.jan-tennert.supabase:bom", version.ref = "supabaseVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

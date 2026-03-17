@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import yr.muhammadyaumil.movieapp.BuildConfig
 import yr.muhammadyaumil.movieapp.core.utils.handleResource
+import yr.muhammadyaumil.movieapp.domain.entity.Favorite.FavoriteEntity
 import yr.muhammadyaumil.movieapp.domain.repository.MovieRepository
 import yr.muhammadyaumil.movieapp.ui.detailHome.event.DetailHomeEvent
 import yr.muhammadyaumil.movieapp.ui.detailHome.state.DetailHomeState
@@ -43,6 +44,7 @@ class DetailHomeViewModel
         init {
             getDetailMovie(movieId)
             getImageMovie(movieId)
+            isMovieFavorite(movieId)
         }
 
         fun onEvent(event: DetailHomeEvent) {
@@ -50,7 +52,53 @@ class DetailHomeViewModel
                 is DetailHomeEvent.ResetError -> {
                     _state.value = _state.value.copy(errorMessage = null)
                 }
+
+                is DetailHomeEvent.ToggleFavorite -> {
+                    val currentMovie = _state.value.detailMovie
+                    val isCurrentlyFavorite = _state.value.isFavorite
+                    if (currentMovie != null) {
+                        val favoriteEntity =
+                            FavoriteEntity(
+                                movieId = currentMovie.id,
+                                title = currentMovie.title,
+                                descriptions = currentMovie.overview,
+                                duration = currentMovie.runtime,
+                                posterUrl = "${BuildConfig.IMAGE_URL}/w200/${currentMovie.backdropPath}",
+                            )
+
+                        toggleFavoriteMovies(
+                            movie = favoriteEntity,
+                            isCurrentlyFavorite = isCurrentlyFavorite,
+                        )
+                    }
+                }
             }
+        }
+
+        private fun toggleFavoriteMovies(
+            movie: FavoriteEntity,
+            isCurrentlyFavorite: Boolean,
+        ) = viewModelScope.launch {
+            movieRepository
+                .toggleFavorite(
+                    favorite = movie,
+                    isCurrentlyFavorite = isCurrentlyFavorite,
+                ).collect { resources ->
+                    _state.handleResource(
+                        resource = resources,
+                        onLoading = { currentState ->
+                            currentState.copy(favoriteLoading = true)
+                        },
+                        onSuccess = { currentState, data ->
+                            currentState.copy(
+                                favoriteLoading = false,
+                            )
+                        },
+                        onError = { currentState, message ->
+                            currentState.copy(favoriteLoading = false, errorMessage = message)
+                        },
+                    )
+                }
         }
 
         private fun getDetailMovie(movieId: Int) {
@@ -75,6 +123,30 @@ class DetailHomeViewModel
                 }
             }
         }
+
+        private fun isMovieFavorite(movieId: Int) =
+            viewModelScope.launch {
+                movieRepository.isFavorite(movieId = movieId).collect { resources ->
+                    _state.handleResource(
+                        resource = resources,
+                        onLoading = { currentState ->
+                            currentState.copy(favoriteLoading = true)
+                        },
+                        onSuccess = { currentState, data ->
+                            currentState.copy(
+                                favoriteLoading = false,
+                                isFavorite = data ?: false,
+                            )
+                        },
+                        onError = { currentState, message ->
+                            currentState.copy(
+                                favoriteLoading = false,
+                                errorMessage = message,
+                            )
+                        },
+                    )
+                }
+            }
 
         private suspend fun compressRemoteImage(
             context: Context,

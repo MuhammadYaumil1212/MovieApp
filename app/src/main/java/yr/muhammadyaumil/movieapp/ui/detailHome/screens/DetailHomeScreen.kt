@@ -22,6 +22,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.rounded.CalendarMonth
 import androidx.compose.material.icons.rounded.Schedule
@@ -158,18 +159,34 @@ fun DetailHomeScreen(
                             .offset(y = 35.dp)
                             .shadow(elevation = 10.dp, shape = CircleShape)
                             .background(Color.White, shape = CircleShape)
-                            .clickable { /* TODO:action when film loved */ },
+                            .clickable {
+                                state.detailMovie?.id?.let { currentMovieId ->
+                                    onEvent(DetailHomeEvent.ToggleFavorite(currentMovieId))
+                                }
+                            },
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.FavoriteBorder,
-                        contentDescription = "Favorite",
-                        tint = Color.Red,
-                        modifier =
-                            Modifier
-                                .size(26.dp)
-                                .height(450.dp),
-                    )
+                    if (!state.isFavorite) {
+                        Icon(
+                            imageVector = Icons.Default.FavoriteBorder,
+                            contentDescription = "Favorite",
+                            tint = Color.Red,
+                            modifier =
+                                Modifier
+                                    .size(26.dp)
+                                    .height(450.dp),
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Filled.Favorite,
+                            contentDescription = "Favorite",
+                            tint = Color.Red,
+                            modifier =
+                                Modifier
+                                    .size(26.dp)
+                                    .height(450.dp),
+                        )
+                    }
                 }
             }
             Column(
