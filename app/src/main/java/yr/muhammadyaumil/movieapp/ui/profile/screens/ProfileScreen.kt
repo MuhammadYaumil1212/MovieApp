@@ -2,7 +2,6 @@ package yr.muhammadyaumil.movieapp.ui.profile.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -63,10 +62,6 @@ fun ProfileScreen(
         onErrorConsumed = { onEvent(ProfileEvent.DismissError) },
         topBar = {
             CenterAlignedTopAppBar(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
                 title = { Text("Profile", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = navigateBack) {
@@ -81,12 +76,10 @@ fun ProfileScreen(
         },
     ) { innerPadding ->
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding =
-                PaddingValues(
-                    top = innerPadding.calculateTopPadding(),
-                    bottom = innerPadding.calculateBottomPadding(),
-                ),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             item {
