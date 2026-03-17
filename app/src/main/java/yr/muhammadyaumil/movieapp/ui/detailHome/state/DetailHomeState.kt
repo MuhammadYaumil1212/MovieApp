@@ -14,6 +14,7 @@ data class DetailHomeState(
     val movieImage: ImageMovieEntity? = null,
     val compressedMovieImage: String? = null,
     val errorMessage: String? = null,
+    val isAuthenticated: Boolean = false,
     val selectedUri: Uri? = null,
     val compressData: ByteArray? = null,
     val isCompressing: Boolean = false,

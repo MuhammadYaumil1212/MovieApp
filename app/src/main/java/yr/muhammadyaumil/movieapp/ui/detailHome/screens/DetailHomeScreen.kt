@@ -60,6 +60,7 @@ fun DetailHomeScreen(
     modifier: Modifier = Modifier,
     onEvent: (onEvent: DetailHomeEvent) -> Unit,
     navigateBack: () -> Unit,
+    navigateToLogin: () -> Unit,
     state: DetailHomeState,
 ) {
     val scrollState = rememberScrollState()
@@ -139,7 +140,13 @@ fun DetailHomeScreen(
                             Modifier
                                 .size(40.dp)
                                 .background(Color.Gray.copy(alpha = 0.4f), shape = CircleShape)
-                                .clickable { /* Handle Bookmark Event */ },
+                                .clickable {
+                                    if (state.isAuthenticated) {
+//                                       //TODO: Handle Bookmark Logic
+                                    } else {
+                                        navigateToLogin()
+                                    }
+                                },
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
@@ -160,8 +167,12 @@ fun DetailHomeScreen(
                             .shadow(elevation = 10.dp, shape = CircleShape)
                             .background(Color.White, shape = CircleShape)
                             .clickable {
-                                state.detailMovie?.id?.let { currentMovieId ->
-                                    onEvent(DetailHomeEvent.ToggleFavorite(currentMovieId))
+                                if (state.isAuthenticated) {
+                                    state.detailMovie?.id?.let { currentMovieId ->
+                                        onEvent(DetailHomeEvent.ToggleFavorite(currentMovieId))
+                                    }
+                                } else {
+                                    navigateToLogin()
                                 }
                             },
                     contentAlignment = Alignment.Center,

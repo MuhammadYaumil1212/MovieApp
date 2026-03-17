@@ -138,6 +138,9 @@ fun MovieApp() {
                     navigateBack = {
                         navController.popBackStack()
                     },
+                    navigateToLogin = {
+                        navController.navigate(Screen.Login.route)
+                    },
                 )
             }
             composable(Screen.Settings.route) {

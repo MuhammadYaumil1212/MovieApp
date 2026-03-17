@@ -13,6 +13,7 @@ import coil3.request.SuccessResult
 import coil3.request.allowHardware
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,8 +22,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import yr.muhammadyaumil.movieapp.BuildConfig
+import yr.muhammadyaumil.movieapp.core.state.Resources
 import yr.muhammadyaumil.movieapp.core.utils.handleResource
 import yr.muhammadyaumil.movieapp.domain.entity.Favorite.FavoriteEntity
+import yr.muhammadyaumil.movieapp.domain.repository.AuthRepository
 import yr.muhammadyaumil.movieapp.domain.repository.MovieRepository
 import yr.muhammadyaumil.movieapp.ui.detailHome.event.DetailHomeEvent
 import yr.muhammadyaumil.movieapp.ui.detailHome.state.DetailHomeState
@@ -35,6 +38,7 @@ class DetailHomeViewModel
     constructor(
         savedStateHandle: SavedStateHandle,
         private val movieRepository: MovieRepository,
+        private val authRepository: AuthRepository,
         @ApplicationContext private val context: Context,
     ) : ViewModel() {
         private val movieId: Int = checkNotNull(savedStateHandle["movieId"])
@@ -45,6 +49,7 @@ class DetailHomeViewModel
             getDetailMovie(movieId)
             getImageMovie(movieId)
             isMovieFavorite(movieId)
+            observeSession()
         }
 
         fun onEvent(event: DetailHomeEvent) {
@@ -74,6 +79,32 @@ class DetailHomeViewModel
                 }
             }
         }
+
+        private fun observeSession() =
+            viewModelScope.launch {
+                authRepository.getSessionStatus().collect { resources ->
+                    val status = resources.data
+                    val isAuthenticated = status is SessionStatus.Authenticated
+                    when (resources) {
+                        is Resources.Loading -> {
+                            _state.value = _state.value.copy(isLoading = true)
+                        }
+
+                        is Resources.Success -> {
+                            _state.value =
+                                _state.value.copy(
+                                    isLoading = false,
+                                    isAuthenticated = isAuthenticated,
+                                )
+                        }
+
+                        is Resources.Error -> {
+                            _state.value =
+                                _state.value.copy(errorMessage = resources.message, isLoading = false)
+                        }
+                    }
+                }
+            }
 
         private fun toggleFavoriteMovies(
             movie: FavoriteEntity,
