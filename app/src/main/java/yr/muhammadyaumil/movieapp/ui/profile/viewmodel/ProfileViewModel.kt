@@ -1,5 +1,6 @@
 package yr.muhammadyaumil.movieapp.ui.profile.viewmodel
 
+import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -36,7 +37,14 @@ class ProfileViewModel
                 }
 
                 is ProfileEvent.DismissError -> {
-                    _state.update { it.copy(errorMessage = null) }
+                    _state.update {
+                        it.copy(
+                            errorMessage = null,
+                            emailState = TextFieldState(),
+                            usernameState = TextFieldState(),
+                            phoneState = TextFieldState(),
+                        )
+                    }
                 }
 
                 is ProfileEvent.EditNameProfile -> {
@@ -110,7 +118,13 @@ class ProfileViewModel
                                 )
                             },
                             onError = { currentState, message ->
-                                currentState.copy(isLoading = false, errorMessage = message)
+                                currentState.copy(
+                                    isLoading = false,
+                                    errorMessage = message,
+                                    emailState = TextFieldState(),
+                                    usernameState = TextFieldState(),
+                                    phoneState = TextFieldState(),
+                                )
                             },
                         )
                     }

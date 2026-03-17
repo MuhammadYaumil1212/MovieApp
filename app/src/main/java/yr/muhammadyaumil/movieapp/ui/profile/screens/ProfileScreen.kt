@@ -108,7 +108,7 @@ fun ProfileScreen(
                             onCancelClick = { onEvent(ProfileEvent.ResetUsernameProfile) },
                             onSave = {
                                 onEvent(ProfileEvent.UpdateProfile)
-                                onEvent(ProfileEvent.ResetPhoneProfile)
+                                onEvent(ProfileEvent.ResetUsernameProfile)
                             },
                         )
                         EditableProfileItem(
