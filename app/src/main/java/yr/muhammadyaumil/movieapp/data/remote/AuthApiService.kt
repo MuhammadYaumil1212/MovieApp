@@ -19,7 +19,6 @@ interface AuthApiServices {
     suspend fun signUpWithEmailAndPassword(
         email: String,
         username: String,
-        phoneNumber: String,
         password: String,
     ): UserInfo?
 
@@ -54,7 +53,6 @@ class AuthApiServicesImpl
         override suspend fun signUpWithEmailAndPassword(
             email: String,
             username: String,
-            phoneNumber: String,
             password: String,
         ) = client.auth.signUpWith(
             Email,
@@ -64,7 +62,6 @@ class AuthApiServicesImpl
             this.data =
                 buildJsonObject {
                     put("display_name", username)
-                    put("phone", phoneNumber)
                 }
         }
 

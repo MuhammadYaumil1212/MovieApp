@@ -49,13 +49,10 @@ class RegisterViewModel
                 _state.value.username.text
                     .toString()
 
-            val phoneNumber =
-                _state.value.phoneNumber.text
-                    .toString()
             val confirmPass =
                 _state.value.confirmPassword.text
                     .toString()
-            if (email.isEmpty() || pass.isEmpty() || confirmPass.isEmpty() || username.isEmpty() || phoneNumber.isEmpty()) {
+            if (email.isEmpty() || pass.isEmpty() || confirmPass.isEmpty() || username.isEmpty()) {
                 _state.value =
                     _state.value.copy(errorMessage = "Email, Password, Username,Phone Number or Confirm Password cannot be blank")
                 return
@@ -71,7 +68,6 @@ class RegisterViewModel
                         email = email,
                         password = pass,
                         username = username,
-                        phoneNumber = phoneNumber,
                     ).collect { resources ->
                         _state.handleResource(
                             resource = resources,

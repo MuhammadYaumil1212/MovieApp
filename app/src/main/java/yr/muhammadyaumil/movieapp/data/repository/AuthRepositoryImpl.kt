@@ -36,14 +36,12 @@ class AuthRepositoryImpl
         override suspend fun register(
             email: String,
             username: String,
-            phoneNumber: String,
             password: String,
         ): Flow<Resources<Unit>> =
             flow<Resources<Unit>> {
                 authRemote.signUpWithEmailAndPassword(
                     email = email,
                     password = password,
-                    phoneNumber = phoneNumber,
                     username = username,
                 )
                 emit(Resources.Success(Unit))

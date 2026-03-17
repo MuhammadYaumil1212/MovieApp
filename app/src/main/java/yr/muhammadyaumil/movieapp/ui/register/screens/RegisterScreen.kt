@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import yr.muhammadyaumil.movieapp.R
@@ -93,7 +92,6 @@ fun RegisterScreen(
                     usernameState = this.username,
                     confirmPasswordState = this.confirmPassword,
                     isRegisterLoading = this.isLoading,
-                    phoneNumberState = this.phoneNumber,
                     onRegisterClick = { onEvent(RegisterEvent.SubmitRegistration) },
                 )
             }
@@ -198,7 +196,6 @@ fun FormTextfield(
     emailState: TextFieldState,
     passwordState: TextFieldState,
     usernameState: TextFieldState,
-    phoneNumberState: TextFieldState,
     confirmPasswordState: TextFieldState,
     onRegisterClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -218,16 +215,6 @@ fun FormTextfield(
             textfieldState = usernameState,
             hint = "Username",
         )
-        Spacer(modifier = Modifier.height(20.dp))
-
-        AppTextfield(
-            modifier = Modifier.fillMaxWidth(),
-            leadingIcon = Icons.Outlined.PersonOutline,
-            textfieldState = phoneNumberState,
-            keyboardType = KeyboardType.Number,
-            hint = "Phone Number",
-        )
-
         Spacer(modifier = Modifier.height(20.dp))
 
         Column(horizontalAlignment = Alignment.End) {

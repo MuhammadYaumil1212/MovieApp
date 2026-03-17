@@ -14,7 +14,6 @@ interface AuthRepository {
     suspend fun register(
         email: String,
         username: String,
-        phoneNumber: String,
         password: String,
     ): Flow<Resources<Unit>>
 
