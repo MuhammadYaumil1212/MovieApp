@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.outlined.Email
@@ -37,7 +39,6 @@ import yr.muhammadyaumil.movieapp.core.composables.AppButton
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
 import yr.muhammadyaumil.movieapp.core.composables.AppTextfield
 import yr.muhammadyaumil.movieapp.core.composables.SocialAuthButton
-import yr.muhammadyaumil.movieapp.ui.login.screens.OrDivider
 import yr.muhammadyaumil.movieapp.ui.register.event.RegisterEvent
 import yr.muhammadyaumil.movieapp.ui.register.state.RegisterState
 
@@ -50,6 +51,7 @@ fun RegisterScreen(
     onEvent: (onEvent: RegisterEvent) -> Unit,
     state: RegisterState,
 ) {
+    val scrollState = rememberScrollState()
     LaunchedEffect(state.isSuccess) {
         if (state.isSuccess) {
             navigateToLogin()
@@ -75,6 +77,7 @@ fun RegisterScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
+                    .verticalScroll(state = scrollState)
                     .padding(innerPadding),
         ) {
             Text(
@@ -83,6 +86,7 @@ fun RegisterScreen(
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.W700,
             )
+
             Spacer(modifier = Modifier.height(20.dp))
             with(state) {
                 FormTextfield(
