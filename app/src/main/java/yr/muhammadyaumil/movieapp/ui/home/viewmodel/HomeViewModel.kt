@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import yr.muhammadyaumil.movieapp.core.state.Resources
 import yr.muhammadyaumil.movieapp.core.utils.handleResource
+import yr.muhammadyaumil.movieapp.data.local.sessions.SessionManager
 import yr.muhammadyaumil.movieapp.domain.repository.AuthRepository
 import yr.muhammadyaumil.movieapp.domain.repository.MovieRepository
 import yr.muhammadyaumil.movieapp.ui.home.event.HomeEvent
@@ -23,6 +24,7 @@ class HomeViewModel
     constructor(
         private val movieRepository: MovieRepository,
         private val authRepository: AuthRepository,
+        private val sessionManager: SessionManager,
     ) : ViewModel() {
         private val _state = MutableStateFlow(HomeState())
         val state: StateFlow<HomeState> = _state.asStateFlow()
@@ -93,6 +95,12 @@ class HomeViewModel
         private fun getCurrentUserInfo() {
             viewModelScope.launch {
                 authRepository.getUserInfo().collect { userResources ->
+                    if (userResources is Resources.Success) {
+                        val userId = userResources.data?.id
+                        if (userId != null) {
+                            sessionManager.saveUserId(userId = userResources.data.id)
+                        }
+                    }
                     _state.handleResource(
                         resource = userResources,
                         onLoading = { currentState ->
@@ -109,6 +117,7 @@ class HomeViewModel
                                 rawDisplayName?.takeIf { it.isNotBlank() }
                                     ?: data?.email?.substringBefore("@")
                                     ?: "Guest"
+
                             currentState.copy(
                                 isLoading = false,
                                 errorMessage = null,

@@ -15,15 +15,19 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.github.jan.supabase.auth.status.SessionStatus
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import yr.muhammadyaumil.movieapp.BuildConfig
 import yr.muhammadyaumil.movieapp.core.state.Resources
 import yr.muhammadyaumil.movieapp.core.utils.handleResource
+import yr.muhammadyaumil.movieapp.data.local.sessions.SessionManager
 import yr.muhammadyaumil.movieapp.domain.entity.Favorite.FavoriteEntity
 import yr.muhammadyaumil.movieapp.domain.repository.AuthRepository
 import yr.muhammadyaumil.movieapp.domain.repository.MovieRepository
@@ -39,6 +43,7 @@ class DetailHomeViewModel
         savedStateHandle: SavedStateHandle,
         private val movieRepository: MovieRepository,
         private val authRepository: AuthRepository,
+        private val sessionManager: SessionManager,
         @ApplicationContext private val context: Context,
     ) : ViewModel() {
         private val movieId: Int = checkNotNull(savedStateHandle["movieId"])
@@ -48,8 +53,9 @@ class DetailHomeViewModel
         init {
             getDetailMovie(movieId)
             getImageMovie(movieId)
-            isMovieFavorite(movieId)
+            getCurrentUserInfo()
             observeSession()
+            observeIsFavorite()
         }
 
         fun onEvent(event: DetailHomeEvent) {
@@ -61,9 +67,12 @@ class DetailHomeViewModel
                 is DetailHomeEvent.ToggleFavorite -> {
                     val currentMovie = _state.value.detailMovie
                     val isCurrentlyFavorite = _state.value.isFavorite
+                    val currentUserId = _state.value.userId ?: return
+
                     if (currentMovie != null) {
                         val favoriteEntity =
                             FavoriteEntity(
+                                userId = currentUserId,
                                 movieId = currentMovie.id,
                                 title = currentMovie.title,
                                 descriptions = currentMovie.overview,
@@ -77,6 +86,32 @@ class DetailHomeViewModel
                         )
                     }
                 }
+            }
+        }
+
+        private fun getCurrentUserInfo() {
+            viewModelScope.launch {
+                sessionManager.activeUserIdFlow.collect { resource ->
+                    if (resource != null) {
+                        _state.update { it.copy(userId = resource) }
+                    }
+                }
+            }
+        }
+
+        @OptIn(ExperimentalCoroutinesApi::class)
+        private fun observeIsFavorite() {
+            viewModelScope.launch {
+                sessionManager.activeUserIdFlow
+                    .flatMapLatest { userId ->
+                        if (userId != null) {
+                            movieRepository.isMovieFavorite(userId, movieId)
+                        } else {
+                            flowOf(false)
+                        }
+                    }.collect { favorite ->
+                        _state.update { it.copy(isFavorite = favorite) }
+                    }
             }
         }
 
@@ -154,30 +189,6 @@ class DetailHomeViewModel
                 }
             }
         }
-
-        private fun isMovieFavorite(movieId: Int) =
-            viewModelScope.launch {
-                movieRepository.isFavorite(movieId = movieId).collect { resources ->
-                    _state.handleResource(
-                        resource = resources,
-                        onLoading = { currentState ->
-                            currentState.copy(favoriteLoading = true)
-                        },
-                        onSuccess = { currentState, data ->
-                            currentState.copy(
-                                favoriteLoading = false,
-                                isFavorite = data ?: false,
-                            )
-                        },
-                        onError = { currentState, message ->
-                            currentState.copy(
-                                favoriteLoading = false,
-                                errorMessage = message,
-                            )
-                        },
-                    )
-                }
-            }
 
         private suspend fun compressRemoteImage(
             context: Context,

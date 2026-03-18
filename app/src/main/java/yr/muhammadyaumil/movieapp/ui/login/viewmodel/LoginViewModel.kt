@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import yr.muhammadyaumil.movieapp.core.utils.handleResource
+import yr.muhammadyaumil.movieapp.data.local.sessions.SessionManager
 import yr.muhammadyaumil.movieapp.domain.repository.AuthRepository
 import yr.muhammadyaumil.movieapp.ui.login.event.LoginEvent
 import yr.muhammadyaumil.movieapp.ui.login.state.LoginState
@@ -19,6 +20,7 @@ class LoginViewModel
     @Inject
     constructor(
         private val authRepository: AuthRepository,
+        private val sessionManager: SessionManager,
     ) : ViewModel() {
         private val _state = MutableStateFlow(LoginState())
         val state: StateFlow<LoginState> = _state.asStateFlow()

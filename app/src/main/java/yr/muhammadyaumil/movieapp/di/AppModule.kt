@@ -27,6 +27,7 @@ import kotlinx.serialization.json.Json
 import yr.muhammadyaumil.movieapp.core.constants.AppConstants
 import yr.muhammadyaumil.movieapp.data.local.Dao.FavoriteMovieDao
 import yr.muhammadyaumil.movieapp.data.local.database.AppDatabase
+import yr.muhammadyaumil.movieapp.data.local.sessions.SessionManager
 import yr.muhammadyaumil.movieapp.data.remote.AuthApiServices
 import yr.muhammadyaumil.movieapp.data.remote.AuthApiServicesImpl
 import yr.muhammadyaumil.movieapp.data.remote.MovieApiServices
@@ -132,4 +133,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideFavoriteMovieDao(appDatabase: AppDatabase): FavoriteMovieDao = appDatabase.favoriteMovieDao()
+
+    @Provides
+    @Singleton
+    fun provideSessionManager(
+        @ApplicationContext context: Context,
+    ): SessionManager = SessionManager(context = context)
 }

@@ -85,18 +85,6 @@ class MovieRepositoryImpl
                 emit(Resources.Error(it.localizedMessage))
             }.flowOn(Dispatchers.IO)
 
-        override suspend fun isFavorite(movieId: Int): Flow<Resources<Boolean>> =
-            favDao
-                .isMovieFavorite(movieId)
-                .map { isFavoriteStatus ->
-                    Resources.Success(isFavoriteStatus) as Resources<Boolean>
-                }.onStart {
-                    emit(Resources.Loading())
-                }.catch { e ->
-                    Log.e(AppConstants.API_LOGGER, e.localizedMessage ?: AppConstants.NULL_MESSAGE)
-                    emit(Resources.Error(e.localizedMessage ?: "Terjadi kesalahan"))
-                }.flowOn(Dispatchers.IO)
-
         override suspend fun toggleFavorite(
             favorite: FavoriteEntity,
             isCurrentlyFavorite: Boolean,
@@ -116,9 +104,9 @@ class MovieRepositoryImpl
                 emit(Resources.Error(e.localizedMessage))
             }.flowOn(Dispatchers.IO)
 
-        override suspend fun getFavoriteMovies(): Flow<Resources<List<FavoriteEntity>>> =
+        override suspend fun getFavoriteMovies(userId: String): Flow<Resources<List<FavoriteEntity>>> =
             favDao
-                .getAllFavoriteMovies()
+                .getActiveUserFavorites(activeUserId = userId)
                 .map { allFavMovies ->
                     Resources.Success(allFavMovies) as Resources<List<FavoriteEntity>>
                 }.onStart {
@@ -127,4 +115,9 @@ class MovieRepositoryImpl
                     Log.e(AppConstants.API_LOGGER, AppConstants.NULL_MESSAGE)
                     emit(Resources.Error(AppConstants.NULL_MESSAGE))
                 }.flowOn(Dispatchers.IO)
+
+        override fun isMovieFavorite(
+            userId: String,
+            movieId: Int,
+        ): Flow<Boolean> = favDao.isMovieFavorite(userId, movieId)
     }

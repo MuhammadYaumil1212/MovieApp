@@ -18,4 +18,5 @@ data class DetailHomeState(
     val selectedUri: Uri? = null,
     val compressData: ByteArray? = null,
     val isCompressing: Boolean = false,
+    val userId: String? = null,
 )

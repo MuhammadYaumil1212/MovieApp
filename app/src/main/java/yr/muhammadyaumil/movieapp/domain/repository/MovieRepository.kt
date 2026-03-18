@@ -21,12 +21,15 @@ interface MovieRepository {
     suspend fun getImageMovie(movieId: Int): Flow<Resources<ImageMovieEntity>>
 
     // local db
-    suspend fun isFavorite(movieId: Int): Flow<Resources<Boolean>>
-
     suspend fun toggleFavorite(
         favorite: FavoriteEntity,
         isCurrentlyFavorite: Boolean,
     ): Flow<Resources<Unit>>
 
-    suspend fun getFavoriteMovies(): Flow<Resources<List<FavoriteEntity>>>
+    suspend fun getFavoriteMovies(userId: String): Flow<Resources<List<FavoriteEntity>>>
+
+    fun isMovieFavorite(
+        userId: String,
+        movieId: Int,
+    ): Flow<Boolean>
 }

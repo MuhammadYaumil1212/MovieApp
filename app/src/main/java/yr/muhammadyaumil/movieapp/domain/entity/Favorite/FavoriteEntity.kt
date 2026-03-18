@@ -1,16 +1,20 @@
 package yr.muhammadyaumil.movieapp.domain.entity.Favorite
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
-@Entity(tableName = "favorite_movies")
+@Entity(
+    tableName = "favorite_movies",
+    primaryKeys = ["user_id", "movie_id"],
+)
 data class FavoriteEntity(
-    @PrimaryKey
-    val movieId: Int,
+    @ColumnInfo(name = "user_id") val userId: String,
+    @ColumnInfo(name = "movie_id") val movieId: Int,
     val title: String,
     val posterUrl: String,
     val descriptions: String,
     val duration: Int,
     val isFavorite: Boolean = true,
     val addedAt: Long = System.currentTimeMillis(),
+    val synced: Boolean = false,
 )
