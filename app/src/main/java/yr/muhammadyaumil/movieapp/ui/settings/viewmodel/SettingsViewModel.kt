@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import yr.muhammadyaumil.movieapp.core.state.Resources
+import yr.muhammadyaumil.movieapp.data.local.sessions.SessionManager
 import yr.muhammadyaumil.movieapp.domain.repository.AuthRepository
 import yr.muhammadyaumil.movieapp.ui.settings.event.SettingsEvent
 import yr.muhammadyaumil.movieapp.ui.settings.state.SettingsState
@@ -19,6 +20,7 @@ class SettingsViewModel
     @Inject
     constructor(
         private val authRepository: AuthRepository,
+        private val sessionManager: SessionManager,
     ) : ViewModel() {
         private val _state = MutableStateFlow(SettingsState())
         val state: StateFlow<SettingsState> = _state.asStateFlow()
@@ -51,6 +53,7 @@ class SettingsViewModel
                         }
 
                         is Resources.Success -> {
+                            sessionManager.clearSession()
                             _state.value =
                                 _state.value.copy(
                                     isSuccess = true,
