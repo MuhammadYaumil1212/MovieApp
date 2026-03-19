@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import yr.muhammadyaumil.movieapp.core.state.Resources
+import yr.muhammadyaumil.movieapp.core.utils.handleResource
 import yr.muhammadyaumil.movieapp.data.local.sessions.SessionManager
 import yr.muhammadyaumil.movieapp.domain.repository.AuthRepository
 import yr.muhammadyaumil.movieapp.ui.settings.event.SettingsEvent
@@ -53,7 +54,7 @@ class SettingsViewModel
                         }
 
                         is Resources.Success -> {
-                            sessionManager.clearSession()
+//                            sessionManager.clearSession()
                             _state.value =
                                 _state.value.copy(
                                     isSuccess = true,
@@ -73,59 +74,57 @@ class SettingsViewModel
         private fun getInfoUser() =
             viewModelScope.launch {
                 authRepository.getUserInfo().collect { resources ->
-                    when (resources) {
-                        is Resources.Loading -> {
-                            _state.value = _state.value.copy(isLoading = true)
-                        }
-
-                        is Resources.Success -> {
-                            _state.value =
-                                _state.value.copy(
-                                    name =
-                                        resources.data
-                                            ?.userMetadata
-                                            ?.get("Display Name")
-                                            ?.toString()
-                                            ?.takeIf { it.isNotBlank() } ?: resources.data?.email
-                                            ?: "Name not found",
-                                    phoneNumber =
-                                        resources.data?.phone?.takeIf { it.isNotBlank() }
-                                            ?: "Please verify your phone number",
-                                    isLoading = false,
-                                )
-                        }
-
-                        is Resources.Error -> {
-                            _state.value =
-                                _state.value.copy(
-                                    errorMessage = resources.message ?: "Something Wrong",
-                                    isLoading = false,
-                                )
-                        }
-                    }
+                    _state.handleResource(
+                        resource = resources,
+                        onLoading = {
+                            _state.value.copy(isLoading = true)
+                        },
+                        onSuccess = { state, data ->
+                            _state.value.copy(
+                                name =
+                                    data
+                                        ?.userMetadata
+                                        ?.get("Display Name")
+                                        ?.toString()
+                                        ?.takeIf { it.isNotBlank() } ?: data?.email
+                                        ?: "Name not found",
+                                phoneNumber =
+                                    data?.phone?.takeIf { it.isNotBlank() }
+                                        ?: "Please verify your phone number",
+                                isLoading = false,
+                            )
+                        },
+                        onError = { state, message ->
+                            _state.value.copy(
+                                isLoading = false,
+                                errorMessage = message ?: "Something Wrong",
+                            )
+                        },
+                    )
                 }
             }
 
         private fun logout() =
             viewModelScope.launch {
                 authRepository.logout().collect { resources ->
-                    when (resources) {
-                        is Resources.Success -> {
-                            _state.value = _state.value.copy(isSuccess = true, logoutLoading = false)
-                        }
-
-                        is Resources.Loading -> {
-                            _state.value = _state.value.copy(logoutLoading = true)
-                        }
-
-                        is Resources.Error -> {
-                            _state.value =
-                                _state.value.copy(
-                                    errorMessage = resources.message,
-                                    logoutLoading = false,
-                                )
-                        }
+                    if (resources is Resources.Success) {
+                        sessionManager.clearSession()
                     }
+                    _state.handleResource(
+                        resource = resources,
+                        onLoading = {
+                            _state.value.copy(logoutLoading = true)
+                        },
+                        onSuccess = { state, data ->
+                            _state.value.copy(isSuccess = true, logoutLoading = false)
+                        },
+                        onError = { state, message ->
+                            _state.value.copy(
+                                isLoading = false,
+                                errorMessage = message ?: "Something Wrong",
+                            )
+                        },
+                    )
                 }
             }
     }
