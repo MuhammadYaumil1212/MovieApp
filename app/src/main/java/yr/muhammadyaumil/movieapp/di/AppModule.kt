@@ -69,7 +69,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMovieApiServices(client: HttpClient): MovieApiServices = MovieApiServicesImpl(client)
+    fun provideMovieApiServices(client: HttpClient): MovieApiServices =
+        MovieApiServicesImpl(
+            client = client,
+            supabaseClient = provideSupabaseClient(),
+        )
 
     @Provides
     @Singleton

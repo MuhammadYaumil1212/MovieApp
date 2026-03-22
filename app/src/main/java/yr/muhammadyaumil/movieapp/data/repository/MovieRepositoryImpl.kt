@@ -92,16 +92,21 @@ class MovieRepositoryImpl
             flow<Resources<Unit>> {
                 if (isCurrentlyFavorite) {
                     favDao.deleteFavorite(favorite.movieId)
-                    // TODO: Send Request Delete to API
+                    movieApiServices.deleteMovie(
+                        movieId = favorite.movieId,
+                        userId = favorite.userId,
+                    )
                 } else {
                     favDao.insertFavorite(favorite)
-                    // TODO: Send Request Insert to API
+                    movieApiServices.insertMovie(favorite)
                 }
+                emit(Resources.Success(Unit))
             }.onStart {
                 emit(Resources.Loading())
             }.catch { e ->
                 Log.e(AppConstants.API_LOGGER, e.localizedMessage ?: AppConstants.NULL_MESSAGE)
                 emit(Resources.Error(e.localizedMessage))
+                favDao.deleteFavorite(favorite.movieId)
             }.flowOn(Dispatchers.IO)
 
         override suspend fun getFavoriteMovies(userId: String): Flow<Resources<List<FavoriteEntity>>> =
