@@ -15,7 +15,7 @@ fun Notfound(
         modifier = modifier,
         imageRes = R.drawable.notfound,
         title = "Favorite Not Found",
-        description = "Belum ada diskusi untuk film ini. Jadilah yang pertama memulai obrolan!",
+        description = "Belum ada Favorite, tambahkan sekarang!",
         actionText = "Muat Ulang",
         onActionClick = onRefreshClick,
     )
