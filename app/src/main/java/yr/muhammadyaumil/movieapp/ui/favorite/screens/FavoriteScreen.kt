@@ -65,7 +65,9 @@ fun FavoriteScreen(
                         .padding(innerPadding),
                 contentAlignment = Alignment.Center,
             ) {
-                Notfound()
+                Notfound(
+                    onRefreshClick = { onEvent(FavoriteEvent.OnRefresh) },
+                )
             }
         }
         LazyColumn(

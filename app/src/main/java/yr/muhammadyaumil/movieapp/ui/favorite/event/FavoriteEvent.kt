@@ -12,4 +12,6 @@ sealed interface FavoriteEvent {
     ) : FavoriteEvent
 
     data object DismissError : FavoriteEvent
+
+    data object OnRefresh : FavoriteEvent
 }

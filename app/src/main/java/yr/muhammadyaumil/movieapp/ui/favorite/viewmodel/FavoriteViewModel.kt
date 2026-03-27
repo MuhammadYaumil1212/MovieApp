@@ -47,6 +47,10 @@ class FavoriteViewModel
                 is FavoriteEvent.DeleteFavorite -> {
                     toggleFavoriteMovies(movie = event.movieData, isCurrentlyFavorite = false)
                 }
+
+                is FavoriteEvent.OnRefresh -> {
+                    observeFavoriteMovie()
+                }
             }
         }
 
