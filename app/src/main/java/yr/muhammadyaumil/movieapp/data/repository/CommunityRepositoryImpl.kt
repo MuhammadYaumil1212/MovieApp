@@ -8,9 +8,10 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onStart
 import yr.muhammadyaumil.movieapp.core.state.Resources
-import yr.muhammadyaumil.movieapp.data.model.Community.MovieComment
-import yr.muhammadyaumil.movieapp.data.model.Community.MoviePost
+import yr.muhammadyaumil.movieapp.core.utils.toEntity
 import yr.muhammadyaumil.movieapp.data.remote.CommunityApiService
+import yr.muhammadyaumil.movieapp.domain.entity.Community.MovieCommentEntity
+import yr.muhammadyaumil.movieapp.domain.entity.Community.MoviePostEntity
 import yr.muhammadyaumil.movieapp.domain.repository.CommunityRepository
 import javax.inject.Inject
 
@@ -19,9 +20,12 @@ class CommunityRepositoryImpl
     constructor(
         private val communityApiService: CommunityApiService,
     ) : CommunityRepository {
-        override suspend fun getAllThreads(): Flow<Resources<List<MoviePost>>> =
-            flow<Resources<List<MoviePost>>> {
-                val allThreads = communityApiService.getAllThreads()
+        override suspend fun getAllThreads(): Flow<Resources<List<MoviePostEntity>>> =
+            flow<Resources<List<MoviePostEntity>>> {
+                val allThreads =
+                    communityApiService.getAllThreads().map { model ->
+                        model.toEntity()
+                    }
                 if (allThreads.isNotEmpty()) {
                     emit(Resources.Success(allThreads))
                 }
@@ -31,9 +35,12 @@ class CommunityRepositoryImpl
                 emit(Resources.Error(error.localizedMessage))
             }.flowOn(Dispatchers.IO)
 
-        override suspend fun getAllComments(postId: String): Flow<Resources<List<MovieComment>>> =
-            flow<Resources<List<MovieComment>>> {
-                val allComments = communityApiService.getAllComments(postId)
+        override suspend fun getAllComments(postId: String): Flow<Resources<List<MovieCommentEntity>>> =
+            flow<Resources<List<MovieCommentEntity>>> {
+                val allComments =
+                    communityApiService.getAllComments(postId).map { model ->
+                        model.toEntity()
+                    }
                 if (allComments.isNotEmpty()) {
                     emit(Resources.Success(allComments))
                 }
