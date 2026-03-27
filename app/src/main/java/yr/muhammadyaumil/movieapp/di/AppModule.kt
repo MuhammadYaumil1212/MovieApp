@@ -30,11 +30,15 @@ import yr.muhammadyaumil.movieapp.data.local.database.AppDatabase
 import yr.muhammadyaumil.movieapp.data.local.sessions.SessionManager
 import yr.muhammadyaumil.movieapp.data.remote.AuthApiServices
 import yr.muhammadyaumil.movieapp.data.remote.AuthApiServicesImpl
+import yr.muhammadyaumil.movieapp.data.remote.CommunityApiService
+import yr.muhammadyaumil.movieapp.data.remote.CommunityApiServiceImpl
 import yr.muhammadyaumil.movieapp.data.remote.MovieApiServices
 import yr.muhammadyaumil.movieapp.data.remote.MovieApiServicesImpl
 import yr.muhammadyaumil.movieapp.data.repository.AuthRepositoryImpl
+import yr.muhammadyaumil.movieapp.data.repository.CommunityRepositoryImpl
 import yr.muhammadyaumil.movieapp.data.repository.MovieRepositoryImpl
 import yr.muhammadyaumil.movieapp.domain.repository.AuthRepository
+import yr.muhammadyaumil.movieapp.domain.repository.CommunityRepository
 import yr.muhammadyaumil.movieapp.domain.repository.MovieRepository
 import javax.inject.Singleton
 
@@ -143,4 +147,13 @@ object AppModule {
     fun provideSessionManager(
         @ApplicationContext context: Context,
     ): SessionManager = SessionManager(context = context)
+
+    @Provides
+    @Singleton
+    fun provideCommunityRepository(communityApiService: CommunityApiService): CommunityRepository =
+        CommunityRepositoryImpl(communityApiService = communityApiService)
+
+    @Provides
+    @Singleton
+    fun provideCommunityApiService(supabaseClient: SupabaseClient): CommunityApiService = CommunityApiServiceImpl(supabaseClient)
 }

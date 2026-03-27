@@ -20,6 +20,7 @@ fun AppScaffold(
     errorMessage: String? = null,
     successMessage: String? = null,
     showErrorTextCenter: Boolean = false,
+    floatingActionButton: @Composable () -> Unit = {},
     onErrorConsumed: () -> Unit = {},
     topBar: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
@@ -41,6 +42,7 @@ fun AppScaffold(
         modifier = modifier,
         topBar = topBar,
         bottomBar = bottomBar,
+        floatingActionButton = floatingActionButton,
     ) { innerPadding ->
         Box(
             modifier =

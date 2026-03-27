@@ -29,6 +29,7 @@ import yr.muhammadyaumil.movieapp.core.composables.MovieBottomBar
 import yr.muhammadyaumil.movieapp.core.composables.ObserveAsEvents
 import yr.muhammadyaumil.movieapp.core.navigation.Screen
 import yr.muhammadyaumil.movieapp.ui.community.screens.CommunityScreen
+import yr.muhammadyaumil.movieapp.ui.community.viewmodel.CommunityViewModel
 import yr.muhammadyaumil.movieapp.ui.detailHome.screens.DetailHomeScreen
 import yr.muhammadyaumil.movieapp.ui.detailHome.viewmodel.DetailHomeViewModel
 import yr.muhammadyaumil.movieapp.ui.favorite.screens.FavoriteScreen
@@ -205,8 +206,12 @@ fun MovieApp() {
                 )
             }
             composable(Screen.Community.route) {
+                val communityViewModel = hiltViewModel<CommunityViewModel>()
+                val state by communityViewModel.state.collectAsStateWithLifecycle()
                 CommunityScreen(
                     modifier = Modifier,
+                    onEvent = communityViewModel::onEvent,
+                    state = state,
                 )
             }
 
