@@ -1,37 +1,24 @@
 package yr.muhammadyaumil.movieapp.ui.favorite.composables
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import yr.muhammadyaumil.movieapp.R
+import yr.muhammadyaumil.movieapp.core.composables.AppEmptyState
 
 @Composable
-fun Notfound() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Image(
-            modifier =
-                Modifier
-                    .width(200.dp)
-                    .height(200.dp),
-            painter = painterResource(R.drawable.notfound),
-            contentDescription = "Notfound",
-        )
-        Spacer(modifier=Modifier.height(15.dp))
-        Text("Favorite Not Found", fontSize = 20.sp, fontWeight = FontWeight.W700)
-    }
+fun Notfound(
+    modifier: Modifier = Modifier,
+    onRefreshClick: (() -> Unit)? = null,
+) {
+    AppEmptyState(
+        modifier = modifier,
+        imageRes = R.drawable.notfound,
+        title = "Favorite Not Found",
+        description = "Belum ada diskusi untuk film ini. Jadilah yang pertama memulai obrolan!",
+        actionText = "Muat Ulang",
+        onActionClick = onRefreshClick,
+    )
 }
 
 @Preview(backgroundColor = 0xFFFFFFFF, showBackground = true)
