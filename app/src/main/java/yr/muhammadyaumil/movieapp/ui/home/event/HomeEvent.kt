@@ -6,4 +6,6 @@ sealed interface HomeEvent {
     data object RefreshUi : HomeEvent
 
     data object OnSessionExpired : HomeEvent
+
+    data object OnRefresh : HomeEvent
 }

@@ -2,10 +2,12 @@ package yr.muhammadyaumil.movieapp.ui.home.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -31,6 +33,7 @@ import yr.muhammadyaumil.movieapp.BuildConfig
 import yr.muhammadyaumil.movieapp.core.composables.AppScaffold
 import yr.muhammadyaumil.movieapp.core.utils.formatDate
 import yr.muhammadyaumil.movieapp.core.utils.formatRating
+import yr.muhammadyaumil.movieapp.ui.home.composables.MovieNotFound
 import yr.muhammadyaumil.movieapp.ui.home.composables.MovieRecentItem
 import yr.muhammadyaumil.movieapp.ui.home.composables.MovieRecommendationItem
 import yr.muhammadyaumil.movieapp.ui.home.event.HomeEvent
@@ -111,24 +114,41 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(15.dp))
             }
             // item for now playing list
-            item {
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 16.dp),
-                ) {
-                    items(nowPlayingMovies.size) { index ->
-                        with(nowPlayingMovies[index]) {
-                            MovieRecentItem(
-                                title = this.originalTitle ?: "",
-                                rating =
-                                    this.voteAverage
-                                        .formatRating()
-                                        .toDouble(),
-                                imageUrl = "${BuildConfig.IMAGE_URL}/w200/${this.posterPath}",
-                                onClick = {
-                                    navigateToDetail(this.id ?: 0)
-                                },
-                            )
+            if (nowPlayingMovies.isNotEmpty()) {
+                item {
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                    ) {
+                        items(nowPlayingMovies.size) { index ->
+                            with(nowPlayingMovies[index]) {
+                                MovieRecentItem(
+                                    title = this.originalTitle ?: "",
+                                    rating =
+                                        this.voteAverage
+                                            .formatRating()
+                                            .toDouble(),
+                                    imageUrl = "${BuildConfig.IMAGE_URL}/w200/${this.posterPath}",
+                                    onClick = {
+                                        navigateToDetail(this.id ?: 0)
+                                    },
+                                )
+                            }
                         }
+                    }
+                }
+            } else {
+                item {
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        MovieNotFound(
+                            onRefreshClick = { onEvent(HomeEvent.OnRefresh) },
+                            msg = "Belum ada Film yang sedang ditampilkan",
+                        )
                     }
                 }
             }
@@ -142,17 +162,34 @@ fun HomeScreen(
                 )
             }
             // item for list of latest movies
-            items(movies.size) { index ->
-                with(movies[index]) {
-                    MovieRecommendationItem(
-                        title = this?.title ?: "No Title",
-                        description = this?.overview ?: "No Descriptions",
-                        duration = this?.releaseDate.formatDate(),
-                        imageUrl = "${BuildConfig.IMAGE_URL}/w200/${this?.posterPath}",
-                        onClick = {
-                            navigateToDetail(this?.id ?: 0)
-                        },
-                    )
+            if (movies.isNotEmpty()) {
+                items(movies.size) { index ->
+                    with(movies[index]) {
+                        MovieRecommendationItem(
+                            title = this?.title ?: "No Title",
+                            description = this?.overview ?: "No Descriptions",
+                            duration = this?.releaseDate.formatDate(),
+                            imageUrl = "${BuildConfig.IMAGE_URL}/w200/${this?.posterPath}",
+                            onClick = {
+                                navigateToDetail(this?.id ?: 0)
+                            },
+                        )
+                    }
+                }
+            } else {
+                item {
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        MovieNotFound(
+                            onRefreshClick = { onEvent(HomeEvent.OnRefresh) },
+                            msg = "Belum ada Film yang sedang ditampilkan",
+                        )
+                    }
                 }
             }
         }

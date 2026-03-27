@@ -55,6 +55,11 @@ class HomeViewModel
                         )
                     }
                 }
+
+                is HomeEvent.OnRefresh -> {
+                    getMovies()
+                    getNowPlayingMovies()
+                }
             }
         }
 
