@@ -11,4 +11,10 @@ data class MoviePost(
     val userId: String,
     @SerialName("content")
     val content: String,
+    @SerialName("username")
+    val username: String,
+    @SerialName("comment_count")
+    val commentCount: Int,
+    @SerialName("like_count")
+    val likeCount: Int,
 )
