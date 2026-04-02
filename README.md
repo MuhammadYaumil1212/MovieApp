@@ -69,4 +69,12 @@ API_KEY_PROD=[TOKEN]
 API_READ_ACCESS_TOKEN=[TOKEN ACCESS]
 BASE_URL_PROD=https://api.themoviedb.org/3/
 IMAGE_BASE_URL=https://image.tmdb.org/t/p/w200
+```
+### ScreenShoots App
+
+<img width="337" height="745" alt="image" src="https://github.com/user-attachments/assets/1db7e5f3-8415-4a35-830a-4de440a772e4" />
+
+<img width="337" height="745" alt="image" src="https://github.com/user-attachments/assets/0dc08f93-b1bf-4f70-a549-8f1aa65dbf52" />
+
+
 
