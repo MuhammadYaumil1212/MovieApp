@@ -57,7 +57,7 @@ Menyediakan fungsionalitas dasar yang digunakan di seluruh lapisan aplikasi.
 
 ## Konfigurasi API (Keamanan)
 
-Untuk menjalankan aplikasi ini, Anda perlu mendaftarkan API Key di [TMDB](https://www.themoviedb.org/). Demi keamanan, jangan pernah memasukkan API Key langsung ke dalam kode sumber (Hardcoded).
+Untuk menjalankan aplikasi ini, Anda perlu mendaftarkan API Key di [TMDB](https://www.themoviedb.org/).
 
 ### Setup `local.properties`
 1. Buka file `local.properties` di root project Anda.
